@@ -17,6 +17,8 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.namespace.QName;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -38,7 +40,7 @@ public class TIGERCorpus implements Corpus {
         this.tigerCorpus = gson.fromJson(gson.toJson(tigerCorpus), corpora.tiger.generated.Corpus.class);
     }
 
-    public void readFromFile(String filename){
+    public void readFromFile(String filename) throws IOException{
         File file = new File(filename);
 
         JAXBContext jaxbContext = null;
@@ -53,7 +55,7 @@ public class TIGERCorpus implements Corpus {
             }
             tigerCorpus.getBody().getSubcorpusOrS().clear();
         } catch (JAXBException e) {
-            e.printStackTrace();
+            throw new IOException(e.toString());
         }
 
     }
@@ -119,37 +121,6 @@ public class TIGERCorpus implements Corpus {
         return null;
     }
 
-    public List<Sentence> getTigerSentences() {
-        return null;
-    }
-
-
-    /*public Iterator<Token> token() {
-        return new Iterator<Token>() {
-            private Iterator<SentenceType> sentenceIterator = tigerSentences.iterator();
-            private Iterator<TType> terminalIterator = null;
-            private SentenceType currentSentence = null;
-
-            public boolean hasNext() {
-                if(currentSentence==null || !terminalIterator.hasNext()){
-                    if(!sentenceIterator.hasNext())
-                        return false;
-                    currentSentence = sentenceIterator.next();
-                    terminalIterator = currentSentence.getGraph().getTerminals().getT().iterator();
-                }
-                return terminalIterator.hasNext();
-            }
-
-            public Token next() {
-               return new Token(terminalIterator.next().getOtherAttributes().get(new QName("word")));
-            }
-
-            public void remove() {
-                throw new UnsupportedOperationException();
-            }
-        };
-    }*/
-
     public Iterator<Token> token() {
 
         TokenIterator tokenIterator = new TokenIterator(tigerSentences.iterator());
@@ -192,34 +163,22 @@ public class TIGERCorpus implements Corpus {
             return outerElement.getGraph().getTerminals().getT().iterator();
         }
 
-        /*@Override
-        protected boolean fill(TType element) {
-            if(element != null && !element.getOtherAttributes().get(new QName("pos")).startsWith("$") ){
-                return true;
-            }
-            return false;
-        }*/
     }
 
-    public class CharacterIterator extends MergedIterator<String, java.lang.Character, Token>{
+    public class CharacterIterator extends MergedIterator<String, Character, Token>{
         public CharacterIterator(Iterator<String> it){
             super(it);
         }
 
-        protected Token getElementContent(java.lang.Character element){
+        protected Token getElementContent(Character element){
             return new Token(element);
         }
 
-        protected Iterator<java.lang.Character> getInnerIterator(String outerElement){
-            ImmutableList<java.lang.Character> chars = Lists.charactersOf(outerElement);
-            UnmodifiableListIterator<java.lang.Character> iter = chars.listIterator();
+        protected Iterator<Character> getInnerIterator(String outerElement){
+            ImmutableList<Character> chars = Lists.charactersOf(outerElement);
+            UnmodifiableListIterator<Character> iter = chars.listIterator();
             return iter;
         }
-
-        /*@Override
-        protected boolean fill(java.lang.Character element) {
-            return false;
-        }*/
 
     }
 

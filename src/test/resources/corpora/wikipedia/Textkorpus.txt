@@ -1,0 +1,329 @@
+Textkorpus
+
+Der Ausdruck Textkorpus (Neutrum; Plural Textkorpora; kurz auch nur Korpus
+oder Corpus; lat. corpus ‚Körper') bezeichnet generell eine Sammlung von
+schriftlichen Texten oder von schriftlich aufgezeichneten, mündlichen
+Äußerungen in einer bestimmten Sprache. Textkorpora sind in
+unterschiedlichen wissenschaftlichen Disziplinen, hauptsächlich in der
+Sprachwissenschaft, Literaturwissenschaft und historisch orientierten
+Fächern, aber auch beispielsweise in der Rechtswissenschaft von Bedeutung.
+Sie sind dabei das Mittel, anhand dessen beispielsweise eine bestimmte
+Sprache beschrieben werden kann oder die Werke eines Autors erforscht
+werden; Korpora dienen aber auch als Quellen zur Untersuchung bestimmter
+(etwa historischer) Themen und Sachverhalte.
+
+Textkorpora werden – sofern es sich um solche aus lebenden Sprachen handelt
+– nach gewissen wissenschaftlichen Kriterien zusammengestellt und umfassen
+eine bestimmte Art und Anzahl von Texten. Solche Zusammenstellungen haben
+mit Aufkommen maschineller Möglichkeiten besonders in mehreren Disziplinen
+der Sprachwissenschaft eine immense Bedeutung erlangt und waren bestimmend
+für die erst vor kurzem erfolgte Etablierung der Korpuslinguistik.
+
+Ein Textkorpus liegt heute typischerweise in digitaler Form vor. Zum Zwecke
+der Beschreibung bestimmter Einzelsprachen wurden bereits in zahlreichen
+Nationalsprachen große, das heißt viele Millionen bis teils mehrere
+Milliarden Wörter umfassende Korpora erstellt, die ein gewisses Verhältnis
+einzelner Textsorten in der jeweiligen Sprache abbilden sollen. Zudem
+existiert eine große Reihe von Spezialkorpora wie etwa Kindersprachkorpora,
+Dialektkorpora, Korpora bestehend aus Gesamtausgaben von literarischen
+Werken u. a. m. Auch werden in zunehmendem Maße für linguistische
+Einzeluntersuchungen eigens konzipierte Textkorpora erstellt.
+
+Arten von Textkorpora
+
+Nach formalen und inhaltlichen Kriterien können Textkorpora in
+unterschiedlicher Weise kategorisiert werden.¹ Unter anderem unterscheidet
+man:
+
+Papierkorpora und elektronische Korpora Auf Papier zusammengetragene
+  Textkorpora waren aufwändig zu erstellen und dementsprechend selten
+  anzutreffen. Sie spielten in der Vergangenheit beispielsweise in der
+  Wörterbuchschreibung eine bedeutende Rolle, da anhand dieser Sammlungen
+  die Bedeutungen einzelner Wörter ausgemacht bzw. belegt wurden. Für die
+  Nutzung der heute üblichen maschinenlesbaren Korpora ist eine spezielle
+  Software wie beispielsweise WordSmith notwendig. Etliche Korpora sind
+  aber online zugänglich und ohne solche Software auf dem eigenen PC
+  nutzbar.
+Teilkorpora und Referenzkorpora Teilkorpora sind solche, die nur einen
+  Ausschnitt aus dem gesamten Spektrum einer Sprache bieten, wie
+  beispielsweise Textkorpora, die nur Texte aus der alltäglichen
+  Umgangssprache oder nur Texte aus Tageszeitungen enthalten. Ein
+  Referenzkorpus ist ein Textkorpus, das nach linguistischen Kriterien eine
+  einzelne Sprache (also das Deutsche, das Englische usw.) in ihrer
+  Gesamtheit dergestalt repräsentativ erfassen soll, dass anhand eines
+  Referenzkorpus einer bestimmten Sprache gültige Aussagen über das System
+  ebendieser Sprache generell gemacht werden können.
+Statische Korpora und Monitorkorpora Statische Korpora sind abgeschlossen
+  und werden nicht mehr erweitert, so etwa Textkorpora mit den Werken eines
+  verstorbenen Schriftstellers, ein Korpus bestehend aus der Gesamtheit
+  aller in einer ausgestorbenen Sprache vorhandenen schriftlichen Quellen
+  oder ein Korpus aus den verschrifteten Aufzeichnungen von Aufnahmen eines
+  die Sprache erwerbenden Kleinkindes. (Alte Sprachen, die nur in wenigen
+  Dokumenten oder gar nur fragmentarisch belegt sind, bezeichnet man auch
+  als „Korpussprachen", weil sie nur anhand dieses einen begrenzten, nicht
+  mehr erweiterbaren Textkorpus rekonstruierbar und beschreibbar sind.)
+  Monitorkorpora hingegen sind Textkorpora, die auf eine Erweiterung hin
+  konzipiert sind (wie etwa Textsammlungen bestehend aus den Artikeln einer
+  aktuellen Tageszeitung).
+Rohkorpora und annotierte Korpora Unter Rohkorpora versteht man
+  Textkorpora, die rein aus den Sprachdaten bestehen, die zur Untersuchung
+  herangezogen werden. Annotierte Korpora sind solche Textkorpora, die
+  neben diesen Primärdaten auch zusätzliche Angaben, sogenannte Metadaten,
+  enthalten. Diese Annotationen können sehr unterschiedlicher Art sein:
+  Gängig sind beispielsweise Korpora, in denen für jedes einzelne Wort
+  zusätzlich die jeweilige Wortart angegeben wird, Korpora, die Glossen
+  enthalten (wobei die Zielsprache nicht jener des Korpus entsprechen
+  muss), oder Korpora, die mit Angaben betreffend die Syntax der einzelnen
+  Sätze versehen sind. (Letztere werden – analog zum Ausdruck „Datenbank" –
+  auch als „Baumbanken" bezeichnet, da in ihnen sogenannte syntaktische
+  Baumstrukturen annotiert sind.) Textkorpora bestehend aus Daten der
+  gesprochenen Sprache sind häufig mit phonologischen Daten angereichert.
+  Zu den Metadaten eines Textkorpus zählen auch Angaben über den Zeitpunkt
+  der Textentstehung, über die Autorenschaft, über die Korpuserstellung u.
+  a. m. Annotierte Korpora bieten gerade für Fragestellungen der
+  theoretischen Linguistik oder der Computerlinguistik grundsätzlich
+  verbesserte Forschungsmöglichkeiten. Jedoch ist die Annotation gerade von
+  umfangreicheren Textkorpora verhältnismäßig aufwändig und demzufolge
+  kostenintensiv, sodass gerade die großen Referenzkorpora nur zum Teil mit
+  Annotationen versehen sind.
+Einsprachige und mehrsprachige Korpora Einsprachige Korpora erlauben
+  Aussagen über die jeweilige Einzelsprache. Mehrsprachige Korpora
+  enthalten Texte aus mehrheitlich zwei, gegebenenfalls mehreren Sprachen.
+  Entweder sind dabei die Texte in der zweiten Sprache eine Übersetzung der
+  Texte der ersten Sprache – man bezeichnet solche Fälle als
+  „Parallelkorpora" – oder das Korpus der zweiten Sprache besteht im selben
+  Ausmaß aus denselben Textsorten wie das Korpus der ersten Sprache (z. B.
+  Zeitungsartikel zu denselben Themen). Mehrsprachige Korpora spielen
+  hauptsächlich für die maschinelle Übersetzung und für die
+  Sprachlehrforschung eine Rolle. Dabei ist die automatische oder
+  statistische Analyse z. B. der Häufigkeit und Verteilung von bestimmten
+  Wörtern innerhalb einzelner Sprachen für die automatische Erstellung
+  eines zweisprachigen Wörterbuches hilfreich. Einige Funktionen eines
+  mehrsprachigen Textkorpus, ohne tatsächlich ein solches zu sein,
+  übernimmt oftmals die Bibel, weil sie auch in kleineren, weniger oft
+  gesprochenen Sprachen vorliegt. Daher ist sie nicht nur für
+  sprachwissenschaftliche Vergleichszwecke dienlich, sondern auch in der
+  Bibelwissenschaft beispielsweise in Bezug auf die Erforschung der
+  Übersetzungsgewohnheiten und auf die Erfassung biblischer Begriffe von
+  großer Bedeutung.
+
+Textkorpora in der Sprachwissenschaft
+
+Textkorpora bieten die Möglichkeit, das System einer Sprache und deren
+Gebrauch anhand von tatsächlich geäußerten Sprachdaten in verschiedener
+Hinsicht zu untersuchen. Der Begriff „Korpus" im Sinne einer
+Zusammenstellung von Sprachdaten, um aufgrund dieser Stichproben allgemeine
+Aussagen zu treffen, wird in verschiedenen Disziplinen der
+Sprachwissenschaft schon seit Jahrzehnten verwendet.²
+
+Diese empirische Ausrichtung steht im Gegensatz zur rationalistischen
+Orientierung der Generativen Grammatik, die augenblicklich ein
+dominierendes Paradigma in der theoretischen Linguistik darstellt.
+Dementsprechend kritisch wird von Vertretern dieser Richtung der Einsatz
+und Nutzen von Textkorpora gerade in Hinblick auf Fragen zur Grammatik
+gesehen. Jedoch werden Korpora auch in diesem Bereich in zunehmendem Maße
+zur Verifizierung von Hypothesen in Anspruch genommen.
+
+Linguistische Teilbereiche, in denen derzeit Textkorpora vermehrt
+herangezogen werden, sind die Korpuslinguistik und die Computerlinguistik.
+Hier werden möglichst große Korpora ausgewertet, um allgemeine Aussagen
+über eine Sprache treffen zu können. Beispiele für den Einsatz von Korpora
+in der Korpuslinguistik sind etwa das Bestimmen von Wortbedeutungen anhand
+von Konkordanzen (also anhand von Belegstellen in konkreten Texten), das
+Eruieren von Kollokationen (also von gemeinsamem Auftreten eines Wortes mit
+bestimmten anderen Wörtern) oder die Beantwortung von Fragen zur Syntax
+einer Sprache.³ Im Bereich der Computerlinguistik und mathematischen
+Linguistik sind unter anderem Worthäufigkeiten und Wortverteilungen in
+Texten, Wortkollokationen oder Satz- und Wortlängen und Ähnliches von
+Interesse. Im sprachwissenschaftlichen Teilgebiet der Diskursanalyse werden
+Textkorpora unterschiedlicher Größe vornehmlich aus dem öffentlichen
+Sprachbereich (Politik, Medien) herangezogen, um aus solchen Sprachdaten
+Rückschlüsse auf latent vorhandene Einstellungen und Haltungen einer
+gesellschaftlichen Gruppierung zu bestimmten Dingen und Sachverhalten
+herauszufinden oder deren Verständnis von bestimmten Begriffen ausfindig zu
+machen.⁴
+
+Zwar stellt auch das World Wide Web eine Sammlung konkret verwendeter
+Sprache dar, es ist jedoch nach sprachwissenschaftlichem Verständnis nicht
+als Textkorpus im eigentlichen Sinne zu betrachten. Dennoch wird es unter
+gewissen Einschränkungen für bestimmte Fragestellungen mit entsprechender
+Vorsicht genutzt. Beispielsweise wurden neben verschiedenen gedruckten
+Texten auch regionale Websites im Rahmen der Erstellung des
+Variantenwörterbuchs des Deutschen herangezogen.⁵
+
+Referenzkorpora von Einzelsprachen
+
+Zur Beschreibung nationaler Sprachen oder sprachlicher Varietäten werden
+umfangreiche Textkorpora erstellt, die heute sehr häufig auch online
+nutzbar sind. In letzteren Fällen ist die dazu benötigte Analysesoftware
+bereits im World Wide Web implementiert und kann von den Nutzern, ohne ein
+solches Programm auf dem eigenen PC installieren zu müssen, angewendet
+werden.
+
+Das erste Textkorpus in einer nationalen Sprachvarietät war das bereits in
+den 1960er Jahren erstellte und vollständig nach 80 definierten Wortarten
+annotierte Brown Corpus, welches das zeitgenössische amerikanische Englisch
+repräsentieren sollte. (Der Name leitet sich von der Brown University in
+Providence im US-Bundesstaat Rhode Island her, an der das Korpus erstellt
+wurde.) Es umfasst 1 Mio. Wörter und setzt sich aus 500 Textauszügen zu je
+2000 Wörtern zusammen, wobei Texte aus 15 unterschiedlichen Textsorten
+(verschiedene Zeitungs- und literarische Textsorten, religiöse Texte,
+Fachliteratur etc.) herangezogen wurden. Die Ansicht, dass ein Textsample
+in der Größe von 2.000 Wörtern die Textsorte für ein Textkorpus
+repräsentativ abbildet, gilt bis heute. Das Brown Corpus diente als
+Grundlage für das American Heritage Dictionary, das erste Wörterbuch, das
+ausschließlich auf Basis eines derartigen Korpus erstellt wurde. Dem Brown
+Corpus folgte unter anderem in den 1980er Jahren das ebenfalls vollständig
+annotierte Lancaster-Oslo-Bergen-Corpus (kurz: LOB Corpus), welches nach
+dem Vorbild des Brown Corpus aus Texten im britischen Englisch besteht.
+
+Heute sind für das Englische unter anderem das British National Corpus, das
+American National Corpus und das International Corpus of English (mit
+Texten aus unterschiedlichen englischsprachigen Ländern) von Bedeutung.
+
+Als das derzeit umfangreichste Korpus des Deutschen gilt das am Institut
+für Deutsche Sprache in Mannheim zusammengestellte Deutsche Referenzkorpus,
+das aus über 4 Mrd. Wörtern (Stand vom Jahresbeginn 2011) aus geschriebener
+Sprache besteht und grundsätzlich allen zur Benutzung offensteht.
+
+Im Rahmen des Forschungsprojekts „Digitales Wörterbuch der deutschen
+Sprache des 20. Jahrhunderts" wurde das größte ausgewogene Textkorpus der
+deutschen Sprache des 20. Jahrhunderts bereitgestellt. Außerdem finden sich
+dort weitere Korpora, so etwa die kompletten Online-Archive der Zeitschrift
+„Die Zeit" (ab 1996), des „Tagesspiegels" (ab 1996) und der „Potsdamer
+Neuesten Nachrichten" sowie ein großes Korpus jüdischer Periodika (Germania
+Judaica). Die Korpora sind verknüpft mit einem großen einsprachigen
+deutschen Wörterbuch, dem Wörterbuch der deutschen Gegenwartssprache. Bei
+der Abfrage eines Stichwortes werden dabei nicht nur die Konkordanzen,
+sondern auch Informationen zu Synonymen, Hyponymen, Hyperonymen und
+Kollokationen generiert.
+
+In der Abteilung Automatische Sprachverarbeitung der Universität Leipzig
+arbeitet man ebenfalls an und mit großen Korpora und pflegt unter anderem
+ein Korpus im Umfang von rund 1,5 Mrd. Wörtern (rund 100 Mio. Sätze).
+Online sind etliche statistische Daten jedoch nur eines kleineren Korpus
+abfragbar.
+
+Des Weiteren gibt es seit 2010 ein online zugängliches Schweizer
+Textkorpus.
+
+Auch in sehr vielen anderen Nationalsprachen existieren heute große
+Korpora. Das gilt nicht nur für den indogermanischen Sprachraum, sondern
+auch für andere sprecherreiche Sprachen, besonders im asiatischen Raum.
+Aber auch kleinere Sprachen Asiens und Afrikas werden in Form von
+Textarchiven oder weniger umfangreichen annotierten Textkorpora
+dokumentiert.
+
+Spezielle Textkorpora
+
+Neben den großen Referenzkorpora existiert eine immer größer werdende
+Anzahl von Textsammlungen, die nicht nur unter der Bezeichnung „Korpus",
+sondern auch als „(Text)archive" oder unter dem Stichwort „Datenbank" zu
+finden sind. Darunter gibt es beispielsweise Dialektkorpora oder Korpora
+gesprochener Sprache, wie sie beispielsweise im Bayerischen Archiv für
+Sprachsignale und am Archiv für gesprochenes Deutsch vorliegen. Eine andere
+Art von Spezialkorpora sind Textgesamtausgaben wie zum Beispiel das an der
+Österreichischen Akademie der Wissenschaften erstellte Austrian Academy
+Corpus, das die Gesamtausgaben der essayistischen Zeitschriften „Die
+Fackel" und „Der Brenner" umfasst.
+
+Besonders für die Psycholinguistik und die Klinische Linguistik ist zur
+Erforschung des normalen und auch des gestörten Spracherwerbs von Kindern
+die Datenbank „CHILDES" von Bedeutung, in welchem Transkripte von
+gesprochener Kindersprache in umfangreichem Maße vorliegen.
+
+Im Rahmen groß angelegter Projekte zur Digitalisierung alter Buchbestände
+werden immer mehr Lexika, Wörterbücher, Enzyklopädien und literarische
+Werke erfasst und online zur Verfügung gestellt. Darunter finden sich
+Unternehmungen wie etwa das „Deutsche Textarchiv", das eine umfassende
+Auswahl an historischen Texten aus mehreren Jahrhunderten bereitstellen
+möchte. Derartige Textsammlungen bieten im optimalen Fall eine kostenlose,
+online durchführbare Volltextsuche im gesamten Bestand. Jedoch besteht in
+solchen Fällen häufig nicht die Möglichkeit, diese Texte für
+sprachwissenschaftliche Zwecke auf dieselbe bequeme Weise zu nutzen, wie
+speziell dafür konzipierte Korpora, da die Suchsoftware nicht danach
+ausgelegt ist.
+
+Siehe auch: Canterbury Corpus
+
+Literatur
+
+- Deutsches Institut f. Normung e.V. (Hrsg.): Aufbau und Nutzung von
+  Terminologie-Datenbanken und Textkorpora. Deutsche Übersetzung des
+  internationalen Fachbereichs ISO/TR 12618, erstellt im NA Terminologie.
+  1. Auflage. Berlin/Wien/Zürich 1997.
+- Paul Baker: Using Corpora in Discourse Analysis. Continuum, London/New
+  York 2009, ISBN 978-0-8264-7724-8.
+- Reinhard Fiehler, Peter Wagener: Die Datenbank Gesprochenes Deutsch (DGD)
+  – Sammlung, Dokumentation, Archivierung und Untersuchung gesprochener
+  Sprache als Aufgabe der Sprachwissenschaft. In: Gesprächsforschung –
+  Online-Zeitschrift zur verbalen Interaktion. 6 (2005), S, 136-147.
+  (www.gespraechsforschung-ozs.de).
+- Werner Kallmeyer, Gisela Zifonun (Hrsg.): Sprachkorpora – Datenmengen und
+  Erkenntnisfortschritt. de Gruyter, Berlin/New York 2007. (=IDS Jahrbuch
+  2006).
+- Korpuslinguistik im Zeitalter der Textdatenbanken. In: Linguistik online.
+  28,3 (2006).
+- Lothar Lemnitzer, Heike Zinsmeister: Korpuslinguistik. Eine Einführung.
+  Gunther Narr Verlag, Tübingen 2006. (= Narr Studienbücher).
+- Wilfried Lenders, Gerd Willée: Linguistische Datenverarbeitung - Ein
+  Lehrbuch. Westdeutscher Verlag, Opladen/Wiesbaden 1998.
+- Rainer Perkuhn, Holger Keibel, Marc Kupietz: Korpuslinguistik. Fink,
+  Paderborn 2012, ISBN 978-3-8252-3433-1.
+- Carmen Scherer: Korpuslinguistik. Winter, Heidelberg 2006, ISBN
+  3-8253-5164-5.
+- Thomas Schmidt: Datenarchive für die Gesprächsforschung: Perspektiven,
+  Probleme und Lösungsansätze. In: Gesprächsforschung – Online-Zeitschrift
+  zur verbalen Interaktion. 6 (2005). S, 103-126.
+  (www.gespraechsforschung-ozs.de).
+- P. Wagener, K.-H. Bausch (Hrsg.) (1997): Tonaufnahmen des gesprochenen
+  Deutsch. Dokumentation der Bestände von sprachwissenschaftlichen
+  Forschungsprojekten und Archiven. Niemeyer, Tübingen 1997. (= Phonai Band
+  40).
+
+Einzelnachweise
+
+[1] Einen diesbezüglichen Überblick bietet zum Beispiel die Einführung in
+  die Korpuslinguistik von Scherer (2006).
+[2] So etwa in einer phonetischen Studie: „... our corpus consisted of
+  monosyllabic words spoken in isolation by two males and one female."
+  (dt.: ... bestand unser Korpus aus einsilbigen Wörtern, die von zwei
+  männlichen und einer weiblichen Person unter Isolationsbedingungen
+  gesprochen worden sind.) (M. Halle, G. W. Hughes, J.-P. A. Radley:
+  Acoustic Properties of Stop Consonants, Journal of the Acoustical Society
+  of America, Vol. 20 (1967); abgedruckt in: Ilse Lehiste (ed.): Readings
+  in Acoustic Phonetics, second printing, MIT Press, Cambridge, Mass. 1969,
+  ISBN 0-262-12025-9, S. 171.)
+[3] Beispielsweise analysiert John Sinclair die Bedeutung des englischen
+  Wortes „(to) yield" oder kategorisiert die Hauptwortkonstruktionen mit
+  „of" wie sie in „bottle of wine" vorkommen. (John Sinclair: Corpus,
+  Concordance, Collocation. 4th Impression. Oxford University Press, Oxford
+  1997, ISBN 0-19-437144-1.)
+[4] So untersucht etwa Noah Bubenhofer exemplarisch, wie Namen für Ethnien
+  oder der Begriff „Terrorismus" in der „Neuen Zürcher Zeitung" tatsächlich
+  verwendet wird. (Noah Bubenhofer: Sprachgebrauchsmuster. Korpuslinguistik
+  als Methode der Diskurs- und Kulturanalyse. de Gruyter, Berlin 2009, ISBN
+  978-3-11-021584-7.)
+[5] Ruth Esterhammer: Das Variantenwörterbuch des Deutschen: Von der Idee
+  zum fertigen Produkt. In: Rudolf Muhr, Manfred B. Sellner (Hrsg.): Zehn
+  Jahre Forschung zum Österreichischen Deutsch: 1995–2005. Eine Bilanz.
+  Peter Lang, Frankfurt/M. 2006, ISBN 3-631-55450-8, S. 65–78.
+
+Weblinks
+
+Wiktionary: Textkorpus – Bedeutungserklärungen, Wortherkunft, Synonyme,
+Übersetzungen
+- Digitales Wörterbuch der deutschen Sprache Online-Recherche im
+  DWDS-Corpus und dem Wörterbuch der Deutschen Gegenwartssprache
+- Deutsches Textarchiv (DTA) Grundlage für ein Referenzkorpus der
+  neuhochdeutschen Sprache
+- COSMAS II Recherche- und Analysesystem zum Deutschen Referenzkorpus und
+  anderen schriftsprachlichen Korpora am Institut für Deutsche Sprache
+  (IDS)
+- Projekt Deutscher Wortschatz Online-Recherche
+- Schweizer Textkorpus Online-Recherche
+- Universität Hamburg Sammlung von Korpora des Sonderforschungsbereichs 538
+  „Mehrsprachigkeit"
+- Bayerisches Archiv für Sprachsignale Sammlung von Korpora gesprochener
+  Sprache und deren Beschreibung
+

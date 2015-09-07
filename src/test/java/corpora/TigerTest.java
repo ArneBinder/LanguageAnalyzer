@@ -4,6 +4,8 @@ import LinguisticEntities.Token;
 import corpora.tiger.TIGERCorpus;
 import org.junit.Test;
 
+import java.io.InputStream;
+import java.net.URL;
 import java.util.Iterator;
 
 /**
@@ -15,11 +17,17 @@ public class TigerTest {
     public void readCorpusTest() throws Exception{
         TIGERCorpus corpus = new TIGERCorpus();
 
-        corpus.readFromFile("tiger_release_aug07.corrected.16012013_extract_v2.xml");
-        Iterator<Token> characters = corpus.token();
-        while(characters.hasNext()){
-            System.out.print(characters.next());
+        //Class clazz = this.getClass();
+        //InputStream is = this.getClass().getClassLoader().getResourceAsStream("tiger_release_aug07.corrected.16012013_extract_v2.xml");
+        //URL url = this.getClass().getClassLoader().getResource("tiger_release_aug07.corrected.16012013_extract_v2.xml");
+        //System.out.println(clazz.getPackage().getClass().getClassLoader().getParent().getClass().getCanonicalName());
+        corpus.readFromFile("src/test/resources/corpora/tiger/tiger_release_aug07.corrected.16012013_extract_v2.xml");
+        Iterator<Token> token = corpus.token();
+        while(token.hasNext()){
+            System.out.print(token.next());
         }
+
+
         /*
         Corpus evalCorpus = corpus.seperateEvalCorpus(0.12);
         evalCorpus.writeToFile("eval_corpus.xml");

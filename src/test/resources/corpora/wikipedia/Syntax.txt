@@ -1,0 +1,208 @@
+Syntax
+
+Unter Syntax (altgriechisch σύνταξις ['syntaksis] σύν: „zusammen", τάξις:
+„Ordnung, Reihenfolge") versteht man allgemein ein Regelsystem zur
+Kombination elementarer Zeichen zu zusammengesetzten Zeichen in natürlichen
+oder künstlichen Zeichensystemen. Die Zusammenfügungsregeln der Syntax
+stehen hierbei den Interpretationsregeln der Semantik gegenüber.
+
+Insbesondere versteht man unter Syntax ein Teilgebiet der Grammatik
+natürlicher Sprachen, das die Zusammenfügung von Wörtern bzw. Wortgruppen
+zu größeren Einheiten bis hin zu Sätzen behandelt, also die Satzlehre. Die
+Syntax wird in der Regel unterschieden von der linguistischen Morphologie,
+die den inneren Aufbau der Wörter behandelt, obwohl die Übergänge zwischen
+beiden Bereichen fließend sein können.
+
+Ebenso wie der Begriff Grammatik, kann sich der Begriff Syntax auf die
+Struktureigenschaften von Zeichensystemen selbst oder auf die
+theoretisch-wissenschaftliche Beschreibung dieser Struktureigenschaften
+beziehen.¹
+
+Die Syntax von Zeichensystemen allgemein
+
+Die Semiotik wird seit Charles W. Morris eingeteilt in Syntaktik, Semantik
+und Pragmatik. Die Syntaktik wird oft fälschlicherweise mit Syntax
+gleichgesetzt. Die Unterschiede zwischen Syntaktik und Syntax beruhen
+darauf, dass Morris von einem trilateralen Zeichenmodell ausgeht und die
+Syntaktik nur auf den Signifikanten anwendet. Im Gegensatz dazu geht
+Ferdinand de Saussure von einem bilateralen Zeichen aus und meint mit
+Syntax die Art der „Verbindung von Signifikant und Signifikat" beim
+Sprechakt, der Parole.² Folglich hat Morris' Syntaktik nichts mit der
+Bedeutung bzw. Funktion der Zeichen zu tun, sondern nur mit der
+Aneinanderreihung der Signifikanten. Saussures Syntax hingegen weist
+durchaus semantische/funktionale Aspekte auf.
+
+Die Syntax sprachlicher Zeichensysteme
+
+Der Ausdruck Syntax wird für natürliche und formale Sprachen verwendet. Das
+Verhältnis zwischen natürlicher und formaler Syntax wird unterschiedlich
+gesehen. Für den Logiker Richard Montague („Universal Grammar", 1970)
+bestand kein prinzipieller Unterschied.
+
+Die Syntax natürlicher Sprachen (natürliche Syntax)
+
+Stellung der Syntax in der Grammatik
+
+Bezogen auf natürliche Sprachen ist die Syntax eine der beiden Abteilungen
+der Grammatik; die andere ist Morphologie. Die Abgrenzung zwischen ihnen
+nimmt auf Komplexitätsebenen der grammatischen Struktur sprachlicher
+Ausdrücke Bezug: Vom minimalen Sprachzeichen (Morphem) wie frag über den
+Stamm wie befrag bis zur Wortform wie befragst ist die Morphologie
+zuständig. Von da an die Komplexitätsebenen aufwärts, also vom Syntagma wie
+den Kandidaten befragst über den einfachen Satz wie (wenn) du den
+Kandidaten befragst bis zum zusammengesetzten Satz wie halt dich zurück,
+wenn du den Kandidaten befragst, ist die Syntax zuständig. Für die Syntax
+ist die Wortform eine Ganzheit, mit deren innerer Struktur syntaktische
+Regeln nichts zu schaffen haben; diese müssen nur "wissen", welchen
+syntaktisch relevanten morphologischen Kategorien die Wortform überhaupt
+angehört. So bestimmt z. B. eine syntaktische Regel, dass das Prädikatsverb
+in wenn du den Kandidaten befragst in Kongruenz mit seinem Subjekt in der
+zweiten Person Singular steht. Wie aber diese Form (bei diesem Verb)
+lautet, darum kümmert sich die Morphologie (wenn das Verb z. B. hereinlässt
+wäre, so wiese es -- im Gegensatz zu befragst -- Umlaut auf).
+
+Die Abgrenzungsprobleme zwischen Syntax und Morphologie kann man u. a.
+ermessen an phrasalen Komposita wie hinuntergehen (ein oder zwei Wörter?)
+oder reitende Artillerietruppe (das Attribut reitend gehört zu Artillerie,
+das aber seinerseits Bestandteil eines anderen Wortes ist). Auch die
+Derivation, die als Teil der Wortbildung zur Morphologie gehört, hat
+syntaktische Aspekte. So ist Befragung von der Basis befrag abgeleitet.
+Aber in dem obigen Beispiel hat der Nebensatz wenn du den Kandidaten
+befragst eine paradigmatische Beziehung zu der Alternative bei deiner
+Befragung des Kandidaten, die sowohl in traditionellen als auch in
+zeitgenössischen Theorien der Syntax als syntaktische Beziehung aufgefasst
+wird.
+
+Satzsyntax, Wortsyntax, Textsyntax
+
+Im herkömmlichen Sinn bedeutet Syntax die Lehre vom Satz (Lehre vom
+(korrekten) Satzbau) bzw. den Satzbau selbst. Die Syntax als Teil der
+Grammatik behandelt die Muster und Regeln, nach denen Wörter zu größeren
+funktionellen Einheiten wie den soeben genannten zusammengestellt und
+Beziehungen wie Teil-Ganzes, Abhängigkeit etc. zwischen diesen Satzgliedern
+formuliert werden. Häufig tritt der Terminus aber in Verbindung mit anderen
+Begriffe auf:
+
+- Wortsyntax (Morphotaktik),
+- Textsyntax (Aufbauprinzipien und -regeln für Texte).
+
+Außer dieser satzzentrierten Perspektive (Satzsyntax) spricht man auch in
+einem weiteren³ Sinn von einer intraverbalen Syntax⁴ oder Wortsyntax⁵
+(auch: Wort-Syntax⁶ ), die kombinatorische Regeln in der Morphologie
+untersucht, und von einer Text-Syntax, die sich mit den Regeln der
+Kombination von Sätzen zu Texten befasst. Der Gebrauch des Wortes Syntax,
+in dem Syntax koextensiv mit Grammatik ist (also die Morphologie entweder
+einschließt oder der Phonologie zuschlägt), findet sich vor allem in der
+englischsprachigen Linguistik sowie in der Theorie formaler Sprachen (in
+denen Morphologie keine Rolle spielt).
+
+Theorien der Satzsyntax
+
+In der allgemeinen Linguistik besteht eine Vielfalt und Konkurrenz von
+Syntaxmodellen, Theorien und Schulen. „Jedes der vorgestellten Modelle hat
+seine Stärken und Schwächen."⁷ Neben den Modellen der traditionellen
+Schulgrammatik wird die Syntax anhand hypothetischer universeller,
+angeborener Formprinzipien (Noam Chomsky) oder ihres kommunikativen Zwecks
+(Funktionale Syntax) oder ihrer Rolle beim Aufbau von komplexen Bedeutungen
+(logische Semantik, Montague- bzw. kategoriale Grammatik) untersucht.
+Zahlreiche solche Modelle sind im Artikel Syntaxtheorie aufgeführt. Zu den
+wichtigeren zählen:
+
+- die Dependenzgrammatik
+- die Government and Binding-Theorie (Chomsky 1981), eine Variante der
+  generativen Grammatik
+- die Head-driven Phrase Structure Grammar.
+
+Die syntaktische Struktur eines natürlichsprachlichen Satzes wird in diesen
+Modellen verschieden dargestellt. Die Varianten der
+Phrasenstrukturgrammatik stellen sie in Form eines Strukturbaums dar,
+welcher die Teil-Ganzes-Beziehungen der Konstituenten des Satzes graphisch
+wiedergibt. Die Dependenzgrammatik stellt sie in Form eines Stemmas dar,
+welches die Abhängigkeiten zwischen den Wörtern wiedergibt.⁸
+
+Die Syntax formaler Sprachen (formale Syntax)
+
+Unter der Syntax einer formalen Sprache (formale Syntax) – wie etwa
+Programmiersprachen in der Informatik oder Kalküle in der Logik – versteht
+man ein System von Regeln, nach denen erlaubte Konstruktionen bzw.
+wohlgeformte Ausdrücke aus einem grundlegenden Zeichenvorrat (dem Alphabet)
+gebildet werden⁹ – wobei von der inhaltlichen Bedeutung der Zeichen
+abgesehen wird bzw. werden kann.
+
+Eine formale Syntax kann graphisch mittels Syntaxgraphen beschrieben
+werden.
+
+Siehe auch
+
+- Sprachtypologie
+- Satzzeichen
+- Syntaxfehler
+- Satzstellung
+- Satzbauplan
+- Morphosyntax
+
+Literatur
+
+- Karl-Dieter Bünting, Henning Bergenholtz: Einführung in die Syntax.
+  Grundbegriffe zum Lesen einer Grammatik. (= Athenäums Studienbücher.
+  Sprachwissenschaft. Studienbuch Linguistik). 2., überarbeitete Auflage.
+  Athenäum, Frankfurt am Main 1989, ISBN 3-610-02194-2.
+- Christa Dürscheid: Syntax. Grundlagen und Theorien (= UTB.
+  Sprachwissenschaften 3319). 5., durchgesehene Auflage. Vandenhoeck &
+  Ruprecht, Göttingen 2010, ISBN 978-3-8252-3319-8.
+- Bernhard Engelen: Einführung in die Syntax der deutschen Sprache. 2 Bände
+  (Bd 1: Vorfragen und Grundlagen. Bd. 2: Satzglieder und Satzbaupläne.).
+  Pädagogischer Verlag Burgbücherei Schneider, Baltmannsweiler 1984–1986,
+  ISBN 3-87116-154-3 (Bd. 1), ISBN 3-87116-160-8 (Bd. 2).
+- Hans-Werner Eroms: Syntax der deutschen Sprache. W. de Gruyter, Berlin u.
+  a. 2000, ISBN 3-11-015666-0.
+- Joachim Jacobs, Arnim von Stechow, Wolfgang Sternefeld, Theo Vennemann,
+  Herbert Ernst Wiegand (Hrsg.): Syntax (= Handbücher zur Sprach- und
+  Kommunikationswissenschaft 9, 1–2). 2 Bände. de Gruyter, Berlin u. a.
+  1993–1995, ISBN 3-11-009586-6 (Bd. 1), ISBN 3-11-014263-5 (Bd. 2).
+- Robert D. Van Valin, Jr.: An introduction to syntax. Cambridge University
+  Press, Cambridge u. a. 2001, ISBN 0-521-63566-7.
+- Robert D. Van Valin, Jr., Randy J. LaPolla: Syntax. Structure, meaning
+  and function. Cambridge University Press, Cambridge u. a. 1997, ISBN
+  0-521-49565-2.
+
+Weblinks
+
+Wiktionary: Satzlehre – Bedeutungserklärungen, Wortherkunft, Synonyme,
+Übersetzungen
+Wiktionary: Syntax – Bedeutungserklärungen, Wortherkunft, Synonyme,
+Übersetzungen
+- Einführung in die Linguistik des Deutschen, Syntax, S. 1–6
+- Linguistischer Grundkurs in Morphologie und Syntax
+- Syntaxtheorie. Universität Jena
+
+Einzelnachweise
+
+[1] Vgl. Christa Dürscheid: Syntax. Grundlagen und Theorien (= UTB.
+  Sprachwissenschaften 3319). 5., durchgesehene Auflage. Vandenhoeck &
+  Ruprecht, Göttingen 2010, ISBN 978-3-8252-3319-8, S. 11.
+[2] Jürgen Trabant: Elemente der Semiotik (= UTB 1908). Francke, Tübingen
+  u. a. 1996, ISBN 3-7720-2247-2, S. 69.
+[3] Nach Angelika Linke, Markus Nussbaumer, Paul R. Portmann: Studienbuch
+  Linguistik (= Reihe germanistische Linguistik. Kollegbuch 121). 5.,
+  erweiterte Auflage. Niemeyer, Tübingen 2004, ISBN 3-484-31121-5, S. 84:
+  „in mehr oder weniger metaphorischer Ausweitung von der Kernbedeutung."
+[4] Vgl. dtv-Lexikon/Syntax
+[5] Danièle Clément: Linguistisches Grundwissen. Eine Einführung für
+  zukünftige Deutschlehrer (= WV-Studium. Bd. 173 Linguistik). 2. Auflage.
+  Westdeutscher Verlag, Wiesbaden 2000, ISBN 3-531-23173-1, S. 44.
+[6] Angelika Linke, Markus Nussbaumer, Paul R. Portmann: Studienbuch
+  Linguistik (= Reihe germanistische Linguistik. Kollegbuch 121). 5.,
+  erweiterte Auflage. Niemeyer, Tübingen 2004, ISBN 3-484-31121-5, S. 84.
+[7] Ulrike Pospiech: Syntax. In: Johannes Volmert (Hrsg.): Grundkurs
+  Sprachwissenschaft (= UTB für Wissenschaft. Uni-Taschenbücher.
+  Sprachwissenschaft 1879). 5., korrigierte und ergänzte Auflage. Fink,
+  München 2005, ISBN 3-8252-1879-1, S. 115–150, hier S. 149.
+[8] Vgl. Helmut Glück (Hrsg.): Metzler-Lexikon Sprache. 3., neubearbeitete
+  Auflage. J. B. Metzler Verlagsbuchhandlung, Stuttgart u. a. 2005, S. 645
+  sowie 651–652.
+[9] Vgl. Syntax. In: Friedrich Kirchner, Carl Michaëlis: Wörterbuch der
+  philosophischen Begriffe (= Philosophische Bibliothek 500). Fortgesetzt
+  von Johannes Hoffmeister. Vollständig neu herausgegeben von Arnim
+  Regenbogen und Uwe Meyer. Meiner, Hamburg 2005, ISBN 3-7873-1325-7.
+
