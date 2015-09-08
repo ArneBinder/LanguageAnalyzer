@@ -1,16 +1,14 @@
 package corpora.wikipedia;
 
-import LinguisticEntities.Token;
+import LinguisticUnits.Token;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.UnmodifiableListIterator;
 import corpora.Corpus;
 import helper.IO;
 import helper.MergedIterator;
-import org.apache.logging.log4j.core.util.FileUtils;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
@@ -18,7 +16,7 @@ import java.util.Map;
 /**
  * Created by Arne on 07.09.2015.
  */
-public class WIKIPEDIACorpus implements Corpus {
+public class WIKIPEDIACorpus extends Corpus {
 
     ArrayList<String> articles = new ArrayList<String>();
 
@@ -43,10 +41,10 @@ public class WIKIPEDIACorpus implements Corpus {
         return null;
     }
 
-    public Iterator<Token> token() {
-
-
-        return new TokenIterator(articles.iterator());
+    public Iterator<Token> tokens() {
+        if(getBasicLayer().getSize()==0)
+            return getBasicLayer().getUnits().iterator();
+        else return getBasicLayer().getUnits().iterator();
     }
 
 
@@ -58,7 +56,7 @@ public class WIKIPEDIACorpus implements Corpus {
 
         @Override
         protected Token getElementContent(Character element) {
-            return new Token(element);
+            return new Token(getBasicLayer(),element);
         }
 
         @Override

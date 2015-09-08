@@ -1,7 +1,6 @@
 package corpora.tiger;
 
-import LinguisticEntities.*;
-import LinguisticEntities.Token;
+import LinguisticUnits.Token;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.UnmodifiableListIterator;
@@ -18,7 +17,6 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.namespace.QName;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -27,7 +25,7 @@ import java.util.Map;
 /**
  * Created by Arne on 05.09.2015.
  */
-public class TIGERCorpus implements Corpus {
+public class TIGERCorpus extends Corpus {
 
     corpora.tiger.generated.Corpus tigerCorpus;
 
@@ -121,11 +119,15 @@ public class TIGERCorpus implements Corpus {
         return null;
     }
 
-    public Iterator<Token> token() {
+    public Iterator<Token> tokens() {
+        if(getBasicLayer().getSize()==0)
+            return getBasicLayer().getUnits().iterator();
+        else {
 
-        TokenIterator tokenIterator = new TokenIterator(tigerSentences.iterator());
+            TokenIterator tokenIterator = new TokenIterator(tigerSentences.iterator());
 
-        return new CharacterIterator(tokenIterator);
+            return new CharacterIterator(tokenIterator);
+        }
 
     }
 
@@ -171,7 +173,7 @@ public class TIGERCorpus implements Corpus {
         }
 
         protected Token getElementContent(Character element){
-            return new Token(element);
+            return new Token(getBasicLayer(), element);
         }
 
         protected Iterator<Character> getInnerIterator(String outerElement){

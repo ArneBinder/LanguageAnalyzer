@@ -1,11 +1,9 @@
 package corpora;
 
-import LinguisticEntities.Token;
+import LinguisticUnits.Token;
 import corpora.tiger.TIGERCorpus;
 import org.junit.Test;
 
-import java.io.InputStream;
-import java.net.URL;
 import java.util.Iterator;
 
 /**
@@ -22,7 +20,7 @@ public class TigerTest {
         //URL url = this.getClass().getClassLoader().getResource("tiger_release_aug07.corrected.16012013_extract_v2.xml");
         //System.out.println(clazz.getPackage().getClass().getClassLoader().getParent().getClass().getCanonicalName());
         corpus.readFromFile("src/test/resources/corpora/tiger/tiger_release_aug07.corrected.16012013_extract_v2.xml");
-        Iterator<Token> token = corpus.token();
+        Iterator<Token> token = corpus.tokens();
         while(token.hasNext()){
             System.out.print(token.next());
         }

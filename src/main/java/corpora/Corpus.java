@@ -1,27 +1,31 @@
 package corpora;
 
-import LinguisticEntities.Sentence;
-import LinguisticEntities.Token;
+import LinguisticUnits.LinguisticLayer;
+import LinguisticUnits.Token;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 /**
  * Created by Arne on 05.09.2015.
  */
-public interface Corpus {
-    void readFromFile(String filename) throws IOException;
+public abstract class Corpus {
+    LinguisticLayer basicLayer = new LinguisticLayer<Token>();
 
-    void writeToFile(String filename);
+    public LinguisticLayer getBasicLayer() {
+        return basicLayer;
+    }
 
-    Corpus seperateEvalCorpus(double evalPercentage) throws Exception;
+    abstract public void readFromFile(String filename) throws IOException;
 
-    Map<String, Object> getMetadata();
+    abstract public void writeToFile(String filename);
 
-    Iterator<Token> token();
+    abstract public Corpus seperateEvalCorpus(double evalPercentage) throws Exception;
+
+    abstract public Map<String, Object> getMetadata();
+
+    abstract public Iterator<Token> tokens();
 
 
 
