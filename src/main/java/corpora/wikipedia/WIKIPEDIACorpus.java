@@ -43,7 +43,7 @@ public class WIKIPEDIACorpus extends Corpus {
 
     public Iterator<Token> tokens() {
         if(getBasicLayer().getSize()==0)
-            return getBasicLayer().getUnits().iterator();
+            return new TokenIterator(articles.iterator());
         else return getBasicLayer().getUnits().iterator();
     }
 

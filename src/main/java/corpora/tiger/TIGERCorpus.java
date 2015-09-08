@@ -120,25 +120,22 @@ public class TIGERCorpus extends Corpus {
     }
 
     public Iterator<Token> tokens() {
-        if(getBasicLayer().getSize()==0)
+        if(getBasicLayer().getSize()==0){
+            return new TokenIterator(new CharacterIterator(tigerSentences.iterator()));
+        }else {
             return getBasicLayer().getUnits().iterator();
-        else {
-
-            TokenIterator tokenIterator = new TokenIterator(tigerSentences.iterator());
-
-            return new CharacterIterator(tokenIterator);
         }
 
     }
 
-    public Iterator<String> getTokenIterator() {
-        return new TokenIterator(tigerSentences.iterator());
-    }
+    /*public Iterator<String> getCharacterIterator() {
+        return new CharacterIterator(tigerSentences.iterator());
+    }*/
 
-    public class TokenIterator extends MergedIterator<SentenceType, TType, String>{
+    public class CharacterIterator extends MergedIterator<SentenceType, TType, String>{
 
         String last = null;
-        public TokenIterator(Iterator<SentenceType> it){
+        public CharacterIterator(Iterator<SentenceType> it){
             super(it);
         }
 
@@ -167,8 +164,8 @@ public class TIGERCorpus extends Corpus {
 
     }
 
-    public class CharacterIterator extends MergedIterator<String, Character, Token>{
-        public CharacterIterator(Iterator<String> it){
+    public class TokenIterator extends MergedIterator<String, Character, Token>{
+        public TokenIterator(Iterator<String> it){
             super(it);
         }
 
