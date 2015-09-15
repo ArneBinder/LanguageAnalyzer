@@ -120,11 +120,11 @@ public class TIGERCorpus extends Corpus {
     }
 
     public Iterator<java.lang.Character> tokens() {
-        if(getBasicLayer().getLength()==0){
+        //if(getBasicLayer().getLength()==0){
             return new TokenIterator(new CharacterIterator(tigerSentences.iterator()));
-        }else {
-            return getBasicLayer().getTokens().iterator();
-        }
+        //}else {
+        //    return getBasicLayer().getTokens().iterator();
+        //}
 
     }
 

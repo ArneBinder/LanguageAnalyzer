@@ -25,14 +25,14 @@ public class TigerTest {
             System.out.print(tokens.next());
         }
         System.out.println();
-        System.out.println("corpus.getBasicLayer().getLength(): "+corpus.getBasicLayer().getLength());
+        //System.out.println("corpus.getBasicLayer().getLength(): "+corpus.getBasicLayer().getLength());
         // test, if other iterator (basicLayer) is used
         tokens = corpus.tokens();
         while(tokens.hasNext()){
             System.out.print(tokens.next());
         }
         System.out.println();
-        System.out.println("corpus.getBasicLayer().getLength(): "+corpus.getBasicLayer().getLength());
+        //System.out.println("corpus.getBasicLayer().getLength(): "+corpus.getBasicLayer().getLength());
 
         /*
         Corpus evalCorpus = corpus.seperateEvalCorpus(0.12);

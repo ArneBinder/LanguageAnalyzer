@@ -11,11 +11,11 @@ import java.util.Map;
  * Created by Arne on 05.09.2015.
  */
 public abstract class Corpus {
-    LinguisticLayer basicLayer = new LinguisticLayer<Character>();
+    /*LinguisticLayer basicLayer = new LinguisticLayer<Character>();
 
     public LinguisticLayer getBasicLayer() {
         return basicLayer;
-    }
+    }*/
 
     abstract public void readFromFile(String filename) throws IOException;
 

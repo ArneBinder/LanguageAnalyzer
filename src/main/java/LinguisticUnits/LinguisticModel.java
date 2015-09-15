@@ -7,9 +7,9 @@ import java.lang.*;
  */
 public class LinguisticModel {
 
-    LinguisticLayer<Character> layer = new LinguisticLayer<Character>();
+    public LinguisticLayer<Character> layer = new LinguisticLayer<Character>();
 
-    public void feed(){
-
+    public void feed(char character){
+        layer.add(new Character(layer, character),character+"");
     }
 }

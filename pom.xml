@@ -58,7 +58,13 @@
             <version>2.4</version>
         </dependency>
 
-
+        <!--
+        <dependency>
+            <groupId>org.apache.mahout</groupId>
+            <artifactId>mahout-mr</artifactId>
+            <version>0.10.0</version>
+        </dependency>
+        -->
 
     </dependencies>
 

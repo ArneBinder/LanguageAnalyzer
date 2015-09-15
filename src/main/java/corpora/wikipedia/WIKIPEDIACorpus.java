@@ -42,9 +42,10 @@ public class WIKIPEDIACorpus extends Corpus {
     }
 
     public Iterator<java.lang.Character> tokens() {
-        if(getBasicLayer().getLength()==0)
+        //if(getBasicLayer().getLength()==0)
             return new TokenIterator(articles.iterator());
-        else return getBasicLayer().getTokens().iterator();
+        //else
+        //    return getBasicLayer().getTokens().iterator();
     }
 
 

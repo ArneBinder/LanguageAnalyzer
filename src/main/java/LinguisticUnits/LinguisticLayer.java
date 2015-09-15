@@ -49,6 +49,16 @@ public class LinguisticLayer<T extends LinguisticUnit> {
         return result;
     }
 
+    public void printTypeNames(){
+        System.out.println("Type names for layer:");
+        System.out.println(String.join(", ", typeNames.values()));
+    }
+
+    public LinguisticLayer aggregate(LinguisticLayer prevUpperLayer){
+
+        return null;
+    }
+
     public void setTokens(ArrayList<T> tokens) {
         this.tokens = tokens;
     }
