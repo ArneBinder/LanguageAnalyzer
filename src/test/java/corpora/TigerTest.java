@@ -1,6 +1,6 @@
 package corpora;
 
-import LinguisticUnits.Token;
+import LinguisticUnits.Character;
 import corpora.tiger.TIGERCorpus;
 import org.junit.Test;
 
@@ -20,19 +20,19 @@ public class TigerTest {
         //URL url = this.getClass().getClassLoader().getResource("tiger_release_aug07.corrected.16012013_extract_v2.xml");
         //System.out.println(clazz.getPackage().getClass().getClassLoader().getParent().getClass().getCanonicalName());
         corpus.readFromFile("src/test/resources/corpora/tiger/tiger_release_aug07.corrected.16012013_extract_v2.xml");
-        Iterator<Token> tokens = corpus.tokens();
+        Iterator<java.lang.Character> tokens = corpus.tokens();
         while(tokens.hasNext()){
             System.out.print(tokens.next());
         }
         System.out.println();
-        System.out.println("corpus.getBasicLayer().getSize(): "+corpus.getBasicLayer().getSize());
+        System.out.println("corpus.getBasicLayer().getLength(): "+corpus.getBasicLayer().getLength());
         // test, if other iterator (basicLayer) is used
         tokens = corpus.tokens();
         while(tokens.hasNext()){
             System.out.print(tokens.next());
         }
         System.out.println();
-        System.out.println("corpus.getBasicLayer().getSize(): "+corpus.getBasicLayer().getSize());
+        System.out.println("corpus.getBasicLayer().getLength(): "+corpus.getBasicLayer().getLength());
 
         /*
         Corpus evalCorpus = corpus.seperateEvalCorpus(0.12);

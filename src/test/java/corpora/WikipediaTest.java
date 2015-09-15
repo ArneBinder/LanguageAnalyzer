@@ -1,6 +1,6 @@
 package corpora;
 
-import LinguisticUnits.Token;
+import LinguisticUnits.Character;
 import corpora.wikipedia.WIKIPEDIACorpus;
 import helper.IO;
 import org.junit.Test;
@@ -18,7 +18,7 @@ public class WikipediaTest {
 
         corpus.readFromFile("src/test/resources/corpora/wikipedia/sprache.txt");
         corpus.readFromFile("src/test/resources/corpora/wikipedia/syntax.txt");
-        Iterator<Token> tokens = corpus.tokens();
+        Iterator<java.lang.Character> tokens = corpus.tokens();
         String out = "";
         while(tokens.hasNext()){
             out += tokens.next();

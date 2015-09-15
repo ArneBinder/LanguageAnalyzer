@@ -1,7 +1,7 @@
 package corpora;
 
 import LinguisticUnits.LinguisticLayer;
-import LinguisticUnits.Token;
+import LinguisticUnits.Character;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -11,7 +11,7 @@ import java.util.Map;
  * Created by Arne on 05.09.2015.
  */
 public abstract class Corpus {
-    LinguisticLayer basicLayer = new LinguisticLayer<Token>();
+    LinguisticLayer basicLayer = new LinguisticLayer<Character>();
 
     public LinguisticLayer getBasicLayer() {
         return basicLayer;
@@ -25,7 +25,7 @@ public abstract class Corpus {
 
     abstract public Map<String, Object> getMetadata();
 
-    abstract public Iterator<Token> tokens();
+    abstract public Iterator<java.lang.Character> tokens();
 
 
 

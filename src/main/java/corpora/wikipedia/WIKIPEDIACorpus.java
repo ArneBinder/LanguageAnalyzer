@@ -1,6 +1,6 @@
 package corpora.wikipedia;
 
-import LinguisticUnits.Token;
+import LinguisticUnits.Character;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.UnmodifiableListIterator;
@@ -41,28 +41,28 @@ public class WIKIPEDIACorpus extends Corpus {
         return null;
     }
 
-    public Iterator<Token> tokens() {
-        if(getBasicLayer().getSize()==0)
+    public Iterator<java.lang.Character> tokens() {
+        if(getBasicLayer().getLength()==0)
             return new TokenIterator(articles.iterator());
-        else return getBasicLayer().getUnits().iterator();
+        else return getBasicLayer().getTokens().iterator();
     }
 
 
-    class TokenIterator extends MergedIterator<String, Character, Token>{
+    class TokenIterator extends MergedIterator<String, java.lang.Character, java.lang.Character>{
 
         public TokenIterator(Iterator<String> it){
             super(it);
         }
 
         @Override
-        protected Token getElementContent(Character element) {
-            return new Token(getBasicLayer(),element);
+        protected java.lang.Character getElementContent(java.lang.Character element) {
+            return element;
         }
 
         @Override
-        protected Iterator<Character> getInnerIterator(String outerElement) {
-            ImmutableList<Character> chars = Lists.charactersOf(outerElement);
-            UnmodifiableListIterator<Character> iter = chars.listIterator();
+        protected Iterator<java.lang.Character> getInnerIterator(String outerElement) {
+            ImmutableList<java.lang.Character> chars = Lists.charactersOf(outerElement);
+            UnmodifiableListIterator<java.lang.Character> iter = chars.listIterator();
             return iter;
         }
     }

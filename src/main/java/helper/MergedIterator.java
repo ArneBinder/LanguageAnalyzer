@@ -49,7 +49,8 @@ public abstract class MergedIterator<OuterType, InnerType, ElementType> implemen
         InnerType currentInnerElement = innerIterator.next();
         lastInnerElement = currentInnerElement;
         //fill = true;
-        return getElementContent(currentInnerElement);
+        ElementType n = getElementContent(currentInnerElement);
+        return n;
     }
 
     public void remove() {
