@@ -108,7 +108,7 @@ public class LinguisticLayer<T extends LinguisticUnit> {
 
 
 
-    public void serialize(String filename) throws FileNotFoundException, UnsupportedEncodingException, IOException{
+    public void serialize(String filename) throws IOException{
         Writer out = new OutputStreamWriter(
                 new FileOutputStream(filename+"."+contentClassName), "UTF-8");
 
@@ -160,13 +160,9 @@ public class LinguisticLayer<T extends LinguisticUnit> {
                         break;
                     case 1:
                         if (c == unitSeperator){
-                            try {
-                                T unit = (T) newInstance("LinguisticUnits."+contentClassName, this, temp);
-                                add(unit);
-                            }catch(ClassNotFoundException e){
-                                System.out.println(temp);
-                                throw e;
-                            }
+                            String thisPackage = this.getClass().getPackage().getName();
+                            T unit = (T) IO.newInstance(thisPackage+"."+contentClassName, this, temp);
+                            add(unit);
                             temp = "";
                         }else if(c==serializeSeperator) {
                             mode++;
@@ -264,20 +260,6 @@ public class LinguisticLayer<T extends LinguisticUnit> {
         return result;
     }
 
-    public <T> T newInstance(final String className,final Object... args)
-            throws ClassNotFoundException,
-            NoSuchMethodException,
-            InstantiationException,
-            IllegalAccessException,
-            IllegalArgumentException,
-            InvocationTargetException {
-        // Derive the parameter types from the parameters themselves.
-        Class[] types = new Class[args.length];
-        for ( int i = 0; i < types.length; i++ ) {
-            types[i] = args[i].getClass();
-        }
-        Class<?> clazz =  Class.forName(className);
-        return (T) clazz.getConstructor(types).newInstance(args);
-    }
+
 
 }

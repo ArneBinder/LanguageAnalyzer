@@ -71,4 +71,20 @@ public class IO {
     }
 
 
+    public static <T> T newInstance(final String className,final Object... args)
+            throws ClassNotFoundException,
+            NoSuchMethodException,
+            InstantiationException,
+            IllegalAccessException,
+            IllegalArgumentException,
+            InvocationTargetException {
+        // Derive the parameter types from the parameters themselves.
+        Class[] types = new Class[args.length];
+        for ( int i = 0; i < types.length; i++ ) {
+            types[i] = args[i].getClass();
+        }
+        Class<?> clazz =  Class.forName(className);
+        return (T) clazz.getConstructor(types).newInstance(args);
+    }
+
 }

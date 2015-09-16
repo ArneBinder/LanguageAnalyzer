@@ -33,7 +33,9 @@ public class WikipediaTest {
         //Gson gson = new Gson();
         model.layer.printTypeNames();
         //model.layer.serialize("layer");
-        model.layer.deserialize("layer.Character");
+        LinguisticModel model2 = new LinguisticModel();
+        model2.layer.deserialize("layer.Character");
+        model2.layer.printTypeNames();
         IO.writeFile("test.txt", out);
         System.out.println(out);
         //System.out.println(gson.toJson(model.layer.getTokens()));
