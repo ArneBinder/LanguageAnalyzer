@@ -1,6 +1,8 @@
 package abinder.langanalyzer.LinguisticUnits;
 
+import java.io.FileWriter;
 import java.util.ArrayList;
+import java.util.IllegalFormatException;
 
 /**
  * Created by Arne on 08.09.2015.
@@ -11,12 +13,19 @@ public abstract class LinguisticUnit {
     int index;
     int type;
 
+    private static final char serializeSeperator = '#';
+
     LinguisticLayer layer;
 
-    LinguisticUnit(LinguisticLayer layer, int type, String name) {
+    LinguisticUnit(LinguisticLayer layer, int type) {
         this.type = type;
         this.layer = layer;
-        index = layer.add(this, name);
+       // index = layer.add(this, name);
+    }
+
+    LinguisticUnit(LinguisticLayer layer, String serialization) {
+        this.layer = layer;
+        deserialize(serialization);
     }
 
     // dummy
@@ -79,6 +88,21 @@ public abstract class LinguisticUnit {
     @Override
     public int hashCode() {
         return type;
+    }
+
+    public String serialize(){
+        return type+""+serializeSeperator+""+index+""+serializeSeperator+""+fromIndex+""+serializeSeperator+""+toIndex;
+    }
+
+    public void deserialize(String serializedUnit) {
+        String[] parts = serializedUnit.split(serializeSeperator+"");
+        if(parts.length!=4)
+            throw new NumberFormatException("Wrong format of serialized LinguisticUnit: \""+serializedUnit+"\" 4 fields seperated by \""+serializeSeperator+"\"are required");
+
+        type = Integer.parseInt(parts[0]);
+        index = Integer.parseInt(parts[1]);
+        fromIndex = Integer.parseInt(parts[2]);
+        toIndex = Integer.parseInt(parts[3]);
     }
 
 

@@ -6,13 +6,13 @@ package abinder.langanalyzer.LinguisticUnits;
 public class Character extends LinguisticUnit {
     //char character;
     public Character(LinguisticLayer<Character> layer, String character){
-        super(layer, character.hashCode(), character);
+        super(layer, character.hashCode());
         this.layer = layer;
         //setType(character==null?0:character.charAt(0));
     }
 
     public Character(LinguisticLayer<Character> layer, char character){
-        super(layer, character, character+"");
+        super(layer, character);
         this.layer = layer;
         //this.character = character;
     }

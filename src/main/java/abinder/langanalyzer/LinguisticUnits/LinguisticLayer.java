@@ -1,21 +1,48 @@
 package abinder.langanalyzer.LinguisticUnits;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
+import abinder.langanalyzer.helper.IO;
+import abinder.langanalyzer.LinguisticUnits.*;
+
+import java.io.*;
+import java.lang.*;
+import java.lang.Character;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
 
 /**
  * Created by Arne on 08.09.2015.
  */
 public class LinguisticLayer<T extends LinguisticUnit> {
 
-    private ArrayList<T> tokens = new ArrayList<T>();
-    private HashSet<T> knownTypes = new HashSet<T>();
-    private HashMap<Integer, String> typeNames = new HashMap<Integer, String>();
+    private ArrayList<T> tokens = new ArrayList<>();
+    private HashSet<Integer> knownTypes = new HashSet<>();
+    private HashMap<Integer, String> typeNames = new HashMap<>();
 
     private LinguisticLayer higherLayer;  // more abstract
     private LinguisticLayer lowerLayer;   // closer to Characters
 
+    private static final char unitSeperator = '%';
+    private static final char serializeSeperator = '\n';
+    private static final char mapSeperator = ':';
+    static Set<java.lang.Character> escapeableChars;
+
+    static{
+        java.lang.Character[] chars = {unitSeperator, serializeSeperator, mapSeperator};
+        escapeableChars = new HashSet<>(Arrays.asList(chars));
+    }
+
+    private static final char escapeChar = '\\';
+
+    private String contentClassName;
+
+    public LinguisticLayer(String contentClassName){
+        this.contentClassName = contentClassName;
+    }
+
+    public String getContentClassName() {
+        return contentClassName;
+    }
 
     public ArrayList<T> getTokens() {
         return tokens;
@@ -33,11 +60,17 @@ public class LinguisticLayer<T extends LinguisticUnit> {
         return tokens.size();
     }
 
-    public int add(T token, String name){
+    public void add(T token, String name){
         typeNames.put(token.getType(), name);
         this.tokens.add(token);
-        knownTypes.add(token);
-        return this.tokens.size()-1;
+        knownTypes.add(token.getType());
+        //return this.tokens.size()-1;
+    }
+
+    public void add(T token){
+        this.tokens.add(token);
+        knownTypes.add(token.getType());
+        //return this.tokens.size()-1;
     }
 
     @Override
@@ -55,8 +88,149 @@ public class LinguisticLayer<T extends LinguisticUnit> {
     }
 
     public LinguisticLayer aggregate(LinguisticLayer prevUpperLayer){
-
+        // TODO: implement (Clustering)!
         return null;
+    }
+
+    public void calcSequenceModel(){
+        // TODO: implement!
+    }
+
+    public T predict(){
+        // TODO: implement
+        return null;
+    }
+
+    public HashMap getFeatures(){
+        // TODO: implement!
+        return null;
+    }
+
+
+
+    public void serialize(String filename) throws FileNotFoundException, UnsupportedEncodingException, IOException{
+        Writer out = new OutputStreamWriter(
+                new FileOutputStream(filename+"."+contentClassName), "UTF-8");
+
+        if(higherLayer!=null){
+            out.write(higherLayer.getContentClassName());
+            higherLayer.serialize(filename);
+        }
+        out.write(serializeSeperator);
+        for(T token: tokens){
+            out.write(token.serialize());
+            out.write(unitSeperator+"");
+        }
+        out.write(serializeSeperator);
+        for(Integer type: knownTypes){
+            out.write(type+"");
+            out.write(mapSeperator+"");
+            out.write(escape(typeNames.get(type)));
+            out.write(unitSeperator+"");
+        }
+        out.write(serializeSeperator);
+        out.flush();
+    }
+
+    public void deserialize(String filename) throws IOException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        String contentClassName = filename.substring(filename.lastIndexOf(".")+1);
+        System.out.println("contentClassName: "+contentClassName);
+
+        BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(filename), "UTF8"));
+        final int blockSize = 4000;
+        char buffer[] = new char[blockSize + 1];
+        char lastC = 0;
+        int count = in.read(buffer, 0, blockSize);
+        int mode = 0;
+        String temp = "";
+        String higherLayerContentClassName = null;
+        while(count != -1){
+            for(int i = 0; i < count; i++) {
+                char c = buffer[i];
+
+                switch(mode){
+                    case 0:
+                        if (c == serializeSeperator){
+                            higherLayerContentClassName = temp;
+                            temp = "";
+                            mode++;
+                        }else{
+                            temp+=c;
+                        }
+                        break;
+                    case 1:
+                        if (c == unitSeperator){
+                            try {
+                                T unit = (T) newInstance(contentClassName, this, temp);
+                                add(unit);
+                            }catch(ClassNotFoundException e){
+                                System.out.println(temp);
+                                throw e;
+                            }
+                            temp = "";
+                        }else if(c==serializeSeperator) {
+                            mode++;
+                        }else{
+                            temp+=c;
+                        }
+                        break;
+                    case 2:
+                        if (c == escapeChar){
+                            mode=3;
+                        }else if(c == unitSeperator){
+                            String[] parts = temp.split(mapSeperator+"");
+                            typeNames.put(Integer.parseInt(parts[0]), parts[0].substring(1)); //unescape
+
+                            temp = "";
+                        }else if(c==serializeSeperator) {
+                            mode++;
+                        }else{
+                            temp+=c;
+                        }
+                        break;
+                    case 3: // escape
+                        temp += c;
+                        mode = 2;
+                        break;
+                }
+
+                /*
+                if (c == serializeSeperator) {
+                    if (mode == 0) {
+                        higherLayerContentClassName = temp;
+                        temp = "";
+                    } else if (mode == 1) { // tokens finished
+                        temp = ""; // should be empty
+                    } else if (mode == 2) { // knownTypes finished
+                        temp = ""; // should be empty
+                    } else {
+                        count = blockSize;
+                        break;
+                    }
+                    mode++;
+                } else if (c == unitSeperator) {
+                    if(mode == 1){ // token finished
+                        T unit = (T)IO.newInstance(contentClassName, this, temp);
+                        add(unit);
+                    }else if(mode == 2){ // knownType finished
+                        String[] parts = temp.split(mapSeperator+"");
+                        typeNames.put(Integer.parseInt(parts[0]), parts[0].substring(1)); //unescape
+                    }
+                    temp = "";
+                }  else {
+                    temp += c;
+                }
+                lastC = c;
+                */
+            }
+            if(count < blockSize)
+                break;
+            count = in.read(buffer, 0, blockSize);
+        }
+        if(higherLayerContentClassName != null){
+            higherLayer = new LinguisticLayer(higherLayerContentClassName);
+            higherLayer.serialize(filename.substring(0, filename.lastIndexOf("."))+"."+higherLayerContentClassName);
+        }
     }
 
     public void setTokens(ArrayList<T> tokens) {
@@ -80,5 +254,30 @@ public class LinguisticLayer<T extends LinguisticUnit> {
     }
 
 
+    private String escape(String str){
+        String result = "";
+        for(int i=0; i<str.length();i++){
+            if(escapeableChars.contains(str.charAt(i)))
+                result+=escapeChar;
+            result+=str.charAt(i);
+        }
+        return result;
+    }
+
+    public <T> T newInstance(final String className,final Object... args)
+            throws ClassNotFoundException,
+            NoSuchMethodException,
+            InstantiationException,
+            IllegalAccessException,
+            IllegalArgumentException,
+            InvocationTargetException {
+        // Derive the parameter types from the parameters themselves.
+        Class[] types = new Class[args.length];
+        for ( int i = 0; i < types.length; i++ ) {
+            types[i] = args[i].getClass();
+        }
+        Class<?> clazz =  Class.forName(className);
+        return (T) clazz.getConstructor(types).newInstance(args);
+    }
 
 }

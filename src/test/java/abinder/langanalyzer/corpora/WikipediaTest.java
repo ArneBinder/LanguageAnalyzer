@@ -3,6 +3,7 @@ package abinder.langanalyzer.corpora;
 import abinder.langanalyzer.LinguisticUnits.LinguisticModel;
 import abinder.langanalyzer.corpora.wikipedia.WIKIPEDIACorpus;
 import abinder.langanalyzer.helper.IO;
+import com.google.gson.Gson;
 import org.junit.Test;
 
 import java.util.Iterator;
@@ -29,8 +30,12 @@ public class WikipediaTest {
         }
 
 
+        //Gson gson = new Gson();
         model.layer.printTypeNames();
+        //model.layer.serialize("layer");
+        model.layer.deserialize("layer.Character");
         IO.writeFile("test.txt", out);
         System.out.println(out);
+        //System.out.println(gson.toJson(model.layer.getTokens()));
     }
 }
