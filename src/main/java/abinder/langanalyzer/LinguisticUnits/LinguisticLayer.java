@@ -139,7 +139,6 @@ public class LinguisticLayer<T extends LinguisticUnit> {
         BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(filename), "UTF8"));
         final int blockSize = 4000;
         char buffer[] = new char[blockSize + 1];
-        char lastC = 0;
         int count = in.read(buffer, 0, blockSize);
         int mode = 0;
         String temp = "";
@@ -189,35 +188,6 @@ public class LinguisticLayer<T extends LinguisticUnit> {
                         mode = 2;
                         break;
                 }
-
-                /*
-                if (c == serializeSeperator) {
-                    if (mode == 0) {
-                        higherLayerContentClassName = temp;
-                        temp = "";
-                    } else if (mode == 1) { // tokens finished
-                        temp = ""; // should be empty
-                    } else if (mode == 2) { // knownTypes finished
-                        temp = ""; // should be empty
-                    } else {
-                        count = blockSize;
-                        break;
-                    }
-                    mode++;
-                } else if (c == unitSeperator) {
-                    if(mode == 1){ // token finished
-                        T unit = (T)IO.newInstance(contentClassName, this, temp);
-                        add(unit);
-                    }else if(mode == 2){ // knownType finished
-                        String[] parts = temp.split(mapSeperator+"");
-                        typeNames.put(Integer.parseInt(parts[0]), parts[0].substring(1)); //unescape
-                    }
-                    temp = "";
-                }  else {
-                    temp += c;
-                }
-                lastC = c;
-                */
             }
             if(count < blockSize)
                 break;

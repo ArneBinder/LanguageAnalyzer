@@ -32,7 +32,7 @@ public class WikipediaTest {
 
         //Gson gson = new Gson();
         model.layer.printTypeNames();
-        //model.layer.serialize("layer");
+        model.layer.serialize("layer");
         LinguisticModel model2 = new LinguisticModel();
         model2.layer.deserialize("layer.Character");
         model2.layer.printTypeNames();
