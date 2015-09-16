@@ -64,13 +64,11 @@ public class LinguisticLayer<T extends LinguisticUnit> {
         typeNames.put(token.getType(), name);
         this.tokens.add(token);
         knownTypes.add(token.getType());
-        //return this.tokens.size()-1;
     }
 
     public void add(T token){
         this.tokens.add(token);
         knownTypes.add(token.getType());
-        //return this.tokens.size()-1;
     }
 
     @Override
@@ -84,7 +82,11 @@ public class LinguisticLayer<T extends LinguisticUnit> {
 
     public void printTypeNames(){
         System.out.println("Type names for layer:");
-        System.out.println(String.join(", ", typeNames.values()));
+        //System.out.println(String.join(", ", typeNames.values()));
+        for(Integer type:typeNames.keySet()){
+            System.out.print(type+":"+typeNames.get(type)+", ");
+        }
+        System.out.println();
     }
 
     public LinguisticLayer aggregate(LinguisticLayer prevUpperLayer){
@@ -173,9 +175,10 @@ public class LinguisticLayer<T extends LinguisticUnit> {
                         if (c == escapeChar){
                             mode=3;
                         }else if(c == unitSeperator){
-                            String[] parts = temp.split(mapSeperator+"");
-                            typeNames.put(Integer.parseInt(parts[0]), parts[0].substring(1)); //unescape
-
+                            int splitPos = temp.indexOf(mapSeperator);
+                            int type = Integer.parseInt(temp.substring(0, splitPos));
+                            String name = temp.substring(splitPos + 1);
+                            typeNames.put(type, name);
                             temp = "";
                         }else if(c==serializeSeperator) {
                             mode++;

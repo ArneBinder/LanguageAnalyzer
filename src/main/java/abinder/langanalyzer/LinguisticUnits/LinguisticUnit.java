@@ -20,7 +20,6 @@ public abstract class LinguisticUnit {
     LinguisticUnit(LinguisticLayer layer, int type) {
         this.type = type;
         this.layer = layer;
-       // index = layer.add(this, name);
     }
 
     LinguisticUnit(LinguisticLayer layer, String serialization) {
