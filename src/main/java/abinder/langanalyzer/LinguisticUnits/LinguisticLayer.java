@@ -161,7 +161,7 @@ public class LinguisticLayer<T extends LinguisticUnit> {
                     case 1:
                         if (c == unitSeperator){
                             try {
-                                T unit = (T) newInstance(contentClassName, this, temp);
+                                T unit = (T) newInstance("LinguisticUnits."+contentClassName, this, temp);
                                 add(unit);
                             }catch(ClassNotFoundException e){
                                 System.out.println(temp);
