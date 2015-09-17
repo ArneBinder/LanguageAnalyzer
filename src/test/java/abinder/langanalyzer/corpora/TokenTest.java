@@ -58,7 +58,7 @@ public class TokenTest {
             System.out.println(tree.serialize(true));
             for(LinguisticTree subTree: tree.getAllSubtrees(4)){
                 System.out.println("\t"+subTree.serialize(true));
-                for(LinguisticTree cutTree: subTree.getAllCutTrees(4)){
+                for(LinguisticTree cutTree: subTree.getAllCutTrees(0)){
                     //String t = cutTree.serialize(true);
                     System.out.println("\t\t"+cutTree.serialize(true));
                     int count = 0;

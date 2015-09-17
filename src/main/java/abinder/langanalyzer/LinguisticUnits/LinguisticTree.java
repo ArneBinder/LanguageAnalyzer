@@ -92,6 +92,8 @@ public class LinguisticTree {
     public ArrayList<LinguisticTree> getAllCutTrees(int maxDepth){
         ArrayList<LinguisticTree> result = new ArrayList<>();
 
+        if(maxDepth  < getDepth())
+            return result;
         //if(!isLeaf())
         result.add(this);
         if(leftChild!=null) {
@@ -123,8 +125,8 @@ public class LinguisticTree {
 
         for(int i=1; i<tokens.size();i++){
             if(maxDepth <= 0){
-                //result.addAll(constructTrees(tokens.subList(0, i), maxDepth));
-                //result.addAll(constructTrees(tokens.subList(i, tokens.size()), maxDepth));
+                result.addAll(constructTrees(tokens.subList(0, i), maxDepth));
+                result.addAll(constructTrees(tokens.subList(i, tokens.size()), maxDepth));
             }else {
                 result.addAll(combineTreeLists(constructTrees(tokens.subList(0, i), maxDepth - 1), constructTrees(tokens.subList(i, tokens.size()), maxDepth - 1)));
             }
