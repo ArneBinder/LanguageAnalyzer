@@ -5,6 +5,7 @@ import org.apache.commons.io.IOUtils;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashSet;
 
 /**
  * Created by Arne on 07.09.2015.
@@ -85,6 +86,27 @@ public class IO {
         }
         Class<?> clazz =  Class.forName(className);
         return (T) clazz.getConstructor(types).newInstance(args);
+    }
+
+    public static String escape(String str, HashSet<Character> escapeAbleChars, char charEscape){
+        String result = "";
+        for( int i=0; i < str.length(); i++){
+            char c = str.charAt(i);
+            if(escapeAbleChars.contains(c))
+                result += charEscape;
+            result += c;
+        }
+        return result;
+    }
+
+    public static String unescape(String str, char charEscape){
+        String result = "";
+        for( int i=0; i < str.length(); i++){
+            if(str.charAt(i)==charEscape)
+                i++;
+            result += str.charAt(i);
+        }
+        return result;
     }
 
 }

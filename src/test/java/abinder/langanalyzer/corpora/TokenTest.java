@@ -50,23 +50,22 @@ public class TokenTest {
         }
         System.out.println(dummy);
 
-        HashMap<String, Integer> trees = new HashMap<>();
+        HashMap<LinguisticTree, Integer> trees = new HashMap<>();
         int totalcount = 0;
         String out = "";
-        LinguisticTree lastTree = null;
         for(LinguisticTree tree: globalToken.getAllTrees(4)){
 
-            System.out.println(tree.serialize());
+            System.out.println(tree.serialize(true));
             for(LinguisticTree subTree: tree.getAllSubtrees(4)){
-                System.out.println("\t"+subTree.serialize());
+                System.out.println("\t"+subTree.serialize(true));
                 for(LinguisticTree cutTree: subTree.getAllCutTrees(4)){
-                    String t = cutTree.serialize();
-                    System.out.println("\t\t"+t);
+                    //String t = cutTree.serialize(true);
+                    System.out.println("\t\t"+cutTree.serialize(true));
                     int count = 0;
-                    if(trees.containsKey(t)){
-                        count = trees.get(t);
+                    if(trees.containsKey(cutTree)){
+                        count = trees.get(cutTree);
                     }
-                    trees.put(t,count + 1);
+                    trees.put(cutTree,count + 1);
                     totalcount++;
                 }
                 //System.out.println(cutTree.serialize() + "\t" + cutTree.getDepth());
@@ -75,7 +74,7 @@ public class TokenTest {
 
 
 
-            out += tree.serialize()+"\t"+tree.getDepth()+"\n";
+            out += tree.serialize(true)+"\t"+tree.getDepth()+"\n";
             //System.out.println(tree.serialize() + "\t" + tree.getDepth());
             //lastTree = tree;
         }
@@ -84,8 +83,8 @@ public class TokenTest {
         System.out.println("diffSize: \t"+trees.size());
         System.out.println("totalcount: \t"+totalcount);
 
-        for(String tree: trees.keySet()){
-            System.out.println(tree+"\t"+trees.get(tree));
+        for(LinguisticTree tree: trees.keySet()){
+            System.out.println(tree.serialize(false)+"\t" + trees.get(tree));
         }
         //String out = globalToken.serialize();
         //System.out.println(out);

@@ -1,6 +1,9 @@
 package abinder.langanalyzer.LinguisticUnits;
 
+import abinder.langanalyzer.helper.IO;
+
 import java.lang.*;
+import java.lang.Character;
 import java.util.*;
 
 /**
@@ -32,33 +35,28 @@ public class LinguisticTree {
         return (leftChild==null && rightChild==null);
     }
 
-    private static String escape(String str){
-        String result = "";
-        for( int i=0; i < str.length(); i++){
-            char c = str.charAt(i);
-            if(escapeAbleChars.contains(c))
-                result += charEscape;
-            result += c;
-        }
-        return result;
+
+    @Override
+    public boolean equals(Object other){
+        return (other instanceof LinguisticTree)
+                && ((LinguisticTree) other).serialize(true).equals(this.serialize(true));
     }
 
-    private static String unescape(String str){
-        String result = "";
-        for( int i=0; i < str.length(); i++){
-            if(str.charAt(i)==charEscape)
-                i++;
-            result += str.charAt(i);
-        }
-        return result;
+    @Override
+    public int hashCode(){
+        return serialize(true).hashCode();
+    }
+
+    public boolean equalsPositionIndependent(LinguisticTree other){
+        return this.serialize(false).equals(other.serialize(false));
     }
 
 
-    public String serialize(){
+    public String serialize(boolean showPosition){
         if(isLeaf())
-            return escape(leaf.serialize());
+            return IO.escape(leaf.serialize(showPosition), escapeAbleChars, charEscape);
         else{
-            return  charOpen+(leftChild!=null?leftChild.serialize():charNull+"")+charSeperate+(rightChild!=null?rightChild.serialize():charNull+"")+charClose;
+            return  charOpen+(leftChild!=null?leftChild.serialize(showPosition):charNull+"")+charSeperate+(rightChild!=null?rightChild.serialize(showPosition):charNull+"")+charClose;
         }
     }
 
@@ -93,17 +91,13 @@ public class LinguisticTree {
 
     public ArrayList<LinguisticTree> getAllCutTrees(int maxDepth){
         ArrayList<LinguisticTree> result = new ArrayList<>();
+
+        //if(!isLeaf())
         result.add(this);
-        //if(isLeaf())
-        //    return result;
         if(leftChild!=null) {
-            //result.add(new LinguisticTree(leftChild, null));
-            //result.addAll(combineTreeLists(leftChild.getAllCutTrees(maxDepth - 1), Collections.singletonList(rightChild)));
-            result.addAll(combineTreeLists(leftChild.getAllCutTrees(maxDepth -1), Collections.singletonList(null)));
+             result.addAll(combineTreeLists(leftChild.getAllCutTrees(maxDepth -1), Collections.singletonList(null)));
         }
         if(rightChild!=null){
-            //result.add(new LinguisticTree(null, rightChild));
-            //result.addAll(combineTreeLists(Collections.singletonList(leftChild), rightChild.getAllCutTrees(maxDepth - 1)));
             result.addAll(combineTreeLists(Collections.singletonList(null),rightChild.getAllCutTrees(maxDepth -1)));
         }
         return result;

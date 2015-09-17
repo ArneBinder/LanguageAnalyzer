@@ -1,22 +1,45 @@
 package abinder.langanalyzer.LinguisticUnits;
 
+import abinder.langanalyzer.helper.IO;
+
 import java.lang.*;
+import java.lang.Character;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 
 /**
  * Created by Arne on 17.09.2015.
  */
 public class LinguisticToken {
+
     LinguisticType type;
     ArrayList<LinguisticToken> tokens = new ArrayList<>();
+    int position;
+
+    private static final char charEscape = '\\';
+    private static final char charPosSeperator = ':';
+    private static final char charOpen = '(';
+    private static final char charClose = ')';
+    private static final HashSet<Character> escapeAbleChars = new HashSet<>(Arrays.asList(charEscape, charOpen, charClose, charPosSeperator));
+
 
     public LinguisticToken(LinguisticType type){
         this.type = type;
     }
 
     public void feed(LinguisticToken token){
+        token.setPosition(tokens.size());
         tokens.add(token);
         //TODO: all the other stuff!
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
     }
 
     public ArrayList<LinguisticTree> getAllTrees(int maxDepth){
@@ -31,14 +54,14 @@ public class LinguisticToken {
         return result;
     }
 
-    public String serialize(){
+    public String serialize(boolean showPosition){
         if(tokens.size()==0)
-            return type.serialize();
+            return (showPosition?position+""+charPosSeperator:"") + IO.escape(type.serialize(),escapeAbleChars,charEscape);
         String result = "";
         for(LinguisticToken token: tokens){
-            result += token.serialize();
+            result += token.serialize(showPosition);
         }
-        return result;
+        return(showPosition?position+""+charPosSeperator:"")+charOpen+result+charClose;
 
     }
 }
