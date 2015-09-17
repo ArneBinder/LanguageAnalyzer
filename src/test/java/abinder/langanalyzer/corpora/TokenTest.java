@@ -12,6 +12,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.UnmodifiableListIterator;
 import org.junit.Test;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -37,7 +38,7 @@ public class TokenTest {
         //UnmodifiableListIterator<Character> iter = chars.listIterator();
 
         String dummy = "";
-        Iterator<Character> tokens = new CharacterIterator("schöne Haus");
+        Iterator<Character> tokens = new CharacterIterator("Das schöne");
         while(tokens.hasNext()){
             char character = tokens.next();
             dummy += character;
@@ -54,9 +55,12 @@ public class TokenTest {
         HashMap<LinguisticTree, Integer> trees = new HashMap<>();
         int totalcount = 0;
         String out = "";
-        for(LinguisticTree tree: globalToken.getAllTrees(6)){
 
-            //System.out.println(tree.serialize(true));
+        Collection<LinguisticTree> fullTrees = globalToken.getAllTrees(3);
+        System.out.println("calculated fullTrees: "+fullTrees.size());
+        for(LinguisticTree tree: fullTrees){
+
+            System.out.println(tree.serialize(true));
             for(LinguisticTree subTree: tree.getAllSubtrees(4)){
                 //System.out.println("\t"+subTree.serialize(true));
                 for(LinguisticTree cutTree: subTree.getAllCutTrees(2)){
@@ -85,7 +89,7 @@ public class TokenTest {
         System.out.println("totalcount: \t"+totalcount);
 
         for(LinguisticTree tree: trees.keySet()){
-            out +=tree.serialize(false)+"\tcount: " + trees.get(tree)+"\tdepth: "+tree.getDepth();
+            out +=tree.serialize(false)+"\tcount: " + trees.get(tree)+"\tdepth: "+tree.getDepth()+"\n";
             //System.out.println(tree.serialize(false)+"\t" + trees.get(tree));
         }
         //String out = globalToken.serialize();

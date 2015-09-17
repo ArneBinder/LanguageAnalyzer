@@ -158,4 +158,26 @@ public class LinguisticTree {
 
         return result;
     }
+
+
+    public static ArrayList<LinguisticTree> constructTrees2(List<LinguisticToken> tokens, int maxDepth, ArrayList<LinguisticTree> trees, int currentDepth){
+        if(trees==null){
+            trees = new ArrayList<>(tokens.size());
+            for(LinguisticToken token: tokens){
+                trees.add(new LinguisticTree(token));
+            }
+            currentDepth = 0;
+        }
+
+        ArrayList<LinguisticTree> result = new ArrayList<>(trees.size());
+        if(currentDepth < maxDepth){
+            for(LinguisticTree tree: trees){
+                //result.a
+            }
+        }
+
+
+        return trees;
+
+    }
 }
