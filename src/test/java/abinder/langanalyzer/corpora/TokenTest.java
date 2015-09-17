@@ -33,11 +33,11 @@ public class TokenTest {
         LinguisticType globalType = new LinguisticType((char)0);
         LinguisticToken globalToken = new LinguisticToken(globalType);
 
-        ImmutableList<Character> chars = Lists.charactersOf("schöne");
-        UnmodifiableListIterator<Character> iter = chars.listIterator();
+        //ImmutableList<Character> chars = Lists.charactersOf("schöne Haus");
+        //UnmodifiableListIterator<Character> iter = chars.listIterator();
 
         String dummy = "";
-        Iterator<Character> tokens = new CharacterIterator("das");
+        Iterator<Character> tokens = new CharacterIterator("schöne Haus");
         while(tokens.hasNext()){
             char character = tokens.next();
             dummy += character;
@@ -50,17 +50,17 @@ public class TokenTest {
         }
         System.out.println(dummy);
 
+        long startTime = System.currentTimeMillis();
         HashMap<LinguisticTree, Integer> trees = new HashMap<>();
         int totalcount = 0;
         String out = "";
-        for(LinguisticTree tree: globalToken.getAllTrees(4)){
+        for(LinguisticTree tree: globalToken.getAllTrees(6)){
 
-            System.out.println(tree.serialize(true));
+            //System.out.println(tree.serialize(true));
             for(LinguisticTree subTree: tree.getAllSubtrees(4)){
-                System.out.println("\t"+subTree.serialize(true));
-                for(LinguisticTree cutTree: subTree.getAllCutTrees(0)){
-                    //String t = cutTree.serialize(true);
-                    System.out.println("\t\t"+cutTree.serialize(true));
+                //System.out.println("\t"+subTree.serialize(true));
+                for(LinguisticTree cutTree: subTree.getAllCutTrees(2)){
+                    //System.out.println("\t\t"+cutTree.serialize(true));
                     int count = 0;
                     if(trees.containsKey(cutTree)){
                         count = trees.get(cutTree);
@@ -68,23 +68,25 @@ public class TokenTest {
                     trees.put(cutTree,count + 1);
                     totalcount++;
                 }
-                //System.out.println(cutTree.serialize() + "\t" + cutTree.getDepth());
             }
 
-
-
-
-            out += tree.serialize(true)+"\t"+tree.getDepth()+"\n";
+            //out += tree.serialize(true)+"\t"+tree.getDepth()+"\n";
             //System.out.println(tree.serialize() + "\t" + tree.getDepth());
-            //lastTree = tree;
         }
+
+        long endTime = System.currentTimeMillis();
+
+        System.out.println();
+        System.out.println("needed time: "+(endTime-startTime));
+
         System.out.println();
 
         System.out.println("diffSize: \t"+trees.size());
         System.out.println("totalcount: \t"+totalcount);
 
         for(LinguisticTree tree: trees.keySet()){
-            System.out.println(tree.serialize(false)+"\t" + trees.get(tree));
+            out +=tree.serialize(false)+"\tcount: " + trees.get(tree)+"\tdepth: "+tree.getDepth();
+            //System.out.println(tree.serialize(false)+"\t" + trees.get(tree));
         }
         //String out = globalToken.serialize();
         //System.out.println(out);
