@@ -18,6 +18,7 @@ public class LinguisticTree {
     private String serialization = null;
     private String serializationPL = null;
     private int depth = -1;
+    private int minDepth = -1;
     private int leftPos = -1;
     private int rightPos = -1;
 
@@ -100,6 +101,17 @@ public class LinguisticTree {
         return depth;
     }
 
+    public int getMinDepth() {
+        if(minDepth >= 0)
+            return minDepth;
+        if (isLeaf()) {
+            minDepth = 0;
+        } else {
+            minDepth = Math.min(leftChild != null ? leftChild.getDepth() : 0, rightChild != null ? rightChild.getDepth() : 0) + 1;
+        }
+        return minDepth;
+    }
+
     public int getLeftPosition(){
         if(leftPos>=0)
             return leftPos;
@@ -138,7 +150,7 @@ public class LinguisticTree {
     public ArrayList<LinguisticTree> getAllCutTrees(int maxDepth) {
         ArrayList<LinguisticTree> result = new ArrayList<>();
 
-        if (maxDepth < getDepth())
+        if (maxDepth < getMinDepth())
             return result;
         //if(!isLeaf())
         result.add(this);
