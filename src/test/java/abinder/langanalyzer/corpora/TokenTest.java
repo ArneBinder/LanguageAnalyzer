@@ -38,7 +38,7 @@ public class TokenTest {
         //UnmodifiableListIterator<Character> iter = chars.listIterator();
 
         String dummy = "";
-        Iterator<Character> tokens = new CharacterIterator("Das schöne");
+        Iterator<Character> tokens = new CharacterIterator("Dasr");
         while(tokens.hasNext()){
             char character = tokens.next();
             dummy += character;
@@ -55,6 +55,11 @@ public class TokenTest {
         HashMap<LinguisticTree, Integer> trees = new HashMap<>();
         int totalcount = 0;
         String out = "";
+
+        for(LinguisticTree tree: LinguisticTree.constructTrees2(globalToken.getTokens(), 3)){
+            System.out.println(tree.serialize(false));
+        }
+        /*
 
         Collection<LinguisticTree> fullTrees = globalToken.getAllTrees(3);
         System.out.println("calculated fullTrees: "+fullTrees.size());
@@ -95,7 +100,7 @@ public class TokenTest {
         //String out = globalToken.serialize();
         //System.out.println(out);
         IO.writeFile("test.txt", out);
-
+*/
     }
 
 }

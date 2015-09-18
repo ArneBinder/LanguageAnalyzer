@@ -54,6 +54,10 @@ public class LinguisticToken {
         return result;
     }
 
+    public ArrayList<LinguisticToken> getTokens() {
+        return tokens;
+    }
+
     public String serialize(boolean showPosition){
         if(tokens.size()==0)
             return (showPosition?position+""+charPosSeperator:"") + IO.escape(type.serialize(),escapeAbleChars,charEscape);

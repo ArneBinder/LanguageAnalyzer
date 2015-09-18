@@ -18,6 +18,8 @@ public class LinguisticTree {
     private String serialization = null;
     private String serializationPL = null;
     private int depth = -1;
+    private int leftPos = -1;
+    private int rightPos = -1;
 
     private static final char charEscape = '\\';
     private static final char charOpen = '[';
@@ -98,6 +100,26 @@ public class LinguisticTree {
         return depth;
     }
 
+    public int getLeftPosition(){
+        if(leftPos>=0)
+            return leftPos;
+        if(isLeaf())
+            leftPos = leaf.getPosition();
+        else
+            leftPos = leftChild.getLeftPosition();
+        return leftPos;
+    }
+
+    public int getRightPosition(){
+        if(rightPos>=0)
+            return rightPos;
+        if(isLeaf())
+            rightPos = leaf.getPosition();
+        else
+            rightPos = rightChild.getRightPosition();
+        return rightPos;
+    }
+
     public ArrayList<LinguisticTree> getAllSubtrees(int maxDepth) {
         ArrayList<LinguisticTree> result = new ArrayList<>();
         if (getDepth() <= maxDepth)
@@ -160,24 +182,66 @@ public class LinguisticTree {
     }
 
 
-    public static ArrayList<LinguisticTree> constructTrees2(List<LinguisticToken> tokens, int maxDepth, ArrayList<LinguisticTree> trees, int currentDepth){
-        if(trees==null){
-            trees = new ArrayList<>(tokens.size());
-            for(LinguisticToken token: tokens){
-                trees.add(new LinguisticTree(token));
+    public static ArrayList<LinguisticTree> constructTrees2(List<LinguisticToken> tokens, int maxDepth){
+
+        int offset = tokens.get(0).getPosition();
+
+        ArrayList<LinguisticTree> result = new ArrayList<>();
+        List<List<LinguisticTree>> lefts = new ArrayList<>(tokens.size());
+        List<List<LinguisticTree>> rights = new ArrayList<>(tokens.size());
+
+        ArrayList<LinguisticTree> highestTrees = new ArrayList<>(tokens.size());
+        for(LinguisticToken token: tokens){
+            LinguisticTree current = new LinguisticTree(token);
+            highestTrees.add(current);
+            ArrayList<LinguisticTree> l = new ArrayList<>();
+            ArrayList<LinguisticTree> r = new ArrayList<>();
+            l.add(current);
+            r.add(current);
+            lefts.add(l);
+            rights.add(r);
+        }
+        result.addAll(highestTrees);
+
+
+        int leftPos;
+        int rightPos;
+        //ArrayList<LinguisticTree> newTrees = new ArrayList<>(highestTrees.size());
+        for(int currentDepth = 0; currentDepth < maxDepth; currentDepth++) {
+            ArrayList<LinguisticTree> newTrees = new ArrayList<>(highestTrees.size());
+            for(LinguisticTree highestTree: highestTrees){
+                leftPos = highestTree.getLeftPosition();
+                rightPos = highestTree.getRightPosition();
+                if(leftPos > 0){
+                    for(LinguisticTree smallerLeftTree: lefts.get(leftPos - 1 - offset)){
+                        LinguisticTree newTree = new LinguisticTree(smallerLeftTree, highestTree);
+                        newTrees.add(newTree);
+                    }
+                }
+
+                if(rightPos < tokens.size()-1){
+                    for(LinguisticTree smallerRightTree: rights.get(rightPos + 1 - offset)){
+                        if(smallerRightTree.getDepth() < currentDepth) {
+                            LinguisticTree newTree = new LinguisticTree(highestTree, smallerRightTree);
+                            newTrees.add(newTree);
+                        }
+                    }
+                }
+
             }
-            currentDepth = 0;
+            for(LinguisticTree newTree: newTrees){
+                leftPos = newTree.getLeftPosition();
+                rightPos = newTree.getRightPosition();
+                lefts.get(rightPos).add(newTree);
+                rights.get(leftPos).add(newTree);
+            }
+            result.addAll(newTrees);
+            highestTrees = newTrees;
         }
 
-        ArrayList<LinguisticTree> result = new ArrayList<>(trees.size());
-        if(currentDepth < maxDepth){
-            for(LinguisticTree tree: trees){
-                //result.a
-            }
-        }
 
 
-        return trees;
+        return result;
 
     }
 }
