@@ -8,9 +8,9 @@ import java.util.Map;
  * Created by Arne on 05.09.2015.
  */
 public abstract class Corpus {
-    /*LinguisticLayer basicLayer = new LinguisticLayer<Character>();
+    /*LinguisticLayer_dep basicLayer = new LinguisticLayer_dep<Character>();
 
-    public LinguisticLayer getBasicLayer() {
+    public LinguisticLayer_dep getBasicLayer() {
         return basicLayer;
     }*/
 

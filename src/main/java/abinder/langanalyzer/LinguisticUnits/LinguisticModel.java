@@ -5,7 +5,7 @@ package abinder.langanalyzer.LinguisticUnits;
  */
 public class LinguisticModel {
 
-    public LinguisticLayer<Character> layer = new LinguisticLayer<>("Character");
+    public LinguisticLayer_dep<Character> layer = new LinguisticLayer_dep<>("Character");
 
     public void feed(char character){
         layer.add(new Character(layer, character), character+"");

@@ -1,8 +1,6 @@
 package abinder.langanalyzer.LinguisticUnits;
 
-import java.io.FileWriter;
 import java.util.ArrayList;
-import java.util.IllegalFormatException;
 
 /**
  * Created by Arne on 08.09.2015.
@@ -15,14 +13,14 @@ public abstract class LinguisticUnit {
 
     private static final char serializeSeperator = '#';
 
-    LinguisticLayer layer;
+    LinguisticLayer_dep layer;
 
-    LinguisticUnit(LinguisticLayer layer, int type) {
+    LinguisticUnit(LinguisticLayer_dep layer, int type) {
         this.type = type;
         this.layer = layer;
     }
 
-    LinguisticUnit(LinguisticLayer layer, String serialization) {
+    LinguisticUnit(LinguisticLayer_dep layer, String serialization) {
         this.layer = layer;
         deserialize(serialization);
     }
@@ -125,11 +123,11 @@ public abstract class LinguisticUnit {
         this.toIndex = toIndex;
     }
 
-    public LinguisticLayer getLayer() {
+    public LinguisticLayer_dep getLayer() {
         return layer;
     }
 
-    public void setLayer(LinguisticLayer layer) {
+    public void setLayer(LinguisticLayer_dep layer) {
         this.layer = layer;
     }
 

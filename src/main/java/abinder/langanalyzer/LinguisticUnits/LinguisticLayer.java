@@ -1,238 +1,142 @@
 package abinder.langanalyzer.LinguisticUnits;
 
-import abinder.langanalyzer.helper.IO;
-import abinder.langanalyzer.LinguisticUnits.*;
-
-import java.io.*;
-import java.lang.*;
-import java.lang.Character;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Created by Arne on 08.09.2015.
+ * Created by Arne on 21.09.2015.
  */
-public class LinguisticLayer<T extends LinguisticUnit> {
+public class LinguisticLayer {
 
-    private ArrayList<T> tokens = new ArrayList<>();
-    private HashSet<Integer> knownTypes = new HashSet<>();
-    private HashMap<Integer, String> typeNames = new HashMap<>();
+    ArrayList<LinguisticToken> tokens = new ArrayList<>();
+    ArrayList<ArrayList<ArrayList<LinguisticTree>>> previousTrees = new ArrayList<>();
+    ArrayList<ArrayList<ArrayList<LinguisticTree>>> rightTrees = new ArrayList<>();
 
-    private LinguisticLayer higherLayer;  // more abstract
-    private LinguisticLayer lowerLayer;   // closer to Characters
+    int count = 0;
+    int posOffset = 0;
 
-    private static final char unitSeperator = '%';
-    private static final char serializeSeperator = '\n';
-    private static final char mapSeperator = ':';
-    static Set<java.lang.Character> escapeableChars;
+    public LinguisticLayer(){
+        //previousTrees.add(new ArrayList<>());
 
-    static{
-        java.lang.Character[] chars = {unitSeperator, serializeSeperator, mapSeperator};
-        escapeableChars = new HashSet<>(Arrays.asList(chars));
     }
 
-    private static final char escapeChar = '\\';
-
-    private String contentClassName;
-
-    public LinguisticLayer(String contentClassName){
-        this.contentClassName = contentClassName;
-    }
-
-    public String getContentClassName() {
-        return contentClassName;
-    }
-
-    public ArrayList<T> getTokens() {
-        return tokens;
-    }
-
-    public ArrayList<T> getUnits(int fromIndex, int toIndex) {
-        return (ArrayList<T>) tokens.subList(fromIndex, toIndex);
-    }
-
-    public T getEntity(int index){
-        return tokens.get(index);
-    }
-
-    public int getLength(){
-        return tokens.size();
-    }
-
-    public void add(T token, String name){
-        typeNames.put(token.getType(), name);
-        this.tokens.add(token);
-        knownTypes.add(token.getType());
-    }
-
-    public void add(T token){
-        this.tokens.add(token);
-        knownTypes.add(token.getType());
-    }
-
-    @Override
-    public String toString(){
-        String result="";
-        for(T currentToken: tokens){
-            result += typeNames.get(currentToken.getType());
-        }
-        return result;
-    }
-
-    public void printTypeNames(){
-        System.out.println("Type names for layer:");
-        //System.out.println(String.join(", ", typeNames.values()));
-        for(Integer type:typeNames.keySet()){
-            System.out.print(type+":"+typeNames.get(type)+", ");
-        }
-        System.out.println();
-    }
-
-    public LinguisticLayer aggregate(LinguisticLayer prevUpperLayer){
-        // TODO: implement (Clustering)!
-        return null;
-    }
-
-    public void calcSequenceModel(){
-        // TODO: implement!
-    }
-
-    public T predict(){
-        // TODO: implement
-        return null;
-    }
-
-    public HashMap getFeatures(){
-        // TODO: implement!
-        return null;
-    }
+    public void feed(LinguisticToken token, int maxDepth){
+        token.setPosition(count);
 
 
-
-    public void serialize(String filename) throws IOException{
-        Writer out = new OutputStreamWriter(
-                new FileOutputStream(filename+"."+contentClassName), "UTF-8");
-
-        if(higherLayer!=null){
-            out.write(higherLayer.getContentClassName());
-            higherLayer.serialize(filename);
-        }
-        out.write(serializeSeperator);
-        for(T token: tokens){
-            out.write(token.serialize());
-            out.write(unitSeperator+"");
-        }
-        out.write(serializeSeperator);
-        for(Integer type: knownTypes){
-            out.write(type+"");
-            out.write(mapSeperator+"");
-            out.write(escape(typeNames.get(type)));
-            out.write(unitSeperator+"");
-        }
-        out.write(serializeSeperator);
-        out.flush();
-    }
-
-    public void deserialize(String filename) throws IOException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        String contentClassName = filename.substring(filename.lastIndexOf(".")+1);
-        System.out.println("contentClassName: "+contentClassName);
-
-        BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(filename), "UTF8"));
-        final int blockSize = 4000;
-        char buffer[] = new char[blockSize + 1];
-        int count = in.read(buffer, 0, blockSize);
-        int mode = 0;
-        String temp = "";
-        String higherLayerContentClassName = null;
-        while(count != -1){
-            for(int i = 0; i < count; i++) {
-                char c = buffer[i];
-
-                switch(mode){
-                    case 0:
-                        if (c == serializeSeperator){
-                            higherLayerContentClassName = temp;
-                            temp = "";
-                            mode++;
-                        }else{
-                            temp+=c;
-                        }
-                        break;
-                    case 1:
-                        if (c == unitSeperator){
-                            String thisPackage = this.getClass().getPackage().getName();
-                            T unit = (T) IO.newInstance(thisPackage+"."+contentClassName, this, temp);
-                            add(unit);
-                            temp = "";
-                        }else if(c==serializeSeperator) {
-                            mode++;
-                        }else{
-                            temp+=c;
-                        }
-                        break;
-                    case 2:
-                        if (c == escapeChar){
-                            mode=3;
-                        }else if(c == unitSeperator){
-                            int splitPos = temp.indexOf(mapSeperator);
-                            int type = Integer.parseInt(temp.substring(0, splitPos));
-                            String name = temp.substring(splitPos + 1);
-                            typeNames.put(type, name);
-                            temp = "";
-                        }else if(c==serializeSeperator) {
-                            mode++;
-                        }else{
-                            temp+=c;
-                        }
-                        break;
-                    case 3: // escape
-                        temp += c;
-                        mode = 2;
-                        break;
+        LinguisticTree currentTokenTree = new LinguisticTree(token);
+        ArrayList<LinguisticTree> currentTrees = new ArrayList<>(1);
+        currentTrees.add(currentTokenTree);
+        ArrayList<ArrayList<LinguisticTree>> newTrees = new ArrayList<>(maxDepth);
+        newTrees.add(currentTrees);
+        if(count - posOffset - 1 >= 0) {
+            int currentDepth = 0;
+            ArrayList<LinguisticTree> lastTrees = new ArrayList<>();
+            lastTrees.add(currentTokenTree);
+            // iterate over maxDepth of previous trees ending at the previous position (count - posOffset)
+            for (ArrayList<LinguisticTree> currentPreviousTrees : previousTrees.get(count - posOffset - 1)){
+                currentTrees = new ArrayList<>();
+                if(currentDepth==maxDepth)
+                    break;
+                for(LinguisticTree currentPreviousTree: currentPreviousTrees){
+                    LinguisticTree newTree = new LinguisticTree(currentPreviousTree, currentTokenTree);
+                    System.out.println("A: "+newTree.serialize(false));
+                    currentTrees.add(newTree);
                 }
+                for(LinguisticTree lastTree: lastTrees){
+                    if(lastTree.getDepth()==maxDepth)
+                        break;
+                    int leftPos = lastTree.getLeftPosition();
+                    if(leftPos - posOffset - 1 > 0){
+                        int otherDepth = 0;
+                        for(ArrayList<LinguisticTree> currentPreviousTrees2: previousTrees.get(leftPos - posOffset - 1)){
+                            for(LinguisticTree currentPreviosTree2: currentPreviousTrees2){
+                                LinguisticTree newTree = new LinguisticTree(currentPreviosTree2, lastTree);
+                                System.out.println("B: "+newTree.serialize(false));
+                                currentTrees.add(newTree);
+                            }
+                            otherDepth++;
+                            if(otherDepth==maxDepth)
+                                break;
+                        }
+                    }
+
+                }
+                //System.out.println();
+                lastTrees = currentTrees;
+                newTrees.add(currentTrees);
+                currentDepth++;
             }
-            if(count < blockSize)
-                break;
-            count = in.read(buffer, 0, blockSize);
+            System.out.println();
+
         }
-        if(higherLayerContentClassName != null){
-            higherLayer = new LinguisticLayer(higherLayerContentClassName);
-            higherLayer.serialize(filename.substring(0, filename.lastIndexOf("."))+"."+higherLayerContentClassName);
+        previousTrees.add(newTrees);
+
+        count++;
+    }
+
+
+    public static ArrayList<LinguisticTree> constructTrees2(List<LinguisticToken> tokens, int maxDepth){
+
+        int offset = tokens.get(0).getPosition();
+
+        ArrayList<LinguisticTree> result = new ArrayList<>();
+        List<List<LinguisticTree>> lefts = new ArrayList<>(tokens.size());
+        List<List<LinguisticTree>> rights = new ArrayList<>(tokens.size());
+
+        ArrayList<LinguisticTree> highestTrees = new ArrayList<>(tokens.size());
+        for(LinguisticToken token: tokens){
+            LinguisticTree current = new LinguisticTree(token);
+            highestTrees.add(current);
+            ArrayList<LinguisticTree> l = new ArrayList<>();
+            ArrayList<LinguisticTree> r = new ArrayList<>();
+            l.add(current);
+            r.add(current);
+            lefts.add(l);
+            rights.add(r);
         }
-    }
-
-    public void setTokens(ArrayList<T> tokens) {
-        this.tokens = tokens;
-    }
-
-    public LinguisticLayer getHigherLayer() {
-        return higherLayer;
-    }
-
-    public void setHigherLayer(LinguisticLayer higherLayer) {
-        this.higherLayer = higherLayer;
-    }
-
-    public LinguisticLayer getLowerLayer() {
-        return lowerLayer;
-    }
-
-    public void setLowerLayer(LinguisticLayer lowerLayer) {
-        this.lowerLayer = lowerLayer;
-    }
+        result.addAll(highestTrees);
 
 
-    private String escape(String str){
-        String result = "";
-        for(int i=0; i<str.length();i++){
-            if(escapeableChars.contains(str.charAt(i)))
-                result+=escapeChar;
-            result+=str.charAt(i);
+        int leftPos;
+        int rightPos;
+        //ArrayList<LinguisticTree> newTrees = new ArrayList<>(highestTrees.size());
+        for(int currentDepth = 0; currentDepth < maxDepth; currentDepth++) {
+            ArrayList<LinguisticTree> newTrees = new ArrayList<>(highestTrees.size());
+            for(LinguisticTree highestTree: highestTrees){
+                leftPos = highestTree.getLeftPosition();
+                rightPos = highestTree.getRightPosition();
+                if(leftPos > 0){
+                    for(LinguisticTree smallerLeftTree: lefts.get(leftPos - 1 - offset)){
+                        LinguisticTree newTree = new LinguisticTree(smallerLeftTree, highestTree);
+                        newTrees.add(newTree);
+                    }
+                }
+
+                if(rightPos < tokens.size()-1){
+                    for(LinguisticTree smallerRightTree: rights.get(rightPos + 1 - offset)){
+                        if(smallerRightTree.getDepth() < currentDepth) {
+                            LinguisticTree newTree = new LinguisticTree(highestTree, smallerRightTree);
+                            newTrees.add(newTree);
+                        }
+                    }
+                }
+
+            }
+            for(LinguisticTree newTree: newTrees){
+                leftPos = newTree.getLeftPosition();
+                rightPos = newTree.getRightPosition();
+                lefts.get(rightPos).add(newTree);
+                rights.get(leftPos).add(newTree);
+            }
+            result.addAll(newTrees);
+            highestTrees = newTrees;
         }
+
+
+
         return result;
+
     }
-
-
 
 }
