@@ -23,5 +23,7 @@ public class LinguisticLayerTest {
             LinguisticToken currentToken = new LinguisticToken(currentType);
             layer.feed(currentToken, 4);
         }
+
+        layer.checkTrees();
     }
 }

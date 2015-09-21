@@ -1,5 +1,8 @@
 package abinder.langanalyzer.LinguisticUnits;
 
+import abinder.langanalyzer.helper.MultiSet;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,52 +36,39 @@ public class LinguisticLayer {
         //if(count - posOffset - 1 >= 0) {
         int currentTokenTreesDepth = 0;
         int currentDepth = 0;
-        ArrayList<LinguisticTree> currentTokenTrees = new ArrayList<>(1);
-
-        //currentTokenTrees.add(new LinguisticTree(token));
+        ArrayList<LinguisticTree> currentTokenTrees;
 
         while(currentTokenTreesDepth < maxDepth && currentTokenTreesDepth < newTrees.size()) {
             currentTokenTrees = newTrees.get(currentTokenTreesDepth);
 
-            ArrayList<ArrayList<LinguisticTree>> currentNewTrees = new ArrayList<>();
+            ArrayList<LinguisticTree> currentNewTrees = new ArrayList<>();
             for(LinguisticTree currentTokenTree: currentTokenTrees) {
 
                 // iterate over maxDepth of previous trees ending at the previous position (count - posOffset)
                 if(currentTokenTree.getLeftPosition() - 1 >= 0) {
                     currentDepth = currentTokenTreesDepth;
                     for (ArrayList<LinguisticTree> currentPreviousTrees : previousTrees.get(currentTokenTree.getLeftPosition() - 1)) {
-                        currentTrees = new ArrayList<>();
                         if (currentDepth == maxDepth)
                             break;
                         for (LinguisticTree currentPreviousTree : currentPreviousTrees) {
                             LinguisticTree newTree = new LinguisticTree(currentPreviousTree, currentTokenTree);
-                            System.out.println(newTree.serialize(false));
-                            currentTrees.add(newTree);
+                            currentNewTrees.add(newTree);
                         }
-
-                        for(int i=0; i<currentTrees.size(); i++){
-                            if(currentNewTrees.size()<=i)
-                                currentNewTrees.add(new ArrayList<>());
-                            currentNewTrees.get(i).add(currentTrees.get(i));
-                        }
-                        //currentNewTrees.add(currentTrees);
                         currentDepth++;
                     }
                 }
-                System.out.println();
             }
-            int i = 0;
-            for(ArrayList<LinguisticTree> currentNewTree:currentNewTrees){
-                if(i+currentTokenTreesDepth >= newTrees.size())
+
+            for(LinguisticTree currentNewTree: currentNewTrees){
+                int depth = currentNewTree.getDepth();
+                while(depth >= newTrees.size()){
                     newTrees.add(new ArrayList<>());
-                newTrees.get(i+currentTokenTreesDepth).addAll(currentNewTree);
-                i++;
+                }
+                newTrees.get(depth).add(currentNewTree);
+
             }
-
             currentTokenTreesDepth++;
-
         }
-
 
         previousTrees.add(newTrees);
 
@@ -86,66 +76,18 @@ public class LinguisticLayer {
     }
 
 
-    public static ArrayList<LinguisticTree> constructTrees2(List<LinguisticToken> tokens, int maxDepth){
+    public void checkTrees(){
+        System.out.println("checkTrees");
+        MultiSet<String> counter = new MultiSet<>();
 
-        int offset = tokens.get(0).getPosition();
-
-        ArrayList<LinguisticTree> result = new ArrayList<>();
-        List<List<LinguisticTree>> lefts = new ArrayList<>(tokens.size());
-        List<List<LinguisticTree>> rights = new ArrayList<>(tokens.size());
-
-        ArrayList<LinguisticTree> highestTrees = new ArrayList<>(tokens.size());
-        for(LinguisticToken token: tokens){
-            LinguisticTree current = new LinguisticTree(token);
-            highestTrees.add(current);
-            ArrayList<LinguisticTree> l = new ArrayList<>();
-            ArrayList<LinguisticTree> r = new ArrayList<>();
-            l.add(current);
-            r.add(current);
-            lefts.add(l);
-            rights.add(r);
-        }
-        result.addAll(highestTrees);
-
-
-        int leftPos;
-        int rightPos;
-        //ArrayList<LinguisticTree> newTrees = new ArrayList<>(highestTrees.size());
-        for(int currentDepth = 0; currentDepth < maxDepth; currentDepth++) {
-            ArrayList<LinguisticTree> newTrees = new ArrayList<>(highestTrees.size());
-            for(LinguisticTree highestTree: highestTrees){
-                leftPos = highestTree.getLeftPosition();
-                rightPos = highestTree.getRightPosition();
-                if(leftPos > 0){
-                    for(LinguisticTree smallerLeftTree: lefts.get(leftPos - 1 - offset)){
-                        LinguisticTree newTree = new LinguisticTree(smallerLeftTree, highestTree);
-                        newTrees.add(newTree);
-                    }
+        for(ArrayList<ArrayList<LinguisticTree>> treesSameEnd: previousTrees){
+            for(ArrayList<LinguisticTree> treesSameDepth: treesSameEnd){
+                for(LinguisticTree tree: treesSameDepth){
+                    counter.add(tree.serialize(false));
                 }
-
-                if(rightPos < tokens.size()-1){
-                    for(LinguisticTree smallerRightTree: rights.get(rightPos + 1 - offset)){
-                        if(smallerRightTree.getDepth() < currentDepth) {
-                            LinguisticTree newTree = new LinguisticTree(highestTree, smallerRightTree);
-                            newTrees.add(newTree);
-                        }
-                    }
-                }
-
             }
-            for(LinguisticTree newTree: newTrees){
-                leftPos = newTree.getLeftPosition();
-                rightPos = newTree.getRightPosition();
-                lefts.get(rightPos).add(newTree);
-                rights.get(leftPos).add(newTree);
-            }
-            result.addAll(newTrees);
-            highestTrees = newTrees;
         }
-
-
-
-        return result;
+        System.out.println("counter.size: "+counter.size());
 
     }
 
