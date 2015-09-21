@@ -37,7 +37,7 @@ public class TokenTest {
         //UnmodifiableListIterator<Character> iter = chars.listIterator();
 
         String dummy = "";
-        Iterator<Character> tokens = new CharacterIterator("Das schöne Haus im norden gefällt mir besser, als dass am Meer.");
+        Iterator<Character> tokens = new CharacterIterator("Das schöne Haus");
         while(tokens.hasNext()){
             char character = tokens.next();
             dummy += character;
@@ -58,9 +58,9 @@ public class TokenTest {
         HashMap<String, Integer> patterns = new HashMap<>();
         HashMap<String, Integer> patternsPositioned = new HashMap<>();
         for(LinguisticTree tree: LinguisticTree.constructTrees2(globalToken.getTokens(), 4)){
-            //String t = tree.serialize(false);
+            String t = tree.serialize(false);
             //out += t+"\t"+tree.getDepth()+"\n";
-            //System.out.println(tree.serialize(false)+"\t"+tree.getDepth());
+            System.out.println(t+"\t"+tree.getDepth());
             for(LinguisticTree cutTree: tree.getAllCutTrees(3)){
                 String ct = cutTree.serialize(false);
                 String ctp = cutTree.serialize(true);

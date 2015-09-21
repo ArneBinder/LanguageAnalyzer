@@ -24,52 +24,62 @@ public class LinguisticLayer {
         token.setPosition(count);
 
 
-        LinguisticTree currentTokenTree = new LinguisticTree(token);
+        LinguisticTree firstTokenTree = new LinguisticTree(token);
         ArrayList<LinguisticTree> currentTrees = new ArrayList<>(1);
-        currentTrees.add(currentTokenTree);
-        ArrayList<ArrayList<LinguisticTree>> newTrees = new ArrayList<>(maxDepth);
+        currentTrees.add(firstTokenTree);
+        ArrayList<ArrayList<LinguisticTree>> newTrees = new ArrayList<>();
         newTrees.add(currentTrees);
-        if(count - posOffset - 1 >= 0) {
-            int currentDepth = 0;
-            ArrayList<LinguisticTree> lastTrees = new ArrayList<>();
-            lastTrees.add(currentTokenTree);
-            // iterate over maxDepth of previous trees ending at the previous position (count - posOffset)
-            for (ArrayList<LinguisticTree> currentPreviousTrees : previousTrees.get(count - posOffset - 1)){
-                currentTrees = new ArrayList<>();
-                if(currentDepth==maxDepth)
-                    break;
-                for(LinguisticTree currentPreviousTree: currentPreviousTrees){
-                    LinguisticTree newTree = new LinguisticTree(currentPreviousTree, currentTokenTree);
-                    System.out.println("A: "+newTree.serialize(false));
-                    currentTrees.add(newTree);
-                }
-                for(LinguisticTree lastTree: lastTrees){
-                    if(lastTree.getDepth()==maxDepth)
-                        break;
-                    int leftPos = lastTree.getLeftPosition();
-                    if(leftPos - posOffset - 1 > 0){
-                        int otherDepth = 0;
-                        for(ArrayList<LinguisticTree> currentPreviousTrees2: previousTrees.get(leftPos - posOffset - 1)){
-                            for(LinguisticTree currentPreviosTree2: currentPreviousTrees2){
-                                LinguisticTree newTree = new LinguisticTree(currentPreviosTree2, lastTree);
-                                System.out.println("B: "+newTree.serialize(false));
-                                currentTrees.add(newTree);
-                            }
-                            otherDepth++;
-                            if(otherDepth==maxDepth)
-                                break;
-                        }
-                    }
+        //newTrees.add(currentTrees);
+        //if(count - posOffset - 1 >= 0) {
+        int currentTokenTreesDepth = 0;
+        int currentDepth = 0;
+        ArrayList<LinguisticTree> currentTokenTrees = new ArrayList<>(1);
 
+        //currentTokenTrees.add(new LinguisticTree(token));
+
+        while(currentTokenTreesDepth < maxDepth && currentTokenTreesDepth < newTrees.size()) {
+            currentTokenTrees = newTrees.get(currentTokenTreesDepth);
+
+            ArrayList<ArrayList<LinguisticTree>> currentNewTrees = new ArrayList<>();
+            for(LinguisticTree currentTokenTree: currentTokenTrees) {
+
+                // iterate over maxDepth of previous trees ending at the previous position (count - posOffset)
+                if(currentTokenTree.getLeftPosition() - 1 >= 0) {
+                    currentDepth = currentTokenTreesDepth;
+                    for (ArrayList<LinguisticTree> currentPreviousTrees : previousTrees.get(currentTokenTree.getLeftPosition() - 1)) {
+                        currentTrees = new ArrayList<>();
+                        if (currentDepth == maxDepth)
+                            break;
+                        for (LinguisticTree currentPreviousTree : currentPreviousTrees) {
+                            LinguisticTree newTree = new LinguisticTree(currentPreviousTree, currentTokenTree);
+                            System.out.println(newTree.serialize(false));
+                            currentTrees.add(newTree);
+                        }
+
+                        for(int i=0; i<currentTrees.size(); i++){
+                            if(currentNewTrees.size()<=i)
+                                currentNewTrees.add(new ArrayList<>());
+                            currentNewTrees.get(i).add(currentTrees.get(i));
+                        }
+                        //currentNewTrees.add(currentTrees);
+                        currentDepth++;
+                    }
                 }
-                //System.out.println();
-                lastTrees = currentTrees;
-                newTrees.add(currentTrees);
-                currentDepth++;
+                System.out.println();
             }
-            System.out.println();
+            int i = 0;
+            for(ArrayList<LinguisticTree> currentNewTree:currentNewTrees){
+                if(i+currentTokenTreesDepth >= newTrees.size())
+                    newTrees.add(new ArrayList<>());
+                newTrees.get(i+currentTokenTreesDepth).addAll(currentNewTree);
+                i++;
+            }
+
+            currentTokenTreesDepth++;
 
         }
+
+
         previousTrees.add(newTrees);
 
         count++;
