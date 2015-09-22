@@ -1,8 +1,10 @@
 package abinder.langanalyzer.LinguisticUnits;
 
+import abinder.langanalyzer.corpora.wikipedia.WIKIPEDIACorpus;
 import abinder.langanalyzer.helper.CharacterIterator;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.lang.*;
 import java.lang.Character;
 import java.util.Iterator;
@@ -13,10 +15,13 @@ import java.util.Iterator;
 public class LinguisticLayerTest {
 
     @Test
-    public void layerTest(){
+    public void layerTest() throws IOException {
+
+        //WIKIPEDIACorpus corpus = new WIKIPEDIACorpus();
+        //corpus.readFromFile("src/test/resources/abinder/langanalyzer/corpora/wikipedia/Sprache.txt");
 
         LinguisticLayer layer = new LinguisticLayer();
-        Iterator<Character> characters = new CharacterIterator("Daschöne");
+        Iterator<Character> characters = new CharacterIterator("aaa"); //corpus.tokens();
         while(characters.hasNext()){
             char character = characters.next();
             LinguisticType currentType = new LinguisticType(character);

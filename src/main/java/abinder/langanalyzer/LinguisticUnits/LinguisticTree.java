@@ -26,12 +26,24 @@ public class LinguisticTree {
     private static final char charOpen = '[';
     private static final char charClose = ']';
     private static final char charSeperate = ',';
-    private static final HashSet<java.lang.Character> escapeAbleChars = new HashSet<>(Arrays.asList(charEscape, charOpen, charClose, charSeperate));
     private static final char charNull = 'X';
+    private static final HashSet<java.lang.Character> escapeAbleChars = new HashSet<>(Arrays.asList(charEscape, charOpen, charClose, charSeperate, charNull));
 
+    private boolean defaultUsePositions = false;
 
     public LinguisticTree(LinguisticToken token) {
         leaf = token;
+    }
+
+    public LinguisticTree(LinguisticTree leftChild, LinguisticTree rightChild, boolean usePositions) {
+        this.leftChild = leftChild;
+        this.rightChild = rightChild;
+        this.defaultUsePositions = usePositions;
+    }
+
+    public LinguisticTree(LinguisticToken token, boolean usePositions) {
+        leaf = token;
+        this.defaultUsePositions = usePositions;
     }
 
     public LinguisticTree(LinguisticTree leftChild, LinguisticTree rightChild) {
@@ -47,12 +59,12 @@ public class LinguisticTree {
     @Override
     public boolean equals(Object other) {
         return (other instanceof LinguisticTree)
-                && ((LinguisticTree) other).serialize(true).equals(this.serialize(true));
+                && ((LinguisticTree) other).serialize(defaultUsePositions).equals(this.serialize(defaultUsePositions));
     }
 
     @Override
     public int hashCode() {
-        return serialize(true).hashCode();
+        return serialize(defaultUsePositions).hashCode();
     }
 
     public boolean equalsPositionIndependent(LinguisticTree other) {
