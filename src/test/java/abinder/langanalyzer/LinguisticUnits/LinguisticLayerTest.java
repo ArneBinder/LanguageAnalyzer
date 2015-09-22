@@ -21,13 +21,13 @@ public class LinguisticLayerTest {
         corpus.readFromFile("src/test/resources/abinder/langanalyzer/corpora/wikipedia/Sprache.txt");
 
         LinguisticLayer layer = new LinguisticLayer();
-        Iterator<Character> characters = new CharacterIterator("abcd");
-        //Iterator<Character> characters = corpus.tokens();
+        //Iterator<Character> characters = new CharacterIterator("abcd");
+        Iterator<Character> characters = corpus.tokens();
         while(characters.hasNext()){
             char character = characters.next();
             LinguisticType currentType = new LinguisticType(character);
             LinguisticToken currentToken = new LinguisticToken(currentType);
-            layer.feed(currentToken, 8);
+            layer.feed(currentToken, 3);
         }
 
         layer.checkTrees();
