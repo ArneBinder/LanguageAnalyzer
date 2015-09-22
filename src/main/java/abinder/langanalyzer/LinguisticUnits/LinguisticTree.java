@@ -159,7 +159,7 @@ public class LinguisticTree {
         return result;
     }
 
-    public ArrayList<LinguisticTree> getAllCutTrees(int maxDepth) {
+    public ArrayList<LinguisticTree> getAllCutTrees() {
         ArrayList<LinguisticTree> result = new ArrayList<>();
 
         //if (maxDepth < getMinDepth())
@@ -168,13 +168,13 @@ public class LinguisticTree {
         //result.add(this);
 
         if (leftChild != null) {
-            result.addAll(combineTreeLists(leftChild.getAllCutTrees(maxDepth - 1), Collections.singletonList(null)));
+            result.addAll(combineTreeLists(leftChild.getAllCutTrees(), Collections.singletonList(null)));
         }
         if (rightChild != null) {
-            result.addAll(combineTreeLists(Collections.singletonList(null), rightChild.getAllCutTrees(maxDepth - 1)));
+            result.addAll(combineTreeLists(Collections.singletonList(null), rightChild.getAllCutTrees()));
         }
         if (leftChild != null && rightChild != null)
-            result.addAll(combineTreeLists(leftChild.getAllCutTrees(maxDepth - 1), rightChild.getAllCutTrees(maxDepth - 1)));
+            result.addAll(combineTreeLists(leftChild.getAllCutTrees(), rightChild.getAllCutTrees()));
         else
             result.add(this);
         return result;
