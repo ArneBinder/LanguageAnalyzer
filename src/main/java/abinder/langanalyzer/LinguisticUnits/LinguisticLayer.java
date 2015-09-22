@@ -91,30 +91,58 @@ public class LinguisticLayer {
         System.out.println("checkTrees");
         MultiSet<LinguisticTree> trees = new MultiSet<>();
 
-        for(ArrayList<ArrayList<LinguisticTree>> treesSameEnd: previousTrees){
-            for(ArrayList<LinguisticTree> treesSameDepth: treesSameEnd){
-                for(LinguisticTree tree: treesSameDepth){
-                    trees.add(tree);
+        int count = 0;
+        ArrayList<ArrayList<LinguisticTree>> tempTrees = previousTrees.get(previousTrees.size()-1);
+        for(ArrayList<LinguisticTree> tempTrees1: tempTrees){
+            for(LinguisticTree tree: tempTrees1){
+                if(tree.getLeftPosition()==0){
+                    System.out.println(tree.serialize(false));
+                    for(LinguisticTree cutTree: tree.getAllCutTrees(10)){
+                        System.out.println("\t"+cutTree.serialize(false));
+                    }
+                    count++;
                 }
             }
         }
+        System.out.println("count: "+count);
+
+/*
+        for(LinguisticTree tree: fullTrees){
+            System.out.println(tree.serialize(false));
+        }
+        System.out.println("size: "+fullTrees.size());
+*/
+        /*
+        int endPos = 0;
+        for(ArrayList<ArrayList<LinguisticTree>> treesSameEnd: previousTrees){
+            System.out.println("endpos:\t"+endPos);
+            int depth = 0;
+            for(ArrayList<LinguisticTree> treesSameDepth: treesSameEnd){
+                System.out.println("depth:\t"+depth);
+                for(LinguisticTree tree: treesSameDepth){
+                    System.out.println(tree.serialize(false));
+                    //trees.add(tree);
+                }
+                depth++;
+            }
+            endPos++;
+        }
+        */
+/*
         for(LinguisticTree treeStr: trees.keySet()){
             System.out.println(trees.get(treeStr)+"\t"+treeStr.serialize(false));
         }
         System.out.println("trees.size: " + trees.size());
         System.out.println();
+        */
 
-        MultiSet<LinguisticTree> cutTrees = new MultiSet<>();
+/*
         for(LinguisticTree treePart: treeParts.sortByValue().keySet()){
-            cutTrees.add(treePart);
-            //System.out.println(treePart);
-        }
-
-        for(LinguisticTree treePart: cutTrees.sortByValue().keySet()){
-            System.out.println(cutTrees.get(treePart)+"\t"+treePart.serialize(false));
+            System.out.println(treeParts.get(treePart)+"\t"+treePart.serialize(false));
         }
 
         System.out.println("treeParts.size: "+treeParts.size());
+        */
     }
 
 }

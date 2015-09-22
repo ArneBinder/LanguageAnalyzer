@@ -162,20 +162,39 @@ public class LinguisticTree {
     public ArrayList<LinguisticTree> getAllCutTrees(int maxDepth) {
         ArrayList<LinguisticTree> result = new ArrayList<>();
 
-        if (maxDepth < getMinDepth())
-            return result;
+        //if (maxDepth < getMinDepth())
+        //    return result;
         //if(!isLeaf())
-        result.add(this);
+        //result.add(this);
+
         if (leftChild != null) {
             result.addAll(combineTreeLists(leftChild.getAllCutTrees(maxDepth - 1), Collections.singletonList(null)));
         }
         if (rightChild != null) {
             result.addAll(combineTreeLists(Collections.singletonList(null), rightChild.getAllCutTrees(maxDepth - 1)));
         }
+        if (leftChild != null && rightChild != null)
+            result.addAll(combineTreeLists(leftChild.getAllCutTrees(maxDepth - 1), rightChild.getAllCutTrees(maxDepth - 1)));
+        else
+            result.add(this);
+        return result;
+    }
+
+    public ArrayList<LinguisticTree> getPartition(){
+        ArrayList<LinguisticTree> result = new ArrayList<>();
+        result.add(this);
+
+        if(leftChild!=null)
+            result.addAll(leftChild.getPartition());
+        if(rightChild!=null)
+            result.addAll(rightChild.getPartition());
+
+
         return result;
     }
 
 
+    // depricated
     private static ArrayList<LinguisticTree> combineTreeLists(List<LinguisticTree> leftList, List<LinguisticTree> rightList) {
         ArrayList<LinguisticTree> result = new ArrayList<>(leftList.size() * rightList.size());
         for (LinguisticTree left : leftList) {
@@ -186,6 +205,7 @@ public class LinguisticTree {
         return result;
     }
 
+    // depricated
     public static ArrayList<LinguisticTree> constructTrees(List<LinguisticToken> tokens, int maxDepth) {
         ArrayList<LinguisticTree> result = new ArrayList<>();
         if (tokens.size() == 1) {
@@ -205,7 +225,7 @@ public class LinguisticTree {
         return result;
     }
 
-
+    // depricated
     public static ArrayList<LinguisticTree> constructTrees2(List<LinguisticToken> tokens, int maxDepth){
 
         int offset = tokens.get(0).getPosition();
