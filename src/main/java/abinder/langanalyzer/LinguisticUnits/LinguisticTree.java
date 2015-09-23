@@ -1,6 +1,7 @@
 package abinder.langanalyzer.LinguisticUnits;
 
 import abinder.langanalyzer.helper.IO;
+import abinder.langanalyzer.helper.MultiSet;
 
 import java.lang.*;
 import java.lang.Character;
@@ -9,10 +10,11 @@ import java.util.*;
 /**
  * Created by Arne on 17.09.2015.
  */
-public class LinguisticTree {
+public class LinguisticTree implements Comparable<LinguisticTree>{
     private LinguisticTree leftChild;
     private LinguisticTree rightChild;
     private LinguisticToken leaf;
+    private ArrayList<LinguisticTree> parents;
 
     //caching
     private String serialization = null;
@@ -21,6 +23,7 @@ public class LinguisticTree {
     private int minDepth = -1;
     private int leftPos = -1;
     private int rightPos = -1;
+    private double probability = -1;
 
     private static final char charEscape = '\\';
     private static final char charOpen = '[';
@@ -51,14 +54,58 @@ public class LinguisticTree {
         this.rightChild = rightChild;
     }
 
+    public LinguisticTree copyThisWithoutChild(LinguisticTree exceptChild){
+        if(isLeaf())
+            return new LinguisticTree(leaf);
+        if(exceptChild.equals(leftChild)){
+            if(rightChild!=null)
+                return new LinguisticTree(null, rightChild.copyThis());
+            else
+                return null;
+        }
+        if(exceptChild.equals(rightChild)){
+            if(leftChild!=null)
+                return new LinguisticTree(leftChild.copyThis(), null);
+            else
+                return null;
+        }
+        return new LinguisticTree(leftChild!=null?leftChild.copyThisWithoutChild(exceptChild):null, rightChild!=null?rightChild.copyThisWithoutChild(exceptChild):null);
+    }
+
+    public LinguisticTree copyThis(){
+        if(isLeaf())
+            return new LinguisticTree(leaf);
+        return new LinguisticTree(leftChild!=null?leftChild.copyThis():null, rightChild!=null?rightChild.copyThis():null);
+    }
+
     public boolean isLeaf() {
         return (leftChild == null && rightChild == null);
     }
 
+    public LinguisticToken getLeaf() {
+        return leaf;
+    }
+
+    public double getProbability() {
+        return probability;
+    }
+
+    public void setProbability(double probability) {
+        this.probability = probability;
+    }
+
+    public LinguisticTree getLeftChild() {
+        return leftChild;
+    }
+
+    public LinguisticTree getRightChild() {
+        return rightChild;
+    }
 
     @Override
     public boolean equals(Object other) {
-        return (other instanceof LinguisticTree)
+        return (other != null)
+                &&(other instanceof LinguisticTree)
                 && ((LinguisticTree) other).serialize(defaultUsePositions).equals(this.serialize(defaultUsePositions));
     }
 
@@ -162,11 +209,6 @@ public class LinguisticTree {
     public ArrayList<LinguisticTree> getAllCutTrees() {
         ArrayList<LinguisticTree> result = new ArrayList<>();
 
-        //if (maxDepth < getMinDepth())
-        //    return result;
-        //if(!isLeaf())
-        //result.add(this);
-
         if (leftChild != null) {
             result.addAll(combineTreeLists(leftChild.getAllCutTrees(), Collections.singletonList(null)));
         }
@@ -180,6 +222,76 @@ public class LinguisticTree {
         return result;
     }
 
+    /*
+    public ArrayList<LinguisticTree> getAllCutTrees(MultiSet<LinguisticTree> treeSet) {
+        ArrayList<LinguisticTree> result = new ArrayList<>();
+
+        if (leftChild != null) {
+            result.addAll(combineTreeLists(leftChild.getAllCutTrees(treeSet), Collections.singletonList(null), treeSet));
+        }
+        if (rightChild != null) {
+            result.addAll(combineTreeLists(Collections.singletonList(null), rightChild.getAllCutTrees(treeSet), treeSet));
+        }
+        if (leftChild != null && rightChild != null)
+            result.addAll(combineTreeLists(leftChild.getAllCutTrees(treeSet), rightChild.getAllCutTrees(treeSet), treeSet));
+        else
+            result.add(this);
+        return result;
+    }
+    */
+
+    /*
+    public double getProbability(MultiSet<LinguisticTree> treeSet, ArrayList<LinguisticTree> parents, LinguisticTree currentChild){
+
+        if(probability >= 0) {
+            System.out.println("\t"+this.serialize(false)+"\t"+probability);
+            return probability;
+        }
+
+
+        //System.out.println("\t"+this.serialize(false));
+
+        probability = 0;
+
+
+        if(leftChild == null && rightChild == null){
+            if(parents.size() == 0) {
+                Integer ownCount = treeSet.get(this);
+                if (ownCount != null) {
+                    probability = ownCount / treeSet.getTotalCount();
+                }else{
+                    //smoothing?
+                }
+                return probability;
+            }else{
+
+            }
+        }
+
+
+        // cut tree
+        if(leftChild!=null){
+            LinguisticTree newTreeLeftEmpty = new LinguisticTree(null, rightChild);
+            if(treeSet.containsKey(newTreeLeftEmpty)){
+                newTreeLeftEmpty = treeSet.getKey(newTreeLeftEmpty);
+            }
+            probability += leftChild.getProbability(treeSet, null, null) * newTreeLeftEmpty.getProbability(treeSet, parent, parentChild);
+
+        }
+        if(rightChild!=null){
+            LinguisticTree newTreeRightEmpty = new LinguisticTree(leftChild,null);
+            if(treeSet.containsKey(newTreeRightEmpty)){
+                newTreeRightEmpty = treeSet.getKey(newTreeRightEmpty);
+            }
+            probability += rightChild.getProbability(treeSet, null, null) * newTreeRightEmpty.getProbability(treeSet, parent, parentChild);
+        }
+        //System.out.println(probability);
+
+        return probability;
+    }
+    */
+
+    /*
     public ArrayList<LinguisticTree> getPartition(){
         ArrayList<LinguisticTree> result = new ArrayList<>();
         result.add(this);
@@ -191,10 +303,24 @@ public class LinguisticTree {
 
 
         return result;
+    }*/
+
+
+    /*
+    private static ArrayList<LinguisticTree> combineTreeLists(List<LinguisticTree> leftList, List<LinguisticTree> rightList, MultiSet<LinguisticTree> treeSet) {
+        ArrayList<LinguisticTree> result = new ArrayList<>(leftList.size() * rightList.size());
+        for (LinguisticTree left : leftList) {
+            for (LinguisticTree right : rightList) {
+                LinguisticTree newTree = new LinguisticTree(left, right);
+                if(treeSet.containsKey(newTree))
+                    newTree = treeSet.getKey(newTree);
+                result.add(newTree);
+            }
+        }
+        return result;
     }
+    */
 
-
-    // depricated
     private static ArrayList<LinguisticTree> combineTreeLists(List<LinguisticTree> leftList, List<LinguisticTree> rightList) {
         ArrayList<LinguisticTree> result = new ArrayList<>(leftList.size() * rightList.size());
         for (LinguisticTree left : leftList) {
@@ -287,5 +413,49 @@ public class LinguisticTree {
 
         return result;
 
+    }
+
+    @Override
+    public int compareTo(LinguisticTree o) {
+        if(o == null)
+            return 1;
+
+        if(this.isLeaf()){
+            if(this.leaf == null) {
+                return -1;
+            }else{
+                if(o.isLeaf())
+                    return leaf.compareTo(o.getLeaf());
+                else
+                    return -1;
+            }
+        }
+
+        if(o.isLeaf())
+            return 1;
+
+        if(leftChild==null){ // --> rightChild != null
+            if(o.leftChild==null){ // --> o.rightChild != null
+                return rightChild.compareTo(o.rightChild);
+            }else{ //o.leftChild != null
+                return -1;
+            }
+        }else{  // --> leftChild != null
+            if(o.leftChild==null){ // --> o.rightChild != null
+                return 1;
+            }else{ // --> o.leftChild != null
+                int comp = leftChild.compareTo(o.leftChild);
+                if(comp!=0)
+                    return comp;
+                if(rightChild==null) {
+                    if(o.rightChild == null)
+                        return 0;
+                    return -1;
+                }
+                return rightChild.compareTo(o.rightChild);
+            }
+        }
+
+        //return 0;
     }
 }

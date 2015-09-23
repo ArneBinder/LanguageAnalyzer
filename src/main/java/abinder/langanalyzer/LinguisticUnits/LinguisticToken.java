@@ -11,7 +11,7 @@ import java.util.HashSet;
 /**
  * Created by Arne on 17.09.2015.
  */
-public class LinguisticToken {
+public class LinguisticToken implements Comparable<LinguisticToken>{
 
     LinguisticType type;
     ArrayList<LinguisticToken> tokens = new ArrayList<>();
@@ -26,6 +26,10 @@ public class LinguisticToken {
 
     public LinguisticToken(LinguisticType type){
         this.type = type;
+    }
+
+    public LinguisticType getType() {
+        return type;
     }
 
     public void feed(LinguisticToken token){
@@ -67,5 +71,12 @@ public class LinguisticToken {
         }
         return(showPosition?position+""+charPosSeperator:"")+charOpen+result+charClose;
 
+    }
+
+    @Override
+    public int compareTo(LinguisticToken o) {
+        if(o==null)
+            return 1;
+        return this.type.compareTo(o.getType());
     }
 }

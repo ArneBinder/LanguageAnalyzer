@@ -3,7 +3,7 @@ package abinder.langanalyzer.LinguisticUnits;
 /**
  * Created by Arne on 17.09.2015.
  */
-public class LinguisticType {
+public class LinguisticType implements Comparable<LinguisticType> {
 
     char id;
     // model
@@ -17,5 +17,14 @@ public class LinguisticType {
 
     public String serialize(){
         return ((char)id)+"";
+    }
+
+    @Override
+    public int compareTo(LinguisticType o) {
+        if(id < o.getId())
+            return -1;
+        if(id > o.getId())
+            return 1;
+        return 0;
     }
 }
