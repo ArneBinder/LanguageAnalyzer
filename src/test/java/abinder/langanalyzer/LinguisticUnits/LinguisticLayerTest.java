@@ -21,8 +21,8 @@ public class LinguisticLayerTest {
         corpus.readFromFile("src/test/resources/abinder/langanalyzer/corpora/wikipedia/Sprache.txt");
 
         LinguisticLayer layer = new LinguisticLayer();
-        Iterator<Character> characters = new CharacterIterator("abcd");
-        //Iterator<Character> characters = corpus.tokens();
+        //Iterator<Character> characters = new CharacterIterator("abcd");
+        Iterator<Character> characters = corpus.tokens();
         int index = 0;
         int stepSize = 3;
         while(characters.hasNext()){

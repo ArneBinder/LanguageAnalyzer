@@ -178,6 +178,7 @@ public class LinguisticLayer {
 
 
 
+        /*
         System.out.println("print maximal trees:");
         int count = 0;
         ArrayList<ArrayList<LinguisticTree>> tempTrees = previousTrees.get(previousTrees.size() - 1);
@@ -198,7 +199,7 @@ public class LinguisticLayer {
             }
         }
         System.out.println("count: "+count);
-
+*/
 /*
         for(LinguisticTree tree: fullTrees){
             System.out.println(tree.serialize(false));
@@ -222,24 +223,24 @@ public class LinguisticLayer {
         }
         */
 
-        /*
+
         System.out.println("print treeParts (sortByKey)");
         for(LinguisticTree treePart: treeParts.sortedKeySet()){
-            System.out.println(treeParts.get(treePart)+"\t"+treePart.serialize(false)+"\t"+probabilities.get(treePart));
+            treePart.setParents(null);
+            System.out.println(treeParts.get(treePart)+"\t"+treePart.serialize(false)+"\t"+getProbability(treePart, treePart));
         }
         System.out.println("treeParts.size: " + treeParts.size());
         System.out.println("treeParts.size (total): " + treeParts.getTotalCount());
         System.out.println();
-*/
 
         /*
         System.out.println("print treeParts (sortByValue)");
         for(LinguisticTree treePart: treeParts.sortByValue().keySet()){
-            System.out.println(treeParts.get(treePart)+"\t"+treePart.serialize(false));
+            treePart.setParents(null);
+            System.out.println(treeParts.get(treePart)+"\t"+treePart.serialize(false) + "\t"+getProbability(treePart, treePart));
         }
-
         System.out.println("treeParts.size: "+treeParts.size());
-*/
+        */
 
         System.out.println();
         System.out.println("print probabilities (sortedByValue)");

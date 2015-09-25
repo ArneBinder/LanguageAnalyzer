@@ -277,8 +277,12 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
             return leftPos;
         if(isLeaf())
             leftPos = leaf.getPosition();
-        else
-            leftPos = leftChild.getLeftPosition();
+        else {
+            if(leftChild!=null)
+                leftPos = leftChild.getLeftPosition();
+            else
+                leftPos = rightChild.getLeftPosition();
+        }
         return leftPos;
     }
 
@@ -287,8 +291,12 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
             return rightPos;
         if(isLeaf())
             rightPos = leaf.getPosition();
-        else
-            rightPos = rightChild.getRightPosition();
+        else {
+            if(rightChild!=null)
+                rightPos = rightChild.getRightPosition();
+            else
+                rightPos = leftChild.getRightPosition();
+        }
         return rightPos;
     }
 
