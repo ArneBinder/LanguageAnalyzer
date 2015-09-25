@@ -4,9 +4,10 @@ import abinder.langanalyzer.corpora.wikipedia.WIKIPEDIACorpus;
 import abinder.langanalyzer.helper.CharacterIterator;
 import org.junit.Test;
 
-import java.io.IOException;
+import java.io.*;
 import java.lang.*;
 import java.lang.Character;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
@@ -14,15 +15,33 @@ import java.util.Iterator;
  */
 public class LinguisticLayerTest {
 
+    ArrayList<Long> timeStamps = new ArrayList<>();
+
+    public LinguisticLayerTest(){
+        timeStamps.add(System.currentTimeMillis());
+    }
+
+    private void printTimeMessage(String message){
+        if(timeStamps.size()==0) {
+            System.out.println("WARNING: timeStamps is empty");
+            return;
+        }
+        long currTime = System.currentTimeMillis();
+        System.out.println(message+": "+(currTime- timeStamps.get(timeStamps.size()-1))+" ms");
+        timeStamps.add(currTime);
+    }
+
     @Test
     public void layerTest() throws IOException {
 
         WIKIPEDIACorpus corpus = new WIKIPEDIACorpus();
         corpus.readFromFile("src/test/resources/abinder/langanalyzer/corpora/wikipedia/Sprache.txt");
+        //corpus.readFromFile("src/test/resources/abinder/langanalyzer/corpora/wikipedia/Syntax.txt");
+        printTimeMessage("corpus read");
 
         LinguisticLayer layer = new LinguisticLayer();
-        //Iterator<Character> characters = new CharacterIterator("abcd");
-        Iterator<Character> characters = corpus.tokens();
+        Iterator<Character> characters = new CharacterIterator("abcd");
+        //Iterator<Character> characters = corpus.tokens();
         int index = 0;
         int stepSize = 3;
         while(characters.hasNext()){
@@ -32,14 +51,24 @@ public class LinguisticLayerTest {
             layer.feed(currentToken, 3);
 
             /*if(index % stepSize == stepSize -1)
-                layer.processTrees(index-stepSize+1);
+                layer.updateTreePatterns(index-stepSize+1);
 */
             index++;
         }
 
-        //layer.processTrees((index / stepSize) * stepSize);
+        printTimeMessage("fed content");
+        //layer.updateTreePatterns((index / stepSize) * stepSize);
 
-        layer.processTrees();
-        layer.checkTrees();
+        layer.updateTreePatterns();
+        printTimeMessage("updateTreePatterns");
+
+        layer.calculateTreePatternProbabilites();
+        printTimeMessage("calculateTreePatternProbabilities");
+
+
+        PrintStream out = new PrintStream(new BufferedOutputStream(new FileOutputStream("out.txt")));
+        layer.printProbabilitiesSortedByValue(out);
+        printTimeMessage("printProbabilitiesSortedByValue to file");
+
     }
 }

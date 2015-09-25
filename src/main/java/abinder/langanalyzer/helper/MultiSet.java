@@ -10,7 +10,6 @@ import java.util.stream.Stream;
 public class MultiSet<V> extends HashMap<V, Integer> implements Iterable<V> {
 
     int totalCount = 0;
-    //HashMap<V,V> keyBackups = new HashMap<>();
 
     public int getTotalCount() {
         return totalCount;
@@ -23,7 +22,6 @@ public class MultiSet<V> extends HashMap<V, Integer> implements Iterable<V> {
         count++;
         totalCount++;
         put(value, count);
-        //keyBackups.put(value, value);
     }
 
     public double getProbability(V value){
@@ -31,16 +29,6 @@ public class MultiSet<V> extends HashMap<V, Integer> implements Iterable<V> {
             return 0;
         return get(value) / (double) totalCount;
     }
-
-    /*public V getKey(V key){
-        return keyBackups.get(key);
-    }*/
-
-    /*
-    public void resetKey(V key){
-        put(key, get(key));
-    }
-    */
 
     @Override
     public Iterator<V> iterator() {
