@@ -57,7 +57,7 @@ public class TokenTest {
 
         HashMap<String, Integer> patterns = new HashMap<>();
         HashMap<String, Integer> patternsPositioned = new HashMap<>();
-        for(LinguisticTree tree: LinguisticTree.constructTrees2(globalToken.getTokens(), 4)){
+        /*for(LinguisticTree tree: LinguisticTree.constructTrees2(globalToken.getTokens(), 4)){
             String t = tree.serialize(false);
             //out += t+"\t"+tree.getDepth()+"\n";
             System.out.println(t+"\t"+tree.getDepth());
@@ -79,6 +79,7 @@ public class TokenTest {
                 //System.out.println("\t"+ct+"\t"+cutTree.getDepth());
             }
         }
+        */
 
         out +=patterns.size()+"\n\n";
         System.out.println("PATTERNS: \t"+patterns.size()+"\n");

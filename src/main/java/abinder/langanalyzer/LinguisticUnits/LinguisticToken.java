@@ -46,10 +46,11 @@ public class LinguisticToken implements Comparable<LinguisticToken>{
         this.position = position;
     }
 
-    public ArrayList<LinguisticTree> getAllTrees(int maxDepth){
+    /*public ArrayList<LinguisticTree> getAllTrees(int maxDepth){
         return LinguisticTree.constructTrees(tokens, maxDepth);
-    }
+    }*/
 
+    /*
     public ArrayList<LinguisticTree> getAllSubtrees(int maxDepth){
         ArrayList<LinguisticTree> result = new ArrayList<>();
         for(LinguisticTree currentTree:getAllTrees(maxDepth)){
@@ -57,6 +58,7 @@ public class LinguisticToken implements Comparable<LinguisticToken>{
         }
         return result;
     }
+    */
 
     public ArrayList<LinguisticToken> getTokens() {
         return tokens;

@@ -1,10 +1,8 @@
 package abinder.langanalyzer.LinguisticUnits;
 
 import abinder.langanalyzer.helper.IO;
-import abinder.langanalyzer.helper.MultiSet;
 
 import java.lang.*;
-import java.lang.Character;
 import java.util.*;
 
 /**
@@ -13,6 +11,7 @@ import java.util.*;
 public class LinguisticTree implements Comparable<LinguisticTree>{
     private LinguisticTree leftChild;
     private LinguisticTree rightChild;
+    private LinguisticTree parent;
     private LinguisticToken leaf;
     private ArrayList<LinguisticTree> parents;
 
@@ -49,11 +48,26 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         this.defaultUsePositions = usePositions;
     }
 
+    public LinguisticTree(LinguisticTree leftChild, LinguisticTree rightChild, LinguisticTree parent) {
+        this.leftChild = leftChild;
+        this.rightChild = rightChild;
+        this.parent = parent;
+    }
+
     public LinguisticTree(LinguisticTree leftChild, LinguisticTree rightChild) {
         this.leftChild = leftChild;
         this.rightChild = rightChild;
     }
 
+    public void setParents(LinguisticTree parent){
+        this.parent = parent;
+        if(leftChild!=null)
+            leftChild.setParents(this);
+        if(rightChild!=null)
+            rightChild.setParents(this);
+    }
+
+    /*
     public LinguisticTree copyThisWithoutChild(LinguisticTree exceptChild){
         if(isLeaf())
             return new LinguisticTree(leaf);
@@ -77,9 +91,14 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
             return new LinguisticTree(leaf);
         return new LinguisticTree(leftChild!=null?leftChild.copyThis():null, rightChild!=null?rightChild.copyThis():null);
     }
+    */
 
     public boolean isLeaf() {
         return (leftChild == null && rightChild == null);
+    }
+
+    public boolean isRoot(){
+        return parent==null;
     }
 
     public LinguisticToken getLeaf() {
@@ -118,6 +137,83 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         return this.serialize(false).equals(other.serialize(false));
     }
 
+    public void rightChildWasDeleted(boolean saysSameChild){
+
+        if(saysSameChild){
+            rightPos = rightChild.getRightPosition();
+        }
+    }
+
+
+    public void leftChildWasDeleted(boolean saysSameChild){
+
+        if(saysSameChild){
+            leftPos = leftChild.getLeftPosition();
+        }
+    }
+
+    public void resetSerializations(){
+        serialization = null;
+        serializationPL = null;
+        if(parent!=null){
+            parent.resetSerializations();
+        }
+    }
+
+    public void resetLeftPositions(int prevleftPosition){
+        if(prevleftPosition == leftPos && leftPos != -1){
+            if(leftChild!=null){
+                leftPos = leftChild.getLeftPosition();
+            }else if(rightChild!=null){
+                leftPos = rightChild.getLeftPosition();
+            }else
+                leftPos = -1;
+            if(parent!=null){
+                parent.resetLeftPositions(prevleftPosition);
+            }
+        }
+    }
+
+    public void resetRightPositions(int prevRightPosition){
+        if(prevRightPosition == rightPos && rightPos != -1){
+            if(rightChild!=null){
+                rightPos = rightChild.getRightPosition();
+            }else if(leftChild != null){
+                rightPos = leftChild.getRightPosition();
+            }else
+                rightPos = -1;
+            if(parent!=null)
+                parent.resetRightPositions(prevRightPosition);
+        }
+    }
+
+    public LinguisticTree deleteLeftChild(){
+        LinguisticTree left = leftChild;
+        resetSerializations();
+        resetLeftPositions(leftPos);
+        leftChild = null;
+        return left;
+    }
+
+    public LinguisticTree deleteRightChild(){
+        LinguisticTree right = rightChild;
+        resetSerializations();
+        resetRightPositions(rightPos);
+        rightChild = null;
+        return right;
+    }
+
+    public void setLeftChild(LinguisticTree leftChild) {
+        resetLeftPositions(leftPos);
+        resetSerializations();
+        this.leftChild = leftChild;
+    }
+
+    public void setRightChild(LinguisticTree rightChild) {
+        resetRightPositions(rightPos);
+        resetSerializations();
+        this.rightChild = rightChild;
+    }
 
     public String serialize(boolean showPosition) {
         if (showPosition) {
@@ -210,13 +306,13 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         ArrayList<LinguisticTree> result = new ArrayList<>();
 
         if (leftChild != null) {
-            result.addAll(combineTreeLists(leftChild.getAllCutTrees(), Collections.singletonList(null)));
+            result.addAll(combineTreeLists(leftChild.getAllCutTrees(), Collections.singletonList(null), this));
         }
         if (rightChild != null) {
-            result.addAll(combineTreeLists(Collections.singletonList(null), rightChild.getAllCutTrees()));
+            result.addAll(combineTreeLists(Collections.singletonList(null), rightChild.getAllCutTrees(), this));
         }
         if (leftChild != null && rightChild != null)
-            result.addAll(combineTreeLists(leftChild.getAllCutTrees(), rightChild.getAllCutTrees()));
+            result.addAll(combineTreeLists(leftChild.getAllCutTrees(), rightChild.getAllCutTrees(), this));
         else
             result.add(this);
         return result;
@@ -321,16 +417,17 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
     }
     */
 
-    private static ArrayList<LinguisticTree> combineTreeLists(List<LinguisticTree> leftList, List<LinguisticTree> rightList) {
+    private static ArrayList<LinguisticTree> combineTreeLists(List<LinguisticTree> leftList, List<LinguisticTree> rightList, LinguisticTree parent) {
         ArrayList<LinguisticTree> result = new ArrayList<>(leftList.size() * rightList.size());
         for (LinguisticTree left : leftList) {
             for (LinguisticTree right : rightList) {
-                result.add(new LinguisticTree(left, right));
+                result.add(new LinguisticTree(left, right, parent));
             }
         }
         return result;
     }
 
+    /*
     // depricated
     public static ArrayList<LinguisticTree> constructTrees(List<LinguisticToken> tokens, int maxDepth) {
         ArrayList<LinguisticTree> result = new ArrayList<>();
@@ -415,6 +512,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
 
     }
 
+*/
     @Override
     public int compareTo(LinguisticTree o) {
         if(o == null)
