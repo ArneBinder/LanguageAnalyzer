@@ -40,8 +40,8 @@ public class LinguisticLayerTest {
         printTimeMessage("corpus read");
 
         LinguisticLayer layer = new LinguisticLayer();
-        Iterator<Character> characters = new CharacterIterator("abcd");
-        //Iterator<Character> characters = corpus.tokens();
+        //Iterator<Character> characters = new CharacterIterator("abcd");
+        Iterator<Character> characters = corpus.tokens();
         int index = 0;
         int stepSize = 3;
         while(characters.hasNext()){
@@ -68,6 +68,7 @@ public class LinguisticLayerTest {
 
         PrintStream out = new PrintStream(new BufferedOutputStream(new FileOutputStream("out.txt")));
         layer.printProbabilitiesSortedByValue(out);
+        out.flush();
         printTimeMessage("printProbabilitiesSortedByValue to file");
 
     }
