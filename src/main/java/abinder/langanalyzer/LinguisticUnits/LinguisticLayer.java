@@ -5,9 +5,7 @@ import abinder.langanalyzer.helper.MultiTreeSet;
 
 import java.io.PrintStream;
 import java.lang.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.*;
 
 /**
  * Created by Arne on 21.09.2015.
@@ -22,6 +20,7 @@ public class LinguisticLayer {
     // with set parents
     MultiTreeSet treePatterns = new MultiTreeSet();
     HashMap<LinguisticTree, Double> probabilities = new HashMap<>();
+    HashMap<String, Double> probabilities2 = new HashMap<>();
 
     int count = 0;
     int posOffset = 0;
@@ -107,7 +106,9 @@ public class LinguisticLayer {
 
         double probability = 0;
 
+        // TODO: fix caching!!
         if(tree.equals(currentPos)) {
+            //String s = tree.serialize(false);
             if(probabilities.containsKey(tree)) {
                 //System.out.println(tabs+tree.serialize(false)+"\t"+currentPos.serialize(false)+ "\tCACHED\t"+ probabilities.get(tree));
                 //tabs = tabs.substring(1);
@@ -150,14 +151,18 @@ public class LinguisticLayer {
 
         //tabs = tabs.substring(1);
 
-        if(probability > 0)
+
+        //if(probability > 0)
+        if(tree.equals(currentPos))
             probabilities.put(tree.copyThis(), probability);
-        else
-            System.out.println("BLAAAA");
+        //else {
+            //if(probability > 0)
+            //    System.out.println("BLAAAA");
+        //}
         return probability;
     }
 
-    public void calculateTreePatternProbabilites(){
+    public void calculateTreePatternProbabilities(){
         for(LinguisticTree tree: treePatterns.keySet()){
             getProbability(tree, tree);
         }
@@ -193,21 +198,92 @@ public class LinguisticLayer {
         out.println("count: " + count);
     }
 
+    public void printProbabilities(PrintStream out){
+        out.println("print probabilities:");
+        for(LinguisticTree tree: probabilities.keySet()){
+            out.println(tree.serialize(false)+"\t"+probabilities.get(tree));
+        }
+        out.println("probabilities.size: " + probabilities.size());
+    }
 
-
-    public void printProbabilitiesSortedByValue(PrintStream out){
+    /*public void printProbabilitiesSortedByValue(PrintStream out){
         out.println("print probabilities (sortedByValue):");
         for(LinguisticTree tree: probabilities.keySet()){//MultiSet.sortByValue(probabilities).keySet()){
             if(!tree.serialize(false).contains("X"))
                 out.println(probabilities.get(tree)+"\t"+tree.serialize(false));
         }
+    }*/
+
+    public void printProbabilitiesSortedByValue2(PrintStream out){
+        out.println("print probabilities (sortedByValue):");
+        for(String tree: probabilities2.keySet()){//MultiSet.sortByValue(probabilities).keySet()){
+            if(!tree.contains("X"))
+                out.println(probabilities2.get(tree)+"\t"+tree);
+        }
     }
 
-    public void printTreePatternsSortedByValue(PrintStream out){
+    public void printProbabilitiesSortedByValue(PrintStream out){
         out.println("print treePatterns (sortByValue)");
         for(LinguisticTree treePart: treePatterns.sortByValue().keySet()){
-            out.println(treePatterns.get(treePart)+"\t"+treePart.serialize(false) + "\t"+getProbability(treePart, treePart));
+            out.println(treePatterns.get(treePart)+"\t"+treePart.serialize(false) + "\t"+(probabilities.containsKey(treePart)?probabilities.get(treePart):"NULL"));
         }
+        out.println("treePatterns.size: " + treePatterns.size());
+        out.println("probabilities.size: "+probabilities.size());
+
+    }
+
+    public void printProbabilitiesSortedByValueAndKey(PrintStream out){
+        out.println("print treePatterns (sortedByValueAndKey)");
+        SortedSet<KeyValuePair<Double, LinguisticTree>> sortedSet = new TreeSet<>();
+        for(Map.Entry<LinguisticTree,Double> entry: probabilities.entrySet()){
+            //if(!entry.getKey().serialize(false).contains("X"))
+                sortedSet.add(new KeyValuePair<>(entry.getValue(), entry.getKey()));
+        }
+        for (KeyValuePair<Double, LinguisticTree> keyValuePair : sortedSet) {
+            out.println(keyValuePair.key + "\t" + keyValuePair.value.serialize(false));
+        }
+
+        /*for(LinguisticTree treePart: treePatterns.sortByValue().keySet()){
+            out.println(treePatterns.get(treePart)+"\t"+treePart.serialize(false) + "\t"+getProbability(treePart, treePart));
+        }*/
+        out.println("treePatterns.size: " + treePatterns.size());
+        out.println("probabilities.size: " + probabilities.size());
+        out.println("sortedSet.size: " + sortedSet.size());
+
+    }
+
+    public void printProbabilitiesSortedByValueAndKey2(PrintStream out){
+        out.println("print treePatterns (sortedByValueAndKey)");
+        SortedSet<KeyValuePair<Double, String>> sortedSet = new TreeSet<>();
+        for(Map.Entry<String,Double> entry: probabilities2.entrySet()){
+            //if(!entry.getKey().serialize(false).contains("X"))
+            sortedSet.add(new KeyValuePair<>(entry.getValue(), entry.getKey()));
+        }
+        for (KeyValuePair keyValuePair : sortedSet) {
+            out.println(keyValuePair.key+"\t"+keyValuePair.value);
+        }
+
+        /*for(LinguisticTree treePart: treePatterns.sortByValue().keySet()){
+            out.println(treePatterns.get(treePart)+"\t"+treePart.serialize(false) + "\t"+getProbability(treePart, treePart));
+        }*/
+        out.println("treePatterns.size: " + treePatterns.size());
+
+    }
+
+    public void printProbabilitiesSortedByValueAndKey3(PrintStream out){
+        out.println("print treePatterns (sortedByValueAndKey)");
+        SortedSet<KeyValuePair<Double, String>> sortedSet = new TreeSet<>();
+        for(Map.Entry<LinguisticTree,Double> entry: probabilities.entrySet()){
+            //if(!entry.getKey().serialize(false).contains("X"))
+            sortedSet.add(new KeyValuePair<>(entry.getValue(), entry.getKey().serialize(false)));
+        }
+        for (KeyValuePair keyValuePair : sortedSet) {
+            out.println(keyValuePair.key+"\t"+keyValuePair.value);
+        }
+
+        /*for(LinguisticTree treePart: treePatterns.sortByValue().keySet()){
+            out.println(treePatterns.get(treePart)+"\t"+treePart.serialize(false) + "\t"+getProbability(treePart, treePart));
+        }*/
         out.println("treePatterns.size: " + treePatterns.size());
 
     }
@@ -215,7 +291,7 @@ public class LinguisticLayer {
     public void printTreePatternsSortedByKey(PrintStream out){
         out.println("print treePatterns (sortByKey)");
         for(LinguisticTree treePart: treePatterns.sortedKeySet()){
-            System.out.println(treePatterns.get(treePart)+"\t"+treePart.serialize(false)+"\t"+getProbability(treePart, treePart));
+            out.println(treePatterns.get(treePart)+"\t"+treePart.serialize(false));
         }
         out.println("treePatterns.size: " + treePatterns.size());
         out.println("treePatterns.size (total): " + treePatterns.getTotalCount());
@@ -227,5 +303,28 @@ public class LinguisticLayer {
 
     public HashMap<LinguisticTree, Double> getProbabilities() {
         return probabilities;
+    }
+
+}
+class KeyValuePair<K extends Comparable<K>, V extends Comparable<V>> implements Comparable<KeyValuePair<K, V>>{
+
+    K key;
+    V value;
+
+    public KeyValuePair(K key, V value) {
+        super();
+        this.key = key;
+        this.value = value;
+    }
+
+
+
+    @Override
+    public int compareTo(KeyValuePair<K, V> o) {
+        if(o==null)
+            return 1;
+        //return key==o.key?value.compareTo(o.value):(int)Math.signum(key-o.key);
+        int comp = key.compareTo(o.key);
+        return (comp==0)?value.compareTo(o.value):comp;
     }
 }

@@ -1,7 +1,6 @@
 package abinder.langanalyzer.LinguisticUnits;
 
 import abinder.langanalyzer.corpora.wikipedia.WIKIPEDIACorpus;
-import abinder.langanalyzer.helper.CharacterIterator;
 import org.junit.Test;
 
 import java.io.*;
@@ -40,7 +39,7 @@ public class LinguisticLayerTest {
         printTimeMessage("corpus read");
 
         LinguisticLayer layer = new LinguisticLayer();
-        //Iterator<Character> characters = new CharacterIterator("abcd");
+        //Iterator<Character> characters = new CharacterIterator("abcdef");
         Iterator<Character> characters = corpus.tokens();
         int index = 0;
         int stepSize = 3;
@@ -62,14 +61,77 @@ public class LinguisticLayerTest {
         layer.updateTreePatterns();
         printTimeMessage("updateTreePatterns");
 
-        layer.calculateTreePatternProbabilites();
+
+        layer.calculateTreePatternProbabilities();
         printTimeMessage("calculateTreePatternProbabilities");
 
+        PrintStream outa = new PrintStream(new BufferedOutputStream(new FileOutputStream(new File("outa.txt"))), true, "UTF-8");
+        layer.printTreePatternsSortedByKey(outa);
+        outa.flush();
+        printTimeMessage("printProbabilities");
 
-        PrintStream out = new PrintStream(new BufferedOutputStream(new FileOutputStream("out.txt")));
-        layer.printProbabilitiesSortedByValue(out);
-        out.flush();
+/*
+        PrintStream outb = new PrintStream(new BufferedOutputStream(new FileOutputStream(new File("outb.txt"))), true, "UTF-8");
+        layer.printProbabilitiesSortedByValue(outb);
+        outb.flush();
         printTimeMessage("printProbabilitiesSortedByValue to file");
+*/
+        //new OutputStreamWriter(new FileOutputStream(filename), "UTF-8")
+        PrintStream out = new PrintStream(new BufferedOutputStream(new FileOutputStream(new File("out.txt"))), true, "UTF-8");
+        layer.printProbabilitiesSortedByValueAndKey(out);
+        out.flush();
+        printTimeMessage("printProbabilitiesSortedByValueAndKey to file");
+
+    }
+
+    @Test
+    //@Ignore
+    public void filesEqualTest() throws Exception{
+
+        int run = 12;
+
+        File[] listOfFiles = (new File(".")).listFiles();
+
+        ArrayList<BufferedReader> readers = new ArrayList<>();
+        ArrayList<File> files = new ArrayList<>();
+
+        for(File file: listOfFiles){
+            if(file.getName().startsWith("out"+run)){
+                files.add(file);
+                readers.add(new BufferedReader(new InputStreamReader(new FileInputStream(file))));
+                System.out.println(file.getName());
+            }
+
+        }
+
+        int linecount = 1;
+        String[] lines = new String[readers.size()];
+
+        read:
+            while(true){
+                int li =0;
+                for (BufferedReader reader : readers) {
+                    lines[li] = reader.readLine();
+                    if(lines[li]==null){
+                        System.out.println("read lines: "+linecount);
+                        break read;
+                    }
+                    li++;
+                }
+
+                for(int i=0; i<lines.length-1;i++){
+                   for(int j=i+1; j<lines.length; j++){
+                       if(!lines[i].equals(lines[j])){
+                           System.out.println("line: "+linecount+"\t"+lines[i]+" != "+lines[j]+"\t\n("+files.get(i).getName()+" != "+files.get(j).getName()+")");
+                           break read;
+                       }
+                   }
+                }
+
+                linecount++;
+
+            }
+
 
     }
 }

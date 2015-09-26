@@ -16,15 +16,24 @@ public class LinguisticType implements Comparable<LinguisticType> {
     }
 
     public String serialize(){
-        return ((char)id)+"";
+        return (id)+"";
     }
 
     @Override
     public int compareTo(LinguisticType o) {
+        if(o == null)
+            return 1;
         if(id < o.getId())
             return -1;
         if(id > o.getId())
             return 1;
         return 0;
+    }
+
+    @Override
+    public boolean equals(Object o){
+        return (o!=null)
+                && (o instanceof LinguisticType)
+                && ((LinguisticType)o).getId() == id;
     }
 }

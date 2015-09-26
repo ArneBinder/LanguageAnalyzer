@@ -87,9 +87,13 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
     }
 */
     public LinguisticTree copyThis(){
+        LinguisticTree result;
         if(isLeaf())
-            return new LinguisticTree(leaf);
-        return new LinguisticTree(leftChild!=null?leftChild.copyThis():null, rightChild!=null?rightChild.copyThis():null);
+            result = new LinguisticTree(leaf);
+        else
+            result = new LinguisticTree(leftChild!=null?leftChild.copyThis():null, rightChild!=null?rightChild.copyThis():null);
+        result.setSerializationPL(this.getSerializationPL());
+        return result;
     }
 
 
@@ -122,34 +126,42 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
     }
 
     @Override
-    public boolean equals(Object other) {
+    /*public boolean equals(Object other) {
         return (other != null)
                 &&(other instanceof LinguisticTree)
                 && ((LinguisticTree) other).serialize(defaultUsePositions).equals(this.serialize(defaultUsePositions));
+    }*/
+
+    public boolean equals(Object other) {
+        if(other == null || !(other instanceof LinguisticTree))
+            return false;
+        LinguisticTree oTree = (LinguisticTree) other;
+        if(leaf != null){
+            return oTree.getLeaf()!=null
+                    && leaf.getType().equals(oTree.getLeaf().getType());
+        }
+        boolean result;
+        if(leftChild!=null){
+            result = leftChild.equals(oTree.leftChild);
+        }else{
+            result = oTree.leftChild == null;
+        }
+        if(rightChild!=null){
+            result &= rightChild.equals(oTree.rightChild);
+        }else{
+            result &= oTree.rightChild == null;
+        }
+        return result;
     }
+
 
     @Override
     public int hashCode() {
         return serialize(defaultUsePositions).hashCode();
     }
 
-    public boolean equalsPositionIndependent(LinguisticTree other) {
-        return this.serialize(false).equals(other.serialize(false));
-    }
-
-    public void rightChildWasDeleted(boolean saysSameChild){
-
-        if(saysSameChild){
-            rightPos = rightChild.getRightPosition();
-        }
-    }
-
-
-    public void leftChildWasDeleted(boolean saysSameChild){
-
-        if(saysSameChild){
-            leftPos = leftChild.getLeftPosition();
-        }
+    public boolean equalsPositionDependent(LinguisticTree other) {
+        return this.serialize(true).equals(other.serialize(true));
     }
 
     public void resetSerializations(){
@@ -231,16 +243,24 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
             }
             return serialization;
         } else {
-            if(serializationPL == null){
+            //if(serializationPL == null){
                 if (isLeaf())
                     serializationPL = IO.escape(leaf.serialize(showPosition), escapeAbleChars, charEscape);
                 else {
                     serializationPL = charOpen + (leftChild != null ? leftChild.serialize(showPosition) : charNull + "") + charSeperate + (rightChild != null ? rightChild.serialize(showPosition) : charNull + "") + charClose;
                 }
-            }
+            //}
             return serializationPL;
         }
 
+    }
+
+    public String getSerializationPL() {
+        return serializationPL;
+    }
+
+    public void setSerializationPL(String serializationPL) {
+        this.serializationPL = serializationPL;
     }
 
     /**
