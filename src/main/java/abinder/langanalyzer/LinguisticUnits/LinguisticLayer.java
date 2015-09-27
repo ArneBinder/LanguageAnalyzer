@@ -12,6 +12,7 @@ import java.util.*;
  */
 public class LinguisticLayer {
 
+    boolean print = false;
     ArrayList<LinguisticToken> tokens = new ArrayList<>();
     // ATTENTION: parents aren't set!
     ArrayList<ArrayList<ArrayList<LinguisticTree>>> previousTrees = new ArrayList<>();
@@ -101,60 +102,86 @@ public class LinguisticLayer {
     }
 
     public double getProbability(LinguisticTree tree, LinguisticTree currentPos) {
-        //tabs += "\t";
-        //System.out.println(tabs + tree.serialize(false) + "\t"+ currentPos.serialize(false) + "\tVISIT");
+        tabs += "\t";
+        System.out.println(tabs + tree.serialize(false) + "\t"+ currentPos.serialize(false) + "\tVISIT");
 
         double probability = 0;
 
+        double currentProb = 0;
+
         // TODO: fix caching!!
         if(tree.equals(currentPos)) {
+            if(tree.serialize(false).equals("[[²,X],[¹,³]]")) {
+                System.out.println("HERE");
+                //print = true;
+            }
             //String s = tree.serialize(false);
             if(probabilities.containsKey(tree)) {
-                //System.out.println(tabs+tree.serialize(false)+"\t"+currentPos.serialize(false)+ "\tCACHED\t"+ probabilities.get(tree));
-                //tabs = tabs.substring(1);
-                return probabilities.get(tree);
-            }else
-                probability += treePatterns.getProbability(tree);
+                //if(print) {
+                    System.out.println(tabs + tree.serialize(false) + "\t" + currentPos.serialize(false) + "\tCACHED\t" + probabilities.get(tree));
+                    tabs = tabs.substring(1);
+                //}
+                currentProb = probabilities.get(tree);
+                return currentProb;
+            }else {
+                currentProb = treePatterns.getProbability(tree);
+                probability += currentProb;
+            }
         }
 
         LinguisticTree leftChild = currentPos.getLeftChild();
         LinguisticTree rightChild = currentPos.getRightChild();
 
-        if(leftChild != null && leftChild.getSize() > 1){
-            //System.out.println(tabs + tree.serialize(false) + "\t"+ leftChild.serialize(false) + "\tLEFTCHILD");
-            probability += getProbability(tree, leftChild);
-        }
 
-        if(rightChild != null && rightChild.getSize() > 1){
-            //System.out.println(tabs + tree.serialize(false) + "\t"+ rightChild.serialize(false) + "\tRIGHTCHILD");
-            probability += getProbability(tree, rightChild);
-        }
 
         // cut tree
         if(leftChild!=null && rightChild != null){
             // cut left child
             leftChild = currentPos.deleteLeftChild();
-            //System.out.println(tabs+leftChild.serialize(false)+ "\to\t"+  tree.serialize(false) + "\tCUT left\t");
+            //if(print)
+                System.out.println(tabs+leftChild.serialize(false)+ "\to\t"+  tree.serialize(false) + "\tCUT left\t");
 
-            probability += getProbability(leftChild, leftChild) * getProbability(tree, tree);
+            currentProb = getProbability(leftChild, leftChild) * getProbability(tree, tree);
+            probability += currentProb;
             currentPos.setLeftChild(leftChild);
 
             // cut right child
             rightChild = currentPos.deleteRightChild();
-            //System.out.println(tabs+tree.serialize(false)+ "\to\t"+ rightChild.serialize(false)+"\t"+"\tCUT right\t");
+            //if(print)
+                System.out.println(tabs+tree.serialize(false)+ "\to\t"+ rightChild.serialize(false)+"\tCUT right\t");
 
-            probability += getProbability(rightChild, rightChild) * getProbability(tree, tree);
+            currentProb = getProbability(rightChild, rightChild) * getProbability(tree, tree);
+            probability += currentProb;
             currentPos.setRightChild(rightChild);
         }
 
-        //System.out.println(tabs+tree.serialize(false)+"\t"+currentPos.serialize(false)+ "\tRETURN\t"+ probability);
+        if(leftChild != null && leftChild.getSize() > 1){
+            //if(print)
+            //System.out.println(tabs + tree.serialize(false) + "\t"+ leftChild.serialize(false) + "\tLEFTCHILD");
+            currentProb = getProbability(tree, leftChild);
+            probability += currentProb;
+        }
 
-        //tabs = tabs.substring(1);
+        if(rightChild != null && rightChild.getSize() > 1){
+            //if(print)
+            //System.out.println(tabs + tree.serialize(false) + "\t"+ rightChild.serialize(false) + "\tRIGHTCHILD");
+            currentProb = getProbability(tree, rightChild);
+            probability += currentProb;
+        }
 
+        //if(print) {
+            //System.out.println(tabs + tree.serialize(false) + "\t" + currentPos.serialize(false) + "\tRETURN\t" + probability);
+            tabs = tabs.substring(1);
+        //}
 
         //if(probability > 0)
-        if(tree.equals(currentPos))
+        if(tree.equals(currentPos)) {
             probabilities.put(tree.copyThis(), probability);
+            //if(tree.serialize(false).equals("[[²,X],[¹,³]]")) {
+            //    System.out.println("HEREOUT");
+            //    print = false;
+            //}
+        }
         //else {
             //if(probability > 0)
             //    System.out.println("BLAAAA");
@@ -164,6 +191,7 @@ public class LinguisticLayer {
 
     public void calculateTreePatternProbabilities(){
         for(LinguisticTree tree: treePatterns.keySet()){
+            System.out.println(tree.serialize(false));
             getProbability(tree, tree);
         }
     }

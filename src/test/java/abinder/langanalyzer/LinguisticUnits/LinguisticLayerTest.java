@@ -1,6 +1,7 @@
 package abinder.langanalyzer.LinguisticUnits;
 
 import abinder.langanalyzer.corpora.wikipedia.WIKIPEDIACorpus;
+import abinder.langanalyzer.helper.CharacterIterator;
 import org.junit.Test;
 
 import java.io.*;
@@ -39,8 +40,8 @@ public class LinguisticLayerTest {
         printTimeMessage("corpus read");
 
         LinguisticLayer layer = new LinguisticLayer();
-        //Iterator<Character> characters = new CharacterIterator("abcdef");
-        Iterator<Character> characters = corpus.tokens();
+        Iterator<Character> characters = new CharacterIterator("abcd");
+        //Iterator<Character> characters = corpus.tokens();
         int index = 0;
         int stepSize = 3;
         while(characters.hasNext()){
