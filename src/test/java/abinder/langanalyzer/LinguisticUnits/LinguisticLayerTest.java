@@ -48,8 +48,7 @@ public class LinguisticLayerTest {
             char character = characters.next();
             LinguisticType currentType = new LinguisticType(character);
             LinguisticToken currentToken = new LinguisticToken(currentType);
-            layer.feed(currentToken, 3);
-
+            layer.feed(currentToken, 4);
             /*if(index % stepSize == stepSize -1)
                 layer.updateTreePatterns(index-stepSize+1);
 */

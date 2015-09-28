@@ -106,9 +106,7 @@ public class LinguisticLayer {
         tabs += "\t";
         double result = 0;
         double currentProb = 0;
-        //ArrayList<LinguisticTree> remainingTreeParts = new ArrayList<>();
         String blindedSerialization = currentHead.getBlindedSerialization(currentHead.serialize(false),tree);
-        //System.out.println(tabs+blindedSerialization+"\tCALC");
         LinguisticTree currentHeadTreeDummy = new LinguisticTree();
         currentHeadTreeDummy.setSerializationPL(blindedSerialization);
         if(probabilities.containsKey(currentHeadTreeDummy)){
@@ -122,6 +120,7 @@ public class LinguisticLayer {
             partitionStr+=" o " + remainingTree.serialize(false);
         }
         System.out.println(tabs+partitionStr);
+
         currentProb = treePatterns.getProbability(currentHeadTreeDummy);
         result = currentProb;
 
@@ -152,9 +151,10 @@ public class LinguisticLayer {
             }
         }
 
-        System.out.println(tabs+partitionStr+"\tRETURN\t"+result);
-        probabilities.put(currentHeadTreeDummy, result);
+        System.out.println(tabs + partitionStr + "\tRETURN\t" + result);
         tabs = tabs.substring(1);
+
+        probabilities.put(currentHeadTreeDummy, result);
         return result;
     }
 
@@ -269,11 +269,11 @@ public class LinguisticLayer {
     public void calculateTreePatternProbabilities(){
         for(LinguisticTree tree: treePatterns.keySet()){
             //System.out.println(tree.serialize(false));
-            if(tree.serialize(false).equals("[[a,b],[c,d]]")) {
+            //if(tree.serialize(false).equals("[[a,b],[c,d]]")) {
                 //getProbability(tree, tree, tree.getLeafCount()-1);
                 tree.setParents(null);
                 getProbabilityForHead(tree, tree, new LinguisticTree[0]);
-            }
+            //}
         }
     }
 
