@@ -11,6 +11,10 @@ public class LinguisticType implements Comparable<LinguisticType> {
         this.id = id;
     }
 
+    public LinguisticType(String id){
+        this.id = id.charAt(0);
+    }
+
     public int getId() {
         return id;
     }

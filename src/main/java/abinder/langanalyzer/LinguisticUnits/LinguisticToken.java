@@ -18,14 +18,20 @@ public class LinguisticToken implements Comparable<LinguisticToken>{
     int position;
 
     private static final char charEscape = '\\';
-    private static final char charPosSeperator = ':';
+    private static final char charPosSeperator = '#';
+    private static final char charTypeSeperator = ':';
+    private static final char charTokenSeperator = ';';
     private static final char charOpen = '(';
     private static final char charClose = ')';
-    private static final HashSet<Character> escapeAbleChars = new HashSet<>(Arrays.asList(charEscape, charOpen, charClose, charPosSeperator));
+    private static final HashSet<Character> escapeAbleChars = new HashSet<>(Arrays.asList(charEscape, charOpen, charClose, charPosSeperator,charTypeSeperator,charTokenSeperator));
 
 
     public LinguisticToken(LinguisticType type){
         this.type = type;
+    }
+
+    public LinguisticToken(String serialization){
+        deserialize(serialization);
     }
 
     public LinguisticType getType() {
@@ -65,14 +71,68 @@ public class LinguisticToken implements Comparable<LinguisticToken>{
     }
 
     public String serialize(boolean showPosition){
+        String result = (showPosition?position+""+charPosSeperator:"") + IO.escape(type.serialize(),escapeAbleChars,charEscape);
         if(tokens.size()==0)
-            return (showPosition?position+""+charPosSeperator:"") + IO.escape(type.serialize(),escapeAbleChars,charEscape);
-        String result = "";
-        for(LinguisticToken token: tokens){
-            result += token.serialize(showPosition);
-        }
-        return(showPosition?position+""+charPosSeperator:"")+charOpen+result+charClose;
+            return result;
 
+        result += charTypeSeperator+""+charOpen+tokens.get(0).serialize(showPosition);
+
+        for(LinguisticToken token: tokens.subList(1,tokens.size())){
+            result +=  charTokenSeperator+token.serialize(showPosition);
+        }
+        result += charClose+"";
+        return result;
+    }
+
+    public void deserialize(String serialization){
+        tokens = new ArrayList<>();
+        boolean inType = true;
+        int open = 0;
+        String temp = "";
+        int currentPos = -1;
+        for(int i=0; i<serialization.length();i++){
+            char c = serialization.charAt(i);
+            if(c==charEscape){
+                i++;
+                temp += serialization.charAt(i);
+            }else if((inType || open==1) && c==charPosSeperator){
+                currentPos = Integer.parseInt(temp);
+                temp = "";
+            }else if(inType && c==charTypeSeperator){
+                type = new LinguisticType(temp);
+                temp = "";
+                inType = false;
+            }else if(c==charOpen){
+                open++;
+            }else if(c==charClose){
+                open--;
+                if(open==0){
+                    LinguisticToken newToken = new LinguisticToken(temp);
+                    if(currentPos>=0){
+                        newToken.setPosition(currentPos);
+                        currentPos = -1;
+                    }
+                    tokens.add(newToken);
+                    temp = "";
+                }
+            }else if(open==1 && c==charTokenSeperator){
+                LinguisticToken newToken = new LinguisticToken(temp);
+                if(currentPos>=0){
+                    newToken.setPosition(currentPos);
+                    currentPos = -1;
+                }
+                tokens.add(newToken);
+                temp = "";
+            }else{
+                temp += c;
+            }
+        }
+        if(inType){
+            type = new LinguisticType(temp);
+            if(currentPos >=0)
+                position = currentPos;
+            //temp = "";
+        }
     }
 
     @Override

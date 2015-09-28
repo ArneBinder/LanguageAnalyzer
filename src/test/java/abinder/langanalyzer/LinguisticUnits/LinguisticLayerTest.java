@@ -32,6 +32,12 @@ public class LinguisticLayerTest {
     }
 
     @Test
+    public void deserializationTest(){
+        LinguisticTree newTree = new LinguisticTree("[\\X,[[e,[a,k]],[m,e]]]");
+        System.out.println(newTree.serialize(false));
+    }
+
+    @Test
     public void layerTest() throws IOException {
 
         WIKIPEDIACorpus corpus = new WIKIPEDIACorpus();
@@ -40,20 +46,26 @@ public class LinguisticLayerTest {
         printTimeMessage("corpus read");
 
         LinguisticLayer layer = new LinguisticLayer();
-        Iterator<Character> characters = new CharacterIterator("abcd");
-        //Iterator<Character> characters = corpus.tokens();
+        //Iterator<Character> characters = new CharacterIterator("abcd");
+        Iterator<Character> characters = corpus.tokens();
         int index = 0;
         int stepSize = 3;
+        System.out.println();
         while(characters.hasNext()){
             char character = characters.next();
             LinguisticType currentType = new LinguisticType(character);
             LinguisticToken currentToken = new LinguisticToken(currentType);
-            layer.feed(currentToken, 4);
-            /*if(index % stepSize == stepSize -1)
-                layer.updateTreePatterns(index-stepSize+1);
-*/
+            if(!currentToken.serialize(false).equals("\\n"))
+                System.out.print(currentToken.serialize(false));
+            else
+                System.out.println();
+            layer.feed(currentToken, 3);
+            if(index % stepSize == stepSize -1)
+                layer.updateTreePatterns();
+
             index++;
         }
+        System.out.println();
 
         printTimeMessage("fed content");
         //layer.updateTreePatterns((index / stepSize) * stepSize);

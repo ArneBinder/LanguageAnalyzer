@@ -103,24 +103,24 @@ public class LinguisticLayer {
 
 
     public double getProbabilityForHead(LinguisticTree tree, LinguisticTree currentHead, LinguisticTree[] remainingTreeParts){
-        tabs += "\t";
+        //tabs += "\t";
         double result = 0;
         double currentProb = 0;
         String blindedSerialization = currentHead.getBlindedSerialization(currentHead.serialize(false),tree);
         LinguisticTree currentHeadTreeDummy = new LinguisticTree();
         currentHeadTreeDummy.setSerializationPL(blindedSerialization);
         if(probabilities.containsKey(currentHeadTreeDummy)){
-            System.out.println(tabs+blindedSerialization+"\tCACHED\t"+probabilities.get(currentHeadTreeDummy));
-            tabs = tabs.substring(1);
+            //System.out.println(tabs+blindedSerialization+"\tCACHED\t"+probabilities.get(currentHeadTreeDummy));
+            //tabs = tabs.substring(1);
             return probabilities.get(currentHeadTreeDummy);
         }
 
-        String partitionStr = blindedSerialization;
+        /*String partitionStr = blindedSerialization;
         for(LinguisticTree remainingTree: remainingTreeParts){
             partitionStr+=" o " + remainingTree.serialize(false);
         }
         System.out.println(tabs+partitionStr);
-
+*/
         currentProb = treePatterns.getProbability(currentHeadTreeDummy);
         result = currentProb;
 
@@ -151,8 +151,8 @@ public class LinguisticLayer {
             }
         }
 
-        System.out.println(tabs + partitionStr + "\tRETURN\t" + result);
-        tabs = tabs.substring(1);
+        //System.out.println(tabs + partitionStr + "\tRETURN\t" + result);
+        //tabs = tabs.substring(1);
 
         probabilities.put(currentHeadTreeDummy, result);
         return result;
@@ -346,6 +346,7 @@ public class LinguisticLayer {
         SortedSet<KeyValuePair<Double, LinguisticTree>> sortedSet = new TreeSet<>();
         for(Map.Entry<LinguisticTree,Double> entry: probabilities.entrySet()){
             //if(!entry.getKey().serialize(false).contains("X"))
+            if(entry.getKey().isFull())
                 sortedSet.add(new KeyValuePair<>(entry.getValue(), entry.getKey()));
         }
         for (KeyValuePair<Double, LinguisticTree> keyValuePair : sortedSet) {

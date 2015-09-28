@@ -38,6 +38,10 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         leaf = token;
     }
 
+    public LinguisticTree(String serialization) {
+        deserialize(serialization);
+    }
+
     public LinguisticTree() {
     }
 
@@ -134,6 +138,14 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         return (other != null)
                 &&(other instanceof LinguisticTree)
                 && ((LinguisticTree) other).serialize(defaultUsePositions).equals(this.serialize(defaultUsePositions));
+    }
+
+    public boolean isFull(){
+        if(isLeaf() && leaf!=null)
+            return true;
+        if(leftChild==null || rightChild==null)
+            return false;
+        return leftChild.isFull() && rightChild.isFull();
     }
 
     /*
@@ -292,6 +304,52 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
             }
             return serializationPL;
         }
+
+    }
+
+    public void deserialize(String serialization){
+        if(serialization==null) {
+            System.out.println("ERROR: serialization is empty!");
+            return;
+        }
+
+        if(serialization.charAt(0)!=charOpen || serialization.charAt(serialization.length()-1)!=charClose){
+            leftChild = null;
+            rightChild = null;
+            leaf = new LinguisticToken(serialization);
+            return;
+        }
+        String s = serialization.substring(1,serialization.length()-1);
+        int open = 0;
+        for(int i=0; i < s.length(); i++){
+            char c = s.charAt(i);
+            if(c==charEscape){
+                i++;
+            }else if(c==charOpen) {
+                open++;
+            }else if(c==charClose) {
+                open--;
+            }else if(c==charSeperate){
+                if(open==0){
+                    String left = s.substring(0,i);
+                    String right = s.substring(i+1);
+                    if(left.equals(charNull+"")){
+                        leftChild = null;
+                    }else{
+                        leftChild = new LinguisticTree();
+                        leftChild.deserialize(left);
+                    }
+                    if(right.equals(charNull+"")){
+                        rightChild = null;
+                    }else{
+                        rightChild = new LinguisticTree();
+                        rightChild.deserialize(right);
+                    }
+                    return;
+                }
+            }
+        }
+
 
     }
 
