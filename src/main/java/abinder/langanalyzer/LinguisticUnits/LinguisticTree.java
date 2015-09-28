@@ -23,6 +23,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
     private int leftPos = -1;
     private int rightPos = -1;
     private double probability = -1;
+    private int leafCount = -1;
 
     private static final char charEscape = '\\';
     private static final char charOpen = '[';
@@ -167,6 +168,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
     public void resetSerializations(){
         serialization = null;
         serializationPL = null;
+        leafCount = -1;
         if(parent!=null){
             parent.resetSerializations();
         }
@@ -226,6 +228,25 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         this.rightChild = rightChild;
         resetRightPositions(rightPos);
         resetSerializations();
+    }
+
+    public int getLeafCount() {
+        if(leafCount>=0)
+            return leafCount;
+        if(isLeaf()){
+            if(leaf!=null)
+                leafCount = 1;
+            else
+                leafCount = 0;
+        }else{
+            leafCount = 0;
+            if(leftChild!=null)
+                leafCount += leftChild.getLeafCount();
+            if(rightChild!=null)
+                leafCount+=rightChild.getLeafCount();
+        }
+
+        return leafCount;
     }
 
     public int getSize(){
