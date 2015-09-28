@@ -38,6 +38,9 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         leaf = token;
     }
 
+    public LinguisticTree() {
+    }
+
     public LinguisticTree(LinguisticTree leftChild, LinguisticTree rightChild, boolean usePositions) {
         this.leftChild = leftChild;
         this.rightChild = rightChild;
@@ -127,12 +130,13 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
     }
 
     @Override
-    /*public boolean equals(Object other) {
+    public boolean equals(Object other) {
         return (other != null)
                 &&(other instanceof LinguisticTree)
                 && ((LinguisticTree) other).serialize(defaultUsePositions).equals(this.serialize(defaultUsePositions));
-    }*/
+    }
 
+    /*
     public boolean equals(Object other) {
         if(other == null || !(other instanceof LinguisticTree))
             return false;
@@ -153,6 +157,21 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
             result &= oTree.rightChild == null;
         }
         return result;
+    }
+    */
+
+    public String getBlindedSerialization(String childSerialization, LinguisticTree root) {
+        if(this==root)
+            return childSerialization;
+        if(parent.leftChild!=null && parent.leftChild == this){
+            return parent.getBlindedSerialization(charOpen+childSerialization+charSeperate+""+charNull+""+charClose, root);
+        }else if(parent.rightChild!=null && parent.rightChild == this){
+            return parent.getBlindedSerialization(charOpen+""+charNull+""+charSeperate+childSerialization+charClose, root);
+        }else{
+            System.out.println("ERROR: this ("+this.serialize(false)+") is neither leftChild nor RightChild of parent: "+parent.serialize(false));
+            return null;
+            //throw new Exception("this ("+this.serialize(false)+") is neither leftChild nor RightChild of parent: "+parent.serialize(false));
+        }
     }
 
 
@@ -264,13 +283,13 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
             }
             return serialization;
         } else {
-            //if(serializationPL == null){
+            if(serializationPL == null){
                 if (isLeaf())
                     serializationPL = IO.escape(leaf.serialize(showPosition), escapeAbleChars, charEscape);
                 else {
                     serializationPL = charOpen + (leftChild != null ? leftChild.serialize(showPosition) : charNull + "") + charSeperate + (rightChild != null ? rightChild.serialize(showPosition) : charNull + "") + charClose;
                 }
-            //}
+            }
             return serializationPL;
         }
 

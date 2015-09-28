@@ -10,8 +10,8 @@ public class MultiTreeSet extends MultiSet<LinguisticTree> {
         int count = 0;
         if(this.containsKey(value))
             count = get(value);
-        else
-            value.setParents(null);
+        //else
+        //    value.setParents(null);
         count++;
         totalCount++;
         put(value, count);

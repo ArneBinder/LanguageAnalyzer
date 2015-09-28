@@ -101,6 +101,63 @@ public class LinguisticLayer {
         }
     }
 
+
+    public double getProbabilityForHead(LinguisticTree tree, LinguisticTree currentHead, LinguisticTree[] remainingTreeParts){
+        tabs += "\t";
+        double result = 0;
+        double currentProb = 0;
+        //ArrayList<LinguisticTree> remainingTreeParts = new ArrayList<>();
+        String blindedSerialization = currentHead.getBlindedSerialization(currentHead.serialize(false),tree);
+        //System.out.println(tabs+blindedSerialization+"\tCALC");
+        LinguisticTree currentHeadTreeDummy = new LinguisticTree();
+        currentHeadTreeDummy.setSerializationPL(blindedSerialization);
+        if(probabilities.containsKey(currentHeadTreeDummy)){
+            System.out.println(tabs+blindedSerialization+"\tCACHED\t"+probabilities.get(currentHeadTreeDummy));
+            tabs = tabs.substring(1);
+            return probabilities.get(currentHeadTreeDummy);
+        }
+
+        String partitionStr = blindedSerialization;
+        for(LinguisticTree remainingTree: remainingTreeParts){
+            partitionStr+=" o " + remainingTree.serialize(false);
+        }
+        System.out.println(tabs+partitionStr);
+        currentProb = treePatterns.getProbability(currentHeadTreeDummy);
+        result = currentProb;
+
+
+        for(LinguisticTree remainingTree: remainingTreeParts){
+            result *= getProbabilityForHead(remainingTree, remainingTree, new LinguisticTree[0]);
+        }
+
+        if(currentHead.getLeftChild()!=null){
+            if(currentHead.getRightChild()!=null) {
+                LinguisticTree[] newRemainingTreeParts = new LinguisticTree[remainingTreeParts.length + 1];
+                System.arraycopy(remainingTreeParts, 0, newRemainingTreeParts, 0, remainingTreeParts.length);
+                newRemainingTreeParts[remainingTreeParts.length] = currentHead.getRightChild();
+                result += getProbabilityForHead(tree, currentHead.getLeftChild(), newRemainingTreeParts);
+            }else{
+                result += getProbabilityForHead(tree, currentHead.getLeftChild(), remainingTreeParts);
+            }
+        }
+
+        if(currentHead.getRightChild()!=null){
+            if(currentHead.getLeftChild()!=null) {
+                LinguisticTree[] newRemainingTreeParts = new LinguisticTree[remainingTreeParts.length + 1];
+                System.arraycopy(remainingTreeParts, 0, newRemainingTreeParts, 0, remainingTreeParts.length);
+                newRemainingTreeParts[remainingTreeParts.length] = currentHead.getLeftChild();
+                result += getProbabilityForHead(tree, currentHead.getRightChild(),newRemainingTreeParts);
+            }else{
+                result += getProbabilityForHead(tree, currentHead.getRightChild(), remainingTreeParts);
+            }
+        }
+
+        System.out.println(tabs+partitionStr+"\tRETURN\t"+result);
+        probabilities.put(currentHeadTreeDummy, result);
+        tabs = tabs.substring(1);
+        return result;
+    }
+
     public double getProbability(LinguisticTree tree, LinguisticTree currentPos, int cutCount) {
         tabs += "\t";
         System.out.println(tabs + tree.serialize(false) + "\t"+ currentPos.serialize(false) + "\tVISIT \tcutCount: "+cutCount);
@@ -212,8 +269,11 @@ public class LinguisticLayer {
     public void calculateTreePatternProbabilities(){
         for(LinguisticTree tree: treePatterns.keySet()){
             //System.out.println(tree.serialize(false));
-            if(tree.serialize(false).equals("[[a,b],[c,d]]"))
-                getProbability(tree, tree, tree.getLeafCount()-1);
+            if(tree.serialize(false).equals("[[a,b],[c,d]]")) {
+                //getProbability(tree, tree, tree.getLeafCount()-1);
+                tree.setParents(null);
+                getProbabilityForHead(tree, tree, new LinguisticTree[0]);
+            }
         }
     }
 
@@ -231,7 +291,7 @@ public class LinguisticLayer {
         for(ArrayList<LinguisticTree> tempTrees1: tempTrees){
             for(LinguisticTree tree: tempTrees1){
                 if(tree.getLeftPosition()==0){
-                    tree.setParents(null);
+                    //tree.setParents(null);
 
                     out.println(tree.serialize(false)+"\t"+getProbability(tree, tree, tree.getLeafCount()-1));
 

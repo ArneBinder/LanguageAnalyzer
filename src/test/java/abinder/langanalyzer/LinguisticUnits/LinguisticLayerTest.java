@@ -71,12 +71,12 @@ public class LinguisticLayerTest {
         outa.flush();
         printTimeMessage("printProbabilities");
 
-/*
+
         PrintStream outb = new PrintStream(new BufferedOutputStream(new FileOutputStream(new File("outb.txt"))), true, "UTF-8");
         layer.printProbabilitiesSortedByValue(outb);
         outb.flush();
         printTimeMessage("printProbabilitiesSortedByValue to file");
-*/
+
         //new OutputStreamWriter(new FileOutputStream(filename), "UTF-8")
         PrintStream out = new PrintStream(new BufferedOutputStream(new FileOutputStream(new File("out.txt"))), true, "UTF-8");
         layer.printProbabilitiesSortedByValueAndKey(out);
