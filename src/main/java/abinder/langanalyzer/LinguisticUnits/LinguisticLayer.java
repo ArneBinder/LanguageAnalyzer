@@ -102,8 +102,8 @@ public class LinguisticLayer {
     }
 
     public double getProbability(LinguisticTree tree, LinguisticTree currentPos, int cutCount) {
-        //tabs += "\t";
-        //System.out.println(tabs + tree.serialize(false) + "\t"+ currentPos.serialize(false) + "\tVISIT");
+        tabs += "\t";
+        System.out.println(tabs + tree.serialize(false) + "\t"+ currentPos.serialize(false) + "\tVISIT \tcutCount: "+cutCount);
 
         double probability = 0;
 
@@ -126,8 +126,8 @@ public class LinguisticLayer {
                 //String s = tree.serialize(false);
                 if (probabilities.containsKey(tree)) {
                     //if(print) {
-                    //   System.out.println(tabs + tree.serialize(false) + "\t" + currentPos.serialize(false) + "\tCACHED\t" + probabilities.get(tree));
-                    //   tabs = tabs.substring(1);
+                       System.out.println(tabs + tree.serialize(false) + "\t" + currentPos.serialize(false) + "\tCACHED\t" + probabilities.get(tree));
+                       tabs = tabs.substring(1);
                     //}
                     currentProb = probabilities.get(tree);
                     return currentProb;
@@ -148,7 +148,7 @@ public class LinguisticLayer {
                 // cut left child
                 leftChild = currentPos.deleteLeftChild();
                 //if(print)
-                //    System.out.println(tabs+leftChild.serialize(false)+ "\to\t"+  tree.serialize(false) + "\tCUT left\t");
+                    System.out.println(tabs+leftChild.serialize(false)+ "\to\t"+  tree.serialize(false) + "\tCUT left\t");
 
                 int cutCountRangeMin = cutCount-1-tree.getLeafCount()+1;
                 int cutCountRangeMax = leftChild.getLeafCount()-1;
@@ -162,7 +162,7 @@ public class LinguisticLayer {
                 // cut right child
                 rightChild = currentPos.deleteRightChild();
                 //if(print)
-                //    System.out.println(tabs+tree.serialize(false)+ "\to\t"+ rightChild.serialize(false)+"\tCUT right\t");
+                    System.out.println(tabs+tree.serialize(false)+ "\to\t"+ rightChild.serialize(false)+"\tCUT right\t");
                 cutCountRangeMin = cutCount-1-tree.getLeafCount()+1;
                 cutCountRangeMax = rightChild.getLeafCount()-1;
                 for(int cutCounta = Math.max(0,cutCountRangeMin); cutCounta < Math.min(cutCount, cutCountRangeMax+1); cutCounta++) {
@@ -174,22 +174,22 @@ public class LinguisticLayer {
 
             if (leftChild != null && leftChild.getSize() > 1) {
                 //if(print)
-                //System.out.println(tabs + tree.serialize(false) + "\t"+ leftChild.serialize(false) + "\tLEFTCHILD");
+                System.out.println(tabs + tree.serialize(false) + "\t"+ leftChild.serialize(false) + "\tLEFTCHILD");
                 currentProb = getProbability(tree, leftChild, cutCount);
                 probability += currentProb;
             }
 
             if (rightChild != null && rightChild.getSize() > 1) {
                 //if(print)
-                //System.out.println(tabs + tree.serialize(false) + "\t"+ rightChild.serialize(false) + "\tRIGHTCHILD");
+                System.out.println(tabs + tree.serialize(false) + "\t"+ rightChild.serialize(false) + "\tRIGHTCHILD");
                 currentProb = getProbability(tree, rightChild, cutCount);
                 probability += currentProb;
             }
         }
 
         //if(print) {
-            //System.out.println(tabs + tree.serialize(false) + "\t" + currentPos.serialize(false) + "\tRETURN\t" + probability);
-         //   tabs = tabs.substring(1);
+            System.out.println(tabs + tree.serialize(false) + "\t" + currentPos.serialize(false) + "\tRETURN\t" + probability);
+            tabs = tabs.substring(1);
         //}
 
         //if(probability > 0)
@@ -212,7 +212,8 @@ public class LinguisticLayer {
     public void calculateTreePatternProbabilities(){
         for(LinguisticTree tree: treePatterns.keySet()){
             //System.out.println(tree.serialize(false));
-            getProbability(tree, tree, tree.getLeafCount()-1);
+            if(tree.serialize(false).equals("[[a,b],[c,d]]"))
+                getProbability(tree, tree, tree.getLeafCount()-1);
         }
     }
 
