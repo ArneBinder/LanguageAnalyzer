@@ -10,6 +10,8 @@ import java.lang.Character;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import static org.junit.Assert.*;
+
 /**
  * Created by Arne on 21.09.2015.
  */
@@ -34,7 +36,8 @@ public class LinguisticLayerTest {
     @Test
     public void deserializationTest(){
         LinguisticTree newTree = new LinguisticTree("[\\X,[[e,[a,k]],[m,e]]]");
-        System.out.println(newTree.serialize(false));
+        //System.out.println(newTree.serialize(false));
+        assertEquals("[\\X,[[e,[a,k]],[m,e]]]", newTree.serialize(false));
     }
 
     @Test
@@ -45,6 +48,7 @@ public class LinguisticLayerTest {
         //corpus.readFromFile("src/test/resources/abinder/langanalyzer/corpora/wikipedia/Syntax.txt");
         printTimeMessage("corpus read");
 
+        PrintStream outc = new PrintStream(new BufferedOutputStream(new FileOutputStream(new File("outc.txt"))), true, "UTF-8");
         LinguisticLayer layer = new LinguisticLayer();
         //Iterator<Character> characters = new CharacterIterator("abcd");
         Iterator<Character> characters = corpus.tokens();
@@ -61,7 +65,7 @@ public class LinguisticLayerTest {
                 System.out.println();
             layer.feed(currentToken, 3);
             if(index % stepSize == stepSize -1)
-                layer.updateTreePatterns();
+                layer.updateTreePatterns(outc);
 
             index++;
         }
@@ -70,10 +74,12 @@ public class LinguisticLayerTest {
         printTimeMessage("fed content");
         //layer.updateTreePatterns((index / stepSize) * stepSize);
 
-        layer.updateTreePatterns();
+        layer.updateTreePatterns(outc);
+        outc.flush();
         printTimeMessage("updateTreePatterns");
 
 
+        /*
         layer.calculateTreePatternProbabilities();
         printTimeMessage("calculateTreePatternProbabilities");
 
@@ -93,6 +99,7 @@ public class LinguisticLayerTest {
         layer.printProbabilitiesSortedByValueAndKey(out);
         out.flush();
         printTimeMessage("printProbabilitiesSortedByValueAndKey to file");
+        */
 
     }
 
