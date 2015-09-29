@@ -9,6 +9,7 @@ import java.lang.*;
 import java.lang.Character;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Locale;
 
 import static org.junit.Assert.*;
 
@@ -78,7 +79,10 @@ public class LinguisticLayerTest {
         outc.flush();
         printTimeMessage("updateTreePatterns");
 
-
+        //PrintStream outs = new PrintStream(new BufferedOutputStream(new FileOutputStream(new File("outs.txt"))), true, "UTF-8");
+        //layer.printMaximalTreesWithTreeParts(System.out);
+        //outs.flush();
+        //printTimeMessage("printMaximalTreesWithTreeParts");
 
         layer.calculateTreePatternProbabilities();
         printTimeMessage("calculateTreePatternProbabilities");

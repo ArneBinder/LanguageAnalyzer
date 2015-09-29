@@ -99,7 +99,7 @@ public class LinguisticLayer {
                     //if(treePatterns.size() < 20000 ||  probability > threshold) {
                         out.println(probability + "\t" + tree.serialize(false) + "\t" + treePatterns.getTotalCount()+"\t"+treePatterns.size());
 
-                        for (LinguisticTree cutTree : tree.getAllCutTrees()) {
+                        for (LinguisticTree cutTree : tree.getTreeParts(tree)){//tree.getAllCutTrees()) { //
                             //cutTree.setParents(null);
                             treePatterns.add(cutTree);
                         }
@@ -111,11 +111,12 @@ public class LinguisticLayer {
     }
 
 
+
     public double getProbabilityForHead(LinguisticTree tree, LinguisticTree currentHead, LinguisticTree[] remainingTreeParts){
         //tabs += "\t";
         double result = 0;
         double currentProb = 0;
-        String blindedSerialization = currentHead.getBlindedSerialization(currentHead.serialize(false),tree);
+        String blindedSerialization = currentHead.serializeToRoot(currentHead.serialize(false), tree);
         LinguisticTree currentHeadTreeDummy = new LinguisticTree();
         currentHeadTreeDummy.setSerializationPL(blindedSerialization);
         if(probabilities.containsKey(currentHeadTreeDummy)){
@@ -167,6 +168,7 @@ public class LinguisticLayer {
         return result;
     }
 
+    //DEPRECATED
     public double getProbability(LinguisticTree tree, LinguisticTree currentPos, int cutCount) {
         tabs += "\t";
         System.out.println(tabs + tree.serialize(false) + "\t"+ currentPos.serialize(false) + "\tVISIT \tcutCount: "+cutCount);
@@ -316,6 +318,35 @@ public class LinguisticLayer {
         out.println("count: " + count);
     }
 
+
+    public void printMaximalTreesWithTreeParts(PrintStream out){
+        out.println("print maximal trees with probaility:");
+        int count = 0;
+        ArrayList<ArrayList<LinguisticTree>> tempTrees = previousTrees.get(previousTrees.size() - 1);
+        for(ArrayList<LinguisticTree> tempTrees1: tempTrees){
+            for(LinguisticTree tree: tempTrees1){
+                if(tree.getLeftPosition()==0){
+                    //tree.setParents(null);
+
+                    out.println(tree.serialize(false));
+                    tree.setParents(null);
+                    tree.getTreeParts(tree);
+                    //for(LinguisticTree treePart:tree.getTreeParts(tree)){
+                        //out.println("\t"+treePart.serialize(false));
+                    //}
+
+                    // print cutTrees of maximal trees
+                    //for(LinguisticTree cutTree: sortedTrees(tree.getAllCutTrees())){
+                    //    System.out.println("\t"+cutTree.serialize(false));
+                    //}
+
+                    count++;
+                }
+            }
+        }
+        out.println("count: " + count);
+    }
+
     public void printProbabilities(PrintStream out){
         out.println("print probabilities:");
         for(LinguisticTree tree: probabilities.keySet()){
@@ -410,6 +441,15 @@ public class LinguisticLayer {
     public void printTreePatternsSortedByKey(PrintStream out){
         out.println("print treePatterns (sortByKey)");
         for(LinguisticTree treePart: treePatterns.sortedKeySet()){
+            out.println(treePatterns.get(treePart)+"\t"+treePart.serialize(false));
+        }
+        out.println("treePatterns.size: " + treePatterns.size());
+        out.println("treePatterns.size (total): " + treePatterns.getTotalCount());
+    }
+
+    public void printTreePatternsSortedByValue(PrintStream out){
+        out.println("print treePatterns (sortByValue)");
+        for(LinguisticTree treePart: MultiSet.sortByValue(treePatterns).keySet()){
             out.println(treePatterns.get(treePart)+"\t"+treePart.serialize(false));
         }
         out.println("treePatterns.size: " + treePatterns.size());
