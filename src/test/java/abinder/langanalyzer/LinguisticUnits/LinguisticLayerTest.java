@@ -79,7 +79,7 @@ public class LinguisticLayerTest {
         printTimeMessage("updateTreePatterns");
 
 
-        /*
+
         layer.calculateTreePatternProbabilities();
         printTimeMessage("calculateTreePatternProbabilities");
 
@@ -99,7 +99,7 @@ public class LinguisticLayerTest {
         layer.printProbabilitiesSortedByValueAndKey(out);
         out.flush();
         printTimeMessage("printProbabilitiesSortedByValueAndKey to file");
-        */
+
 
     }
 

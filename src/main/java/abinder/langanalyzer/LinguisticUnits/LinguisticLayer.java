@@ -88,17 +88,22 @@ public class LinguisticLayer {
 
 
     public void updateTreePatterns(PrintStream out){
+        double threshold = 1.5E-3;
+
         for(int i=processedTreesIndex-posOffset; i < previousTrees.size(); i++){
             for(ArrayList<LinguisticTree> trees: previousTrees.get(i)){
                 for(LinguisticTree tree: trees) {
                     probabilities.clear();
                     tree.setParents(null);
                     double probability = getProbabilityForHead(tree, tree, new LinguisticTree[0]);
-                    out.println(probability+"\t"+tree.serialize(false)+"\t"+treePatterns.getTotalCount());
-                    for (LinguisticTree cutTree : tree.getAllCutTrees()) {
-                        //cutTree.setParents(null);
-                        treePatterns.add(cutTree);
-                    }
+                    //if(treePatterns.size() < 20000 ||  probability > threshold) {
+                        out.println(probability + "\t" + tree.serialize(false) + "\t" + treePatterns.getTotalCount()+"\t"+treePatterns.size());
+
+                        for (LinguisticTree cutTree : tree.getAllCutTrees()) {
+                            //cutTree.setParents(null);
+                            treePatterns.add(cutTree);
+                        }
+                    //}
                 }
             }
             processedTreesIndex++;
@@ -350,7 +355,7 @@ public class LinguisticLayer {
         SortedSet<KeyValuePair<Double, LinguisticTree>> sortedSet = new TreeSet<>();
         for(Map.Entry<LinguisticTree,Double> entry: probabilities.entrySet()){
             //if(!entry.getKey().serialize(false).contains("X"))
-            if(!entry.getKey().isFull())
+            //if(!entry.getKey().isFull())
                 sortedSet.add(new KeyValuePair<>(entry.getValue(), entry.getKey()));
         }
         for (KeyValuePair<Double, LinguisticTree> keyValuePair : sortedSet) {
