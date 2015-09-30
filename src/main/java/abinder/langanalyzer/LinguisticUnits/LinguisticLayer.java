@@ -1,7 +1,6 @@
 package abinder.langanalyzer.LinguisticUnits;
 
-import abinder.langanalyzer.helper.MultiSet;
-import abinder.langanalyzer.helper.MultiTreeSet;
+import abinder.langanalyzer.helper.*;
 
 import java.io.PrintStream;
 import java.lang.*;
@@ -127,7 +126,7 @@ public class LinguisticLayer {
         return (summands.size()>1?"(":"")+String.join(" + ", summands)+(summands.size()>1?")":"");
     }
 
-    public double getProb(LinguisticTree tree, List<String> summands){
+    public double getProb(LinguisticTree tree){
         tabs += "\t";
 
         //System.out.println(tabs+tree.serialize(false)+"\tENTER");
@@ -142,20 +141,10 @@ public class LinguisticLayer {
         String summand;
         for(LinguisticTree leaf: workingTree.getLeafs()){
             //System.out.println(tabs+"\t"+workingTree.serialize(false)+"\tLEAF\t"+leaf.serialize(false));
-            ArrayList<String> nl = new ArrayList<>();
-            double currentProb = getCutProb(workingTree, leaf, null, nl) + treePatterns.getProbability(workingTree);
-            nl.add(workingTree.serialize(false));
-            summand = "";
+            double currentProb = getCutProb(workingTree, leaf, null) + treePatterns.getProbability(workingTree);
             for(LinguisticTree leftTree: leftTrees){
-                ArrayList<String> nl2 = new ArrayList<>();
-                currentProb *= getProb(leftTree, nl2);
-                summand += " o "+fltn(nl2);
+                currentProb *= getProb(leftTree);
             }
-
-            if(summand.equals(""))
-                summands.addAll(nl);
-            else
-                summands.add(fltn(nl) + summand);
 
             result += currentProb;
             //System.out.println(tabs+"\t"+currentProb);
@@ -179,7 +168,7 @@ public class LinguisticLayer {
         return result;
     }
 
-    public double getCutProb(LinguisticTree tree, LinguisticTree currentPos, LinguisticTree lastPos, List<String> summands){
+    public double getCutProb(LinguisticTree tree, LinguisticTree currentPos, LinguisticTree lastPos){
         tabs += "\t";
         //System.out.println(tabs + tree.serialize(false) + "\tENTER\t" + currentPos.serialize(false) + "\tFROM\t" + (lastPos != null ?lastPos.serialize(false):"NULL"));
         double result = 0.0;
@@ -191,66 +180,36 @@ public class LinguisticLayer {
                 if(left!=null) {
                     right = currentPos.deleteRightChild();
                     //System.out.println(tabs + right.serialize(false) + " o (" + tree.serialize(false) + " + " + currentPos.serialize(false) + " -> LEFTCHILD)");
-                    ArrayList<String> nl = new ArrayList<>();
-                    ArrayList<String> nl2 = new ArrayList<>();
-                    result += getProb(right, nl) * (treePatterns.getProbability(tree) + getCutProb(tree, left, currentPos, nl2));
-                    nl2.add(tree.serialize(false));
-                    if(!nl.isEmpty())
-                        summands.add(fltn(nl)+ " o " + fltn(nl2));
-                    else
-                        summands.addAll(nl2);
+                    result += getProb(right) * (treePatterns.getProbability(tree) + getCutProb(tree, left, currentPos));
                     currentPos.setRightChild(right);
                 }
-                ArrayList<String> nl3 = new ArrayList<>();
-                result += getCutProb(tree, right, currentPos, nl3);
-                summands.addAll(nl3);
+                result += getCutProb(tree, right, currentPos);
             }
 
             if(left!=null){
                 if(right!=null) {
                     left = currentPos.deleteLeftChild();
                     //System.out.println(tabs + left.serialize(false) + " o (" + tree.serialize(false) + " + " + currentPos.serialize(false) + " -> RIGHTCHILD)");
-                    ArrayList<String> nl = new ArrayList<>();
-                    ArrayList<String> nl2 = new ArrayList<>();
-                    result += getProb(left, nl) * (treePatterns.getProbability(tree) + getCutProb(tree, right, currentPos, nl2));
-                    nl2.add(tree.serialize(false));
-                    if(!nl.isEmpty())
-                        summands.add(fltn(nl)+ " o " + fltn(nl2));
-                    else
-                        summands.addAll(nl2);
+                    result += getProb(left) * (treePatterns.getProbability(tree) + getCutProb(tree, right, currentPos));
                     currentPos.setLeftChild(left);
                 }
-                ArrayList<String> nl3 = new ArrayList<>();
-                result += getCutProb(tree, left, currentPos, nl3);
-                summands.addAll(nl3);
+                result += getCutProb(tree, left, currentPos);
+
             }
         }else if(lastPos==left){
             if(right!=null){
                 right = currentPos.deleteRightChild();
                 //System.out.println(tabs + right.serialize(false) + " o (" + tree.serialize(false) + " + " + currentPos.serialize(false) + " -> PARENT)");
-                ArrayList<String> nl = new ArrayList<>();
-                ArrayList<String> nl2 = new ArrayList<>();
-                result += getProb(right, nl) * (treePatterns.getProbability(tree)+ (parent!=null?getCutProb(tree, parent, currentPos, nl2):0.0));
-                nl2.add(tree.serialize(false));
-                if(!nl.isEmpty())
-                    summands.add(fltn(nl)+ " o " + fltn(nl2));
-                else
-                    summands.addAll(nl2);
+                result += getProb(right) * (treePatterns.getProbability(tree)+ (parent!=null?getCutProb(tree, parent, currentPos):0.0));
                 currentPos.setRightChild(right);
-                ArrayList<String> nl3 = new ArrayList<>();
-                result += getCutProb(tree, right, currentPos, nl3);
-                summands.addAll(nl3);
+                result += getCutProb(tree, right, currentPos);
             }
             if(parent!=null){
-                ArrayList<String> nl3 = new ArrayList<>();
-                result += getCutProb(tree, parent, currentPos, nl3);
-                summands.addAll(nl3);
+                result += getCutProb(tree, parent, currentPos);
             }
 
         }else if(lastPos==right && parent!=null){
-            ArrayList<String> nl3 = new ArrayList<>();
-            result += getCutProb(tree, parent, currentPos, nl3);
-            summands.addAll(nl3);
+            result += getCutProb(tree, parent, currentPos);
         }
 
         //System.out.println(tabs+tree.serialize(false)+"\tCUT\t"+result);
@@ -378,6 +337,127 @@ public class LinguisticLayer {
         //System.out.println(tabs+tree.serialize(false)+"\tCUT\t"+result);
         tabs = tabs.substring(1);
         return summands;
+    }
+
+    public Operation getOperations(LinguisticTree tree){
+        tabs += "\t";
+        Operation sum = new Sum();
+        //System.out.println(tabs+tree.serialize(false)+"\tENTER");
+        //double result = 0.0;//= treePatterns.getProbability(tree);
+        LinguisticTree workingTree = tree.copyThis();
+        workingTree.setParents(null);
+
+        //LinguisticTree leftTree = null;
+        ArrayList<LinguisticTree> leftTrees = new ArrayList<>();
+        LinguisticTree cutParent = null;
+        boolean visitedRoot = false;
+        for(LinguisticTree leaf: workingTree.getLeafs()){
+            //System.out.println(tabs+"\t"+workingTree.serialize(false)+"\tLEAF\t"+leaf.serialize(false));
+            Operation currentSum = getCutOperations(workingTree, leaf, null);
+            currentSum.addOperand(workingTree.copyThis());
+            currentSum.flatten();
+            Operation product = new Product();
+            product.addOperand(currentSum);
+
+            for(LinguisticTree leftTree: leftTrees){
+                product.addOperand(getOperations(leftTree));
+            }
+            product.flatten();
+            sum.addOperand(product);
+
+            if(!visitedRoot && cutParent!=null)
+                cutParent.setLeftChild(leftTrees.remove(leftTrees.size()-1));
+
+            cutParent = leaf.getMaxLeftTree().getParent();
+
+            // is not last leaf?
+            if(cutParent!=null) {
+                if(cutParent==workingTree)
+                    visitedRoot = true;
+                leftTrees.add(cutParent.deleteLeftChild());
+            }
+
+        }
+        sum.flatten();
+
+        //System.out.println(tabs+tree.serialize(false)+"\tRETURN\t"+result);
+        tabs = tabs.substring(1);
+        return sum;
+    }
+
+    public Operation getCutOperations(LinguisticTree tree, LinguisticTree currentPos, LinguisticTree lastPos){
+        tabs += "\t";
+        Operation sum = new Sum();
+        //System.out.println(tabs + tree.serialize(false) + "\tENTER\t" + currentPos.serialize(false) + "\tFROM\t" + (lastPos != null ?lastPos.serialize(false):"NULL"));
+        //double result = 0.0;
+        LinguisticTree parent = currentPos.getParent();
+        LinguisticTree left = currentPos.getLeftChild();
+        LinguisticTree right = currentPos.getRightChild();
+        if(lastPos==parent){
+            if(right!=null){
+                if(left!=null) {
+                    right = currentPos.deleteRightChild();
+                    //System.out.println(tabs + right.serialize(false) + " o (" + tree.serialize(false) + " + " + currentPos.serialize(false) + " -> LEFTCHILD)");
+                    Operation nl = getOperations(right);
+                    Operation nl2 = getCutOperations(tree, left, currentPos);
+                    nl2.addOperand(tree.copyThis());
+                    Operation product = new Product();
+                    product.addOperand(nl);
+                    product.addOperand(nl2);
+                    product.flatten();
+                    sum.addOperand(product);
+                    currentPos.setRightChild(right);
+                }
+                sum.addOperand(getCutOperations(tree, right, currentPos));
+            }
+
+            if(left!=null){
+                if(right!=null) {
+                    left = currentPos.deleteLeftChild();
+                    //System.out.println(tabs + left.serialize(false) + " o (" + tree.serialize(false) + " + " + currentPos.serialize(false) + " -> RIGHTCHILD)");
+                    Operation nl =  getOperations(left);
+                    Operation nl2 = getCutOperations(tree, right, currentPos);
+                    nl2.addOperand(tree.copyThis());
+                    Operation product = new Product();
+                    product.addOperand(nl);
+                    product.addOperand(nl2);
+                    product.flatten();
+                    sum.addOperand(product);
+                    currentPos.setLeftChild(left);
+                }
+                sum.addOperand(getCutOperations(tree, left, currentPos));
+            }
+        }else if(lastPos==left){
+            if(right!=null){
+                right = currentPos.deleteRightChild();
+                //System.out.println(tabs + right.serialize(false) + " o (" + tree.serialize(false) + " + " + currentPos.serialize(false) + " -> PARENT)");
+                Operation nl = getOperations(right);
+                Operation nl2;
+                if(parent!=null)
+                    nl2 = getCutOperations(tree, parent, currentPos);
+                else
+                    nl2 = new Sum();
+                nl2.addOperand(tree.copyThis());
+                Operation product = new Product();
+                product.addOperand(nl);
+                product.addOperand(nl2);
+                product.flatten();
+                sum.addOperand(product);
+                currentPos.setRightChild(right);
+                sum.addOperand(getCutOperations(tree, right, currentPos));
+            }
+            if(parent!=null){
+                sum.addOperand(getCutOperations(tree, parent, currentPos));
+            }
+
+        }else if(lastPos==right && parent!=null){
+            sum.addOperand(getCutOperations(tree, parent, currentPos));
+        }
+
+        //System.out.println(tabs+tree.serialize(false)+"\tCUT\t"+result);
+        tabs = tabs.substring(1);
+        sum.flatten();
+        return sum;
     }
 
     public double getProbabilityForHead(LinguisticTree tree, LinguisticTree currentHead, LinguisticTree[] remainingTreeParts){
@@ -600,7 +680,7 @@ public class LinguisticLayer {
                     //tree.setParents(null);
 
                     out.println(tree.serialize(false));
-                    System.out.println(getProb(tree, new ArrayList<String>()));
+                    System.out.println(getProb(tree));
                     //tree.setParents(null);
                     //tree.getTreeParts(tree);
 

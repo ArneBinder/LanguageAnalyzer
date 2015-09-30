@@ -49,9 +49,10 @@ public class LinguisticLayerTest {
         }
         //ArrayList<String> str = new ArrayList<>();
         //System.out.println(layer.getProb(tree, str));
-        for(String s:layer.getPartitions(tree)){
+        /*for(String s:layer.getPartitions(tree)){
             System.out.println(s);
-        }
+        }*/
+        System.out.println(layer.getOperations(tree));
         System.out.println("Done");
     }
 

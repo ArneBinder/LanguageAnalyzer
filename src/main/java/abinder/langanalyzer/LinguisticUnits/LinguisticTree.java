@@ -767,4 +767,8 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
 
         //return 0;
     }
+
+    public String toString(){
+        return this.serialize(false);
+    }
 }
