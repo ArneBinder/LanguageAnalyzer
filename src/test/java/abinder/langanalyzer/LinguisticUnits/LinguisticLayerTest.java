@@ -47,9 +47,11 @@ public class LinguisticLayerTest {
         for(LinguisticTree subTree: tree.getAllSubtrees(3)){
             layer.addAllTreePattern(subTree.getAllCutTrees());
         }
-        String[] str = new String[1];
+        ArrayList<String> str = new ArrayList<>();
         System.out.println(layer.getProb(tree, str));
-        System.out.println(str[0]);
+        for(String s:str){
+            System.out.println(s);
+        }
         System.out.println("Done");
     }
 
