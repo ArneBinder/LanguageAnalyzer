@@ -339,9 +339,9 @@ public class LinguisticLayer {
         return summands;
     }
 
-    public Operation getOperations(LinguisticTree tree){
+    public Sum getOperations(LinguisticTree tree){
         tabs += "\t";
-        Operation sum = new Sum();
+        Sum sum = new Sum();
         //System.out.println(tabs+tree.serialize(false)+"\tENTER");
         //double result = 0.0;//= treePatterns.getProbability(tree);
         LinguisticTree workingTree = tree.copyThis();
@@ -385,9 +385,9 @@ public class LinguisticLayer {
         return sum;
     }
 
-    public Operation getCutOperations(LinguisticTree tree, LinguisticTree currentPos, LinguisticTree lastPos){
+    public Sum getCutOperations(LinguisticTree tree, LinguisticTree currentPos, LinguisticTree lastPos){
         tabs += "\t";
-        Operation sum = new Sum();
+        Sum sum = new Sum();
         //System.out.println(tabs + tree.serialize(false) + "\tENTER\t" + currentPos.serialize(false) + "\tFROM\t" + (lastPos != null ?lastPos.serialize(false):"NULL"));
         //double result = 0.0;
         LinguisticTree parent = currentPos.getParent();

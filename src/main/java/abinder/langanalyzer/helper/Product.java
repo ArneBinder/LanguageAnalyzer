@@ -7,4 +7,9 @@ public class Product extends Operation {
     public Product() {
         super("o");
     }
+
+    @Override
+    public double calc(double oa, double ob) {
+        return oa*ob;
+    }
 }

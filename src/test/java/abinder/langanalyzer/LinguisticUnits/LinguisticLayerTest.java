@@ -2,6 +2,7 @@ package abinder.langanalyzer.LinguisticUnits;
 
 import abinder.langanalyzer.corpora.wikipedia.WIKIPEDIACorpus;
 import abinder.langanalyzer.helper.CharacterIterator;
+import abinder.langanalyzer.helper.Sum;
 import org.junit.Test;
 
 import java.io.*;
@@ -48,11 +49,12 @@ public class LinguisticLayerTest {
             layer.addAllTreePattern(subTree.getAllCutTrees());
         }
         //ArrayList<String> str = new ArrayList<>();
-        //System.out.println(layer.getProb(tree, str));
+        System.out.println(layer.getProb(tree));
         /*for(String s:layer.getPartitions(tree)){
             System.out.println(s);
         }*/
-        System.out.println(layer.getOperations(tree));
+        Sum sum = layer.getOperations(tree);
+        System.out.println(sum.calculate(layer.getTreePatterns()));
         System.out.println("Done");
     }
 

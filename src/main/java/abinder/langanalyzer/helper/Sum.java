@@ -7,4 +7,9 @@ public class Sum extends Operation {
     public Sum(){
         super("+");
     }
+
+    @Override
+    public double calc(double oa, double ob) {
+        return oa+ob;
+    }
 }

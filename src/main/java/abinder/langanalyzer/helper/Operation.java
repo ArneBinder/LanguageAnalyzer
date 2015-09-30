@@ -15,6 +15,8 @@ public abstract class Operation {
     ArrayList<Operation> operations = new ArrayList<>(1);
     ArrayList<LinguisticTree> terminals = new ArrayList<>(1);
 
+    public abstract double calc(double oa, double ob);
+
     public Operation(String operator){
         this.operator = operator;
     }
@@ -58,6 +60,28 @@ public abstract class Operation {
 
     public int size(){
         return operations.size()+terminals.size();
+    }
+
+    public double calculate(MultiSet<LinguisticTree> treePattern){
+        double result=0.0;
+        if(size()==0)
+            return result;
+        if(terminals.size()>0){
+            Iterator<LinguisticTree> it = terminals.iterator();
+            result = treePattern.getProbability(it.next());
+            while(it.hasNext()){
+                result = calc(result,treePattern.getProbability(it.next()));
+            }
+        }
+        if(operations.size()>0){
+            Iterator<Operation> it = operations.iterator();
+            if(result==0.0)
+                result = it.next().calculate(treePattern);
+            while(it.hasNext()){
+                result = calc(result,it.next().calculate(treePattern));
+            }
+        }
+        return result;
     }
 
     public String toString(){
