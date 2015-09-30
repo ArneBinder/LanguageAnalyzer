@@ -3,7 +3,6 @@ package abinder.langanalyzer.LinguisticUnits;
 import abinder.langanalyzer.helper.IO;
 
 import java.lang.*;
-import java.lang.reflect.Array;
 import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -135,6 +134,10 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         return rightChild;
     }
 
+    public LinguisticTree getParent() {
+        return parent;
+    }
+
     @Override
     public boolean equals(Object other) {
         return (other != null)
@@ -151,7 +154,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
     }
 
     public LinkedBlockingQueue<LinguisticTree> getLeafs(){
-        LinkedBlockingQueue<LinguisticTree> result = new LinkedBlockingQueue<>(1);
+        LinkedBlockingQueue<LinguisticTree> result = new LinkedBlockingQueue<>();
         if(leaf!=null) {
             result.add(this);
             return result;
@@ -159,12 +162,21 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         if(leftChild!=null){
             result.addAll(leftChild.getLeafs());
         }
+        /*if(leftChild== null || rightChild==null){
+            result.add(this);
+        }*/
         if(rightChild!=null){
             result.addAll(rightChild.getLeafs());
         }
         return result;
     }
 
+
+    public LinguisticTree getMaxLeftTree(){
+        if(parent==null || (parent.getLeftChild()==this && parent.getRightChild()!=null))
+            return this;
+        return parent.getMaxLeftTree();
+    }
 
     /*
     public boolean equals(Object other) {
@@ -312,13 +324,14 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         this.leftChild = leftChild;
         resetLeftPositions(leftPos);
         resetSerializations();
-
+        leftChild.parent = this;
     }
 
     public void setRightChild(LinguisticTree rightChild) {
         this.rightChild = rightChild;
         resetRightPositions(rightPos);
         resetSerializations();
+        rightChild.parent = this;
     }
 
     public int getLeafCount() {
@@ -510,17 +523,24 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
     }
 
     /*
-    public ArrayList<LinguisticTree> getAllCutTrees(MultiSet<LinguisticTree> treeSet) {
+    public ArrayList<LinguisticTree> getAllCutTrees(){
+        ArrayList<LinguisticTree> result = getAllCutTreesInclusiveThis();
+        result.remove(this);
+        return result;
+    }*/
+
+    /*
+    public ArrayList<LinguisticTree> getAllCutTreesInclusiveThis(MultiSet<LinguisticTree> treeSet) {
         ArrayList<LinguisticTree> result = new ArrayList<>();
 
         if (leftChild != null) {
-            result.addAll(combineTreeLists(leftChild.getAllCutTrees(treeSet), Collections.singletonList(null), treeSet));
+            result.addAll(combineTreeLists(leftChild.getAllCutTreesInclusiveThis(treeSet), Collections.singletonList(null), treeSet));
         }
         if (rightChild != null) {
-            result.addAll(combineTreeLists(Collections.singletonList(null), rightChild.getAllCutTrees(treeSet), treeSet));
+            result.addAll(combineTreeLists(Collections.singletonList(null), rightChild.getAllCutTreesInclusiveThis(treeSet), treeSet));
         }
         if (leftChild != null && rightChild != null)
-            result.addAll(combineTreeLists(leftChild.getAllCutTrees(treeSet), rightChild.getAllCutTrees(treeSet), treeSet));
+            result.addAll(combineTreeLists(leftChild.getAllCutTreesInclusiveThis(treeSet), rightChild.getAllCutTreesInclusiveThis(treeSet), treeSet));
         else
             result.add(this);
         return result;

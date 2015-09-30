@@ -9,7 +9,6 @@ import java.lang.*;
 import java.lang.Character;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Locale;
 
 import static org.junit.Assert.*;
 
@@ -42,6 +41,19 @@ public class LinguisticLayerTest {
     }
 
     @Test
+    public void simpleLayerTest(){
+        LinguisticLayer layer = new LinguisticLayer();
+        LinguisticTree tree = new LinguisticTree("[[a,b],[c,d]]");
+        for(LinguisticTree subTree: tree.getAllSubtrees(3)){
+            layer.addAllTreePattern(subTree.getAllCutTrees());
+        }
+        String[] str = new String[1];
+        System.out.println(layer.getProb(tree, str));
+        System.out.println(str[0]);
+        System.out.println("Done");
+    }
+
+    @Test
     public void layerTest() throws IOException {
 
         WIKIPEDIACorpus corpus = new WIKIPEDIACorpus();
@@ -51,8 +63,8 @@ public class LinguisticLayerTest {
 
         PrintStream outc = new PrintStream(new BufferedOutputStream(new FileOutputStream(new File("outc.txt"))), true, "UTF-8");
         LinguisticLayer layer = new LinguisticLayer();
-        //Iterator<Character> characters = new CharacterIterator("abcd");
-        Iterator<Character> characters = corpus.tokens();
+        Iterator<Character> characters = new CharacterIterator("abcd");
+        //Iterator<Character> characters = corpus.tokens();
         int index = 0;
         int stepSize = 3;
         System.out.println();
@@ -80,9 +92,9 @@ public class LinguisticLayerTest {
         printTimeMessage("updateTreePatterns");
 
         //PrintStream outs = new PrintStream(new BufferedOutputStream(new FileOutputStream(new File("outs.txt"))), true, "UTF-8");
-        //layer.printMaximalTreesWithTreeParts(System.out);
+        layer.printMaximalTreesWithTreeParts(System.out);
         //outs.flush();
-        //printTimeMessage("printMaximalTreesWithTreeParts");
+        printTimeMessage("printMaximalTreesWithTreeParts");
 
         layer.calculateTreePatternProbabilities();
         printTimeMessage("calculateTreePatternProbabilities");
