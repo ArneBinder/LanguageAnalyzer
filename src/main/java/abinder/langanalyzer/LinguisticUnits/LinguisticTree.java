@@ -3,7 +3,9 @@ package abinder.langanalyzer.LinguisticUnits;
 import abinder.langanalyzer.helper.IO;
 
 import java.lang.*;
+import java.lang.reflect.Array;
 import java.util.*;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Created by Arne on 17.09.2015.
@@ -147,6 +149,22 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
             return false;
         return leftChild.isFull() && rightChild.isFull();
     }
+
+    public LinkedBlockingQueue<LinguisticTree> getLeafs(){
+        LinkedBlockingQueue<LinguisticTree> result = new LinkedBlockingQueue<>(1);
+        if(leaf!=null) {
+            result.add(this);
+            return result;
+        }
+        if(leftChild!=null){
+            result.addAll(leftChild.getLeafs());
+        }
+        if(rightChild!=null){
+            result.addAll(rightChild.getLeafs());
+        }
+        return result;
+    }
+
 
     /*
     public boolean equals(Object other) {

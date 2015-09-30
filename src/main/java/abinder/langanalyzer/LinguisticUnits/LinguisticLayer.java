@@ -114,11 +114,14 @@ public class LinguisticLayer {
 
     public double getProbabilityForHead(LinguisticTree tree, LinguisticTree currentHead, LinguisticTree[] remainingTreeParts){
         //tabs += "\t";
+
         double result = 0;
         double currentProb = 0;
         String blindedSerialization = currentHead.serializeToRoot(currentHead.serialize(false), tree);
         LinguisticTree currentHeadTreeDummy = new LinguisticTree();
         currentHeadTreeDummy.setSerializationPL(blindedSerialization);
+        //if(blindedSerialization.equals("[X,[[X,+],X]]"))
+        //    System.out.println("BLA");
         if(probabilities.containsKey(currentHeadTreeDummy)){
             //System.out.println(tabs+blindedSerialization+"\tCACHED\t"+probabilities.get(currentHeadTreeDummy));
             //tabs = tabs.substring(1);
