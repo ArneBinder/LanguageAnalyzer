@@ -259,11 +259,11 @@ public class LinguisticLayer {
     }
 
 
-    public double getPartitions(LinguisticTree tree, List<String> summands){
+    public ArrayList<String> getPartitions(LinguisticTree tree){
         tabs += "\t";
-
+        ArrayList<String> summands = new ArrayList<>();
         //System.out.println(tabs+tree.serialize(false)+"\tENTER");
-        double result = 0.0;//= treePatterns.getProbability(tree);
+        //double result = 0.0;//= treePatterns.getProbability(tree);
         LinguisticTree workingTree = tree.copyThis();
         workingTree.setParents(null);
 
@@ -274,13 +274,11 @@ public class LinguisticLayer {
         String summand;
         for(LinguisticTree leaf: workingTree.getLeafs()){
             //System.out.println(tabs+"\t"+workingTree.serialize(false)+"\tLEAF\t"+leaf.serialize(false));
-            ArrayList<String> nl = new ArrayList<>();
-            double currentProb = getCutPartitions(workingTree, leaf, null, nl) + treePatterns.getProbability(workingTree);
+            ArrayList<String> nl = getCutPartitions(workingTree, leaf, null);
             nl.add(workingTree.serialize(false));
             summand = "";
             for(LinguisticTree leftTree: leftTrees){
-                ArrayList<String> nl2 = new ArrayList<>();
-                currentProb *= getPartitions(leftTree, nl2);
+                ArrayList<String> nl2 = getPartitions(leftTree);
                 summand += " o "+fltn(nl2);
             }
 
@@ -289,7 +287,7 @@ public class LinguisticLayer {
             else
                 summands.add(fltn(nl) + summand);
 
-            result += currentProb;
+            //result += currentProb;
             //System.out.println(tabs+"\t"+currentProb);
 
             if(!visitedRoot && cutParent!=null)
@@ -308,13 +306,14 @@ public class LinguisticLayer {
 
         //System.out.println(tabs+tree.serialize(false)+"\tRETURN\t"+result);
         tabs = tabs.substring(1);
-        return result;
+        return summands;
     }
 
-    public double getCutPartitions(LinguisticTree tree, LinguisticTree currentPos, LinguisticTree lastPos, List<String> summands){
+    public ArrayList<String> getCutPartitions(LinguisticTree tree, LinguisticTree currentPos, LinguisticTree lastPos){
         tabs += "\t";
+        ArrayList<String> summands = new ArrayList<>();
         //System.out.println(tabs + tree.serialize(false) + "\tENTER\t" + currentPos.serialize(false) + "\tFROM\t" + (lastPos != null ?lastPos.serialize(false):"NULL"));
-        double result = 0.0;
+        //double result = 0.0;
         LinguisticTree parent = currentPos.getParent();
         LinguisticTree left = currentPos.getLeftChild();
         LinguisticTree right = currentPos.getRightChild();
@@ -323,9 +322,8 @@ public class LinguisticLayer {
                 if(left!=null) {
                     right = currentPos.deleteRightChild();
                     //System.out.println(tabs + right.serialize(false) + " o (" + tree.serialize(false) + " + " + currentPos.serialize(false) + " -> LEFTCHILD)");
-                    ArrayList<String> nl = new ArrayList<>();
-                    ArrayList<String> nl2 = new ArrayList<>();
-                    result += getPartitions(right, nl) * (treePatterns.getProbability(tree) + getCutPartitions(tree, left, currentPos, nl2));
+                    ArrayList<String> nl = getPartitions(right);
+                    ArrayList<String> nl2 = getCutPartitions(tree, left, currentPos);
                     nl2.add(tree.serialize(false));
                     if(!nl.isEmpty())
                         summands.add(fltn(nl)+ " o " + fltn(nl2));
@@ -333,18 +331,15 @@ public class LinguisticLayer {
                         summands.addAll(nl2);
                     currentPos.setRightChild(right);
                 }
-                ArrayList<String> nl3 = new ArrayList<>();
-                result += getCutPartitions(tree, right, currentPos, nl3);
-                summands.addAll(nl3);
+                summands.addAll(getCutPartitions(tree, right, currentPos));
             }
 
             if(left!=null){
                 if(right!=null) {
                     left = currentPos.deleteLeftChild();
                     //System.out.println(tabs + left.serialize(false) + " o (" + tree.serialize(false) + " + " + currentPos.serialize(false) + " -> RIGHTCHILD)");
-                    ArrayList<String> nl = new ArrayList<>();
-                    ArrayList<String> nl2 = new ArrayList<>();
-                    result += getPartitions(left, nl) * (treePatterns.getProbability(tree) + getCutPartitions(tree, right, currentPos, nl2));
+                    ArrayList<String> nl =  getPartitions(left);
+                    ArrayList<String> nl2 = getCutPartitions(tree, right, currentPos);
                     nl2.add(tree.serialize(false));
                     if(!nl.isEmpty())
                         summands.add(fltn(nl)+ " o " + fltn(nl2));
@@ -352,42 +347,37 @@ public class LinguisticLayer {
                         summands.addAll(nl2);
                     currentPos.setLeftChild(left);
                 }
-                ArrayList<String> nl3 = new ArrayList<>();
-                result += getCutPartitions(tree, left, currentPos, nl3);
-                summands.addAll(nl3);
+                summands.addAll(getCutPartitions(tree, left, currentPos));
             }
         }else if(lastPos==left){
             if(right!=null){
                 right = currentPos.deleteRightChild();
                 //System.out.println(tabs + right.serialize(false) + " o (" + tree.serialize(false) + " + " + currentPos.serialize(false) + " -> PARENT)");
-                ArrayList<String> nl = new ArrayList<>();
-                ArrayList<String> nl2 = new ArrayList<>();
-                result += getPartitions(right, nl) * (treePatterns.getProbability(tree)+ (parent!=null?getCutPartitions(tree, parent, currentPos, nl2):0.0));
+                ArrayList<String> nl = getPartitions(right);
+                ArrayList<String> nl2;
+                if(parent!=null)
+                    nl2 = getCutPartitions(tree, parent, currentPos);
+                else
+                    nl2 = new ArrayList<>();
                 nl2.add(tree.serialize(false));
                 if(!nl.isEmpty())
                     summands.add(fltn(nl)+ " o " + fltn(nl2));
                 else
                     summands.addAll(nl2);
                 currentPos.setRightChild(right);
-                ArrayList<String> nl3 = new ArrayList<>();
-                result += getCutPartitions(tree, right, currentPos, nl3);
-                summands.addAll(nl3);
+                summands.addAll(getCutPartitions(tree, right, currentPos));
             }
             if(parent!=null){
-                ArrayList<String> nl3 = new ArrayList<>();
-                result += getCutPartitions(tree, parent, currentPos, nl3);
-                summands.addAll(nl3);
+                summands.addAll(getCutPartitions(tree, parent, currentPos));
             }
 
         }else if(lastPos==right && parent!=null){
-            ArrayList<String> nl3 = new ArrayList<>();
-            result += getCutPartitions(tree, parent, currentPos, nl3);
-            summands.addAll(nl3);
+            summands.addAll(getCutPartitions(tree, parent, currentPos));
         }
 
         //System.out.println(tabs+tree.serialize(false)+"\tCUT\t"+result);
         tabs = tabs.substring(1);
-        return result;
+        return summands;
     }
 
     public double getProbabilityForHead(LinguisticTree tree, LinguisticTree currentHead, LinguisticTree[] remainingTreeParts){
