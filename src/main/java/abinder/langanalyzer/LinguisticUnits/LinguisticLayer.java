@@ -94,7 +94,7 @@ public class LinguisticLayer {
                 for(LinguisticTree tree: trees) {
                     probabilities.clear();
                     tree.setParents(null);
-                    double probability = getProbabilityForHead(tree, tree, new LinguisticTree[0]);
+                    double probability = getProb(tree);//getProbabilityForHead(tree, tree, new LinguisticTree[0]);
                     //if(treePatterns.size() < 20000 ||  probability > threshold) {
                         out.println(probability + "\t" + tree.serialize(false) + "\t" + treePatterns.getTotalCount()+"\t"+treePatterns.size());
 
@@ -138,7 +138,6 @@ public class LinguisticLayer {
         ArrayList<LinguisticTree> leftTrees = new ArrayList<>();
         LinguisticTree cutParent = null;
         boolean visitedRoot = false;
-        String summand;
         for(LinguisticTree leaf: workingTree.getLeafs()){
             //System.out.println(tabs+"\t"+workingTree.serialize(false)+"\tLEAF\t"+leaf.serialize(false));
             double currentProb = getCutProb(workingTree, leaf, null) + treePatterns.getProbability(workingTree);
@@ -164,6 +163,7 @@ public class LinguisticLayer {
         }
 
         //System.out.println(tabs+tree.serialize(false)+"\tRETURN\t"+result);
+        probabilities.put(tree, result);
         tabs = tabs.substring(1);
         return result;
     }
@@ -460,6 +460,7 @@ public class LinguisticLayer {
         return sum;
     }
 
+    //DEPRICATED
     public double getProbabilityForHead(LinguisticTree tree, LinguisticTree currentHead, LinguisticTree[] remainingTreeParts){
         //tabs += "\t";
 
@@ -634,7 +635,8 @@ public class LinguisticLayer {
             //if(tree.serialize(false).equals("[[a,b],[c,d]]")) {
                 //getProbability(tree, tree, tree.getLeafCount()-1);
                 tree.setParents(null);
-                getProbabilityForHead(tree, tree, new LinguisticTree[0]);
+                getProb(tree);
+                //getProbabilityForHead(tree, tree, new LinguisticTree[0]);
             //}
         }
     }

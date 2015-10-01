@@ -80,8 +80,8 @@ public class LinguisticLayerTest {
 
         PrintStream outc = new PrintStream(new BufferedOutputStream(new FileOutputStream(new File("outc.txt"))), true, "UTF-8");
         LinguisticLayer layer = new LinguisticLayer();
-        Iterator<Character> characters = new CharacterIterator("abcd");
-        //Iterator<Character> characters = corpus.tokens();
+        //Iterator<Character> characters = new CharacterIterator("abcd");
+        Iterator<Character> characters = corpus.tokens();
         int index = 0;
         int stepSize = 3;
         System.out.println();
@@ -108,11 +108,13 @@ public class LinguisticLayerTest {
         outc.flush();
         printTimeMessage("updateTreePatterns");
 
+        /*
         //PrintStream outs = new PrintStream(new BufferedOutputStream(new FileOutputStream(new File("outs.txt"))), true, "UTF-8");
         layer.printMaximalTreesWithTreeParts(System.out);
         //outs.flush();
         printTimeMessage("printMaximalTreesWithTreeParts");
 
+*/
         layer.calculateTreePatternProbabilities();
         printTimeMessage("calculateTreePatternProbabilities");
 
