@@ -9,6 +9,8 @@ import java.io.*;
 import java.lang.*;
 import java.lang.Character;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 
 import static org.junit.Assert.*;
@@ -54,10 +56,17 @@ public class LinguisticLayerTest {
             System.out.println(s);
         }*/
         Sum sum = layer.getOperations(tree);
-        System.out.println(sum.calculate(layer.getTreePatterns()));
-        System.out.println(sum);
+        //System.out.println(sum.calculate(layer.getTreePatterns()));
+
         sum.deepFlatten();
-        System.out.println(sum);
+        //System.out.println(sum);
+        //String partitionString = sum.toString();
+        //String[] partitions = partitionString.substring(1, partitionString.length()-1).split(" \\+ ");
+        //Arrays.sort(partitions);
+        //System.out.println("\npartitions:\n"+String.join("\n", Arrays.asList(partitions))+"\n");
+        System.out.println("\npartitions:\n"+sum.toString().replaceAll(" \\+ ", "\n")+"\n");
+
+        System.out.println("probability:\t"+ sum.calculate(layer.getTreePatterns()));
         System.out.println("Done");
     }
 

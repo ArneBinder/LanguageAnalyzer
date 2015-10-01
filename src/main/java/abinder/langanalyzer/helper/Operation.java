@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 /**
  * Created by Arne on 30.09.2015.
  */
-public abstract class Operation {
+public abstract class Operation implements Comparable<Operation> {
     String operator;
     ArrayList<Operation> operations = new ArrayList<>(1);
     ArrayList<LinguisticTree> terminals = new ArrayList<>(1);
@@ -98,11 +98,12 @@ public abstract class Operation {
 
     public String toString(){
         flatten();
-        Collections.sort(terminals);
         String joinedTerminals = terminals.stream()
+                .sorted()
                 .map(LinguisticTree::toString)
                 .collect(Collectors.joining(" " + operator + " "));
         String joinedOperations = operations.stream()
+                .sorted()
                 .map(Operation::toString)
                 .collect(Collectors.joining(" " + operator + " "));
 
@@ -116,6 +117,30 @@ public abstract class Operation {
         if(terminals.size()+ operations.size()>1 && operator.equals("+"))
             return "("+result+")";
         else return result;
+    }
+
+    @Override
+    public int compareTo(Operation other){
+        if (other==null){
+            return 1;
+        }
+        int result = size()-other.size();
+        if(result==0)
+            result = other.terminals.size()-terminals.size();
+        if(result==0){
+            for(int i=0; i<terminals.size();i++){
+                result = terminals.get(i).compareTo(other.terminals.get(i));
+                if(result!=0)
+                    return result;
+            }
+
+            for(int i=0; i<operations.size();i++){
+                result = operations.get(i).compareTo(other.operations.get(i));
+                if(result!=0)
+                    return result;
+            }
+        }
+        return result;
     }
 
 }
