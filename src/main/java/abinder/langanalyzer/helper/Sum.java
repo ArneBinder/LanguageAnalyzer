@@ -12,4 +12,15 @@ public class Sum extends Operation {
     public double calc(double oa, double ob) {
         return oa+ob;
     }
+
+    @Override
+    public void deepFlatten() {
+        Operation result = new Sum();
+        result.addAllTerminals(this.getTerminals());
+        for(Operation operation: operations){
+            operation.deepFlatten();
+            operation.flatten();
+        }
+        flatten();
+    }
 }

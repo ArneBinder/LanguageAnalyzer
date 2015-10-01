@@ -3,6 +3,7 @@ package abinder.langanalyzer.helper;
 import abinder.langanalyzer.LinguisticUnits.LinguisticTree;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.stream.Collectors;
@@ -16,6 +17,7 @@ public abstract class Operation {
     ArrayList<LinguisticTree> terminals = new ArrayList<>(1);
 
     public abstract double calc(double oa, double ob);
+    public abstract void deepFlatten();
 
     public Operation(String operator){
         this.operator = operator;
@@ -39,6 +41,14 @@ public abstract class Operation {
 
     public void addOperand(LinguisticTree operand){
         terminals.add(operand);
+    }
+
+    public void addAllOperations(Collection<Operation> operands){
+        operations.addAll(operands);
+    }
+
+    public void addAllTerminals(Collection<LinguisticTree> operands){
+        terminals.addAll(operands);
     }
 
     public void flatten(){
@@ -83,6 +93,8 @@ public abstract class Operation {
         }
         return result;
     }
+
+
 
     public String toString(){
         flatten();

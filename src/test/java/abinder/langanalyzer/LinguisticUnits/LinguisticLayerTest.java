@@ -55,6 +55,9 @@ public class LinguisticLayerTest {
         }*/
         Sum sum = layer.getOperations(tree);
         System.out.println(sum.calculate(layer.getTreePatterns()));
+        System.out.println(sum);
+        sum.deepFlatten();
+        System.out.println(sum);
         System.out.println("Done");
     }
 
