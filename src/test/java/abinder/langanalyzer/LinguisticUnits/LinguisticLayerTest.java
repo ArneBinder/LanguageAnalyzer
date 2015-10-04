@@ -108,6 +108,8 @@ public class LinguisticLayerTest {
         outc.flush();
         printTimeMessage("updateTreePatterns");
 
+        layer.calcBestPaths();
+
         /*
         //PrintStream outs = new PrintStream(new BufferedOutputStream(new FileOutputStream(new File("outs.txt"))), true, "UTF-8");
         layer.printMaximalTreesWithTreeParts(System.out);
@@ -115,6 +117,8 @@ public class LinguisticLayerTest {
         printTimeMessage("printMaximalTreesWithTreeParts");
 
 */
+
+       /*
         layer.calculateTreePatternProbabilities();
         printTimeMessage("calculateTreePatternProbabilities");
 
@@ -134,7 +138,7 @@ public class LinguisticLayerTest {
         layer.printProbabilitiesSortedByValueAndKey(out);
         out.flush();
         printTimeMessage("printProbabilitiesSortedByValueAndKey to file");
-
+*/
 
     }
 

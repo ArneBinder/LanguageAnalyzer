@@ -4,6 +4,7 @@ import abinder.langanalyzer.helper.*;
 
 import java.io.PrintStream;
 import java.lang.*;
+import java.lang.reflect.Array;
 import java.util.*;
 
 /**
@@ -11,10 +12,12 @@ import java.util.*;
  */
 public class LinguisticLayer {
 
-    boolean print = false;
     ArrayList<LinguisticToken> tokens = new ArrayList<>();
     // ATTENTION: parents aren't set!
     ArrayList<ArrayList<ArrayList<LinguisticTree>>> previousTrees = new ArrayList<>();
+
+    ArrayList<LinguisticTree>[] bestTrees;
+    double[] bestProbabilities;
     //ArrayList<ArrayList<ArrayList<LinguisticTree>>> rightTrees = new ArrayList<>();
 
     // with set parents
@@ -119,6 +122,39 @@ public class LinguisticLayer {
     public void addTreePattern(LinguisticTree tree){
         treePatterns.add(tree);
     }
+
+
+    public void calcBestPaths(){
+        if(bestProbabilities == null)
+            bestProbabilities = new double[previousTrees.size()+1]; //new ArrayList<>(previousTrees.size());
+        if(bestTrees==null)
+            bestTrees = (ArrayList<LinguisticTree>[]) Array.newInstance(ArrayList.class, previousTrees.size());//(new ArrayList[previousTrees.size()]); //new ArrayList<>(previousTrees.size());
+
+
+       for(int i=previousTrees.size()-1; i>=0; i--){
+           for(ArrayList<LinguisticTree> currentTrees: previousTrees.get(i)){
+               for(LinguisticTree tree: currentTrees){
+                   double newProb = Math.log(getProb(tree))+bestProbabilities[i+1];
+                   int newPos = tree.getLeftPosition();
+                   if(bestProbabilities[newPos] == 0.0 || newProb >= bestProbabilities[newPos]){
+
+                       if(newProb != bestProbabilities[newPos])
+                           bestTrees[newPos] = new ArrayList<>();
+                       bestProbabilities[newPos]= newProb;
+                       bestTrees[newPos].add(tree);
+                   }
+
+               }
+           }
+
+
+       }
+
+        //System.out.println("end");
+
+
+    }
+
 
     private String fltn(ArrayList<String> summands){
         if(summands.isEmpty())
