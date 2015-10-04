@@ -109,6 +109,7 @@ public class LinguisticLayerTest {
         printTimeMessage("updateTreePatterns");
 
         layer.calcBestPaths();
+        printTimeMessage("calcBestPaths");
 
         /*
         //PrintStream outs = new PrintStream(new BufferedOutputStream(new FileOutputStream(new File("outs.txt"))), true, "UTF-8");
