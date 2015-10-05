@@ -45,9 +45,9 @@ public class LinguisticLayerTest {
 
     @Test
     public void simpleLayerTest(){
-        LinguisticLayer layer = new LinguisticLayer();
+        LinguisticLayer layer = new LinguisticLayer(3);
         LinguisticTree tree = new LinguisticTree("[[a,b],[c,d]]");
-        for(LinguisticTree subTree: tree.getAllSubtrees(3)){
+        for(LinguisticTree subTree: tree.getAllSubtrees(layer.getMaxDepth())){
             layer.addAllTreePattern(subTree.getAllCutTrees());
         }
         //ArrayList<String> str = new ArrayList<>();
@@ -79,7 +79,7 @@ public class LinguisticLayerTest {
         printTimeMessage("corpus read");
 
         PrintStream outc = new PrintStream(new BufferedOutputStream(new FileOutputStream(new File("outc.txt"))), true, "UTF-8");
-        LinguisticLayer layer = new LinguisticLayer();
+        LinguisticLayer layer = new LinguisticLayer(3);
         //Iterator<Character> characters = new CharacterIterator("abcd");
         Iterator<Character> characters = corpus.tokens();
         int index = 0;
@@ -93,7 +93,7 @@ public class LinguisticLayerTest {
                 System.out.print(currentToken.serialize(false));
             else
                 System.out.println();
-            layer.feed(currentToken, 3);
+            layer.feed(currentToken);
             if(index % stepSize == stepSize -1)
                 layer.updateTreePatterns(outc);
 
@@ -108,8 +108,8 @@ public class LinguisticLayerTest {
         outc.flush();
         printTimeMessage("updateTreePatterns");
 
-        layer.calcBestPaths();
-        printTimeMessage("calcBestPaths");
+
+
 
         /*
         //PrintStream outs = new PrintStream(new BufferedOutputStream(new FileOutputStream(new File("outs.txt"))), true, "UTF-8");
@@ -118,16 +118,45 @@ public class LinguisticLayerTest {
         printTimeMessage("printMaximalTreesWithTreeParts");
 
 */
+        System.out.println();
 
-       /*
-        layer.calculateTreePatternProbabilities();
-        printTimeMessage("calculateTreePatternProbabilities");
+        int iterations = 5;
+        for(int i = 0; i< iterations; i++) {
+            layer.calcBestPaths();
+            printTimeMessage("calcBestPaths");
+
+            //PrintStream outd = new PrintStream(new BufferedOutputStream(new FileOutputStream(new File("outd.txt"))), true, "UTF-8");
+
+            try {
+                layer.processBestPaths(new int[]{0, 1, 2, 3, 4, 5});
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            //outd.flush();
+            printTimeMessage("processBestPaths");
+
+
+            layer.calculateTreePatternProbabilities();
+            printTimeMessage("calculateTreePatternProbabilities");
+
+
+        }
 
         PrintStream outa = new PrintStream(new BufferedOutputStream(new FileOutputStream(new File("outa.txt"))), true, "UTF-8");
-        layer.printTreePatternsSortedByKey(outa);
+        layer.printProbabilitiesSortedByValueAndKey(outa);
         outa.flush();
         printTimeMessage("printProbabilities");
 
+        PrintStream outd = new PrintStream(new BufferedOutputStream(new FileOutputStream(new File("outd.txt"))), true, "UTF-8");
+        try {
+            layer.printBestPaths(new int[]{0, 1, 2, 3, 4, 5}, outd);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        outd.flush();
+        printTimeMessage("printBestPaths");
+
+/*
 
         PrintStream outb = new PrintStream(new BufferedOutputStream(new FileOutputStream(new File("outb.txt"))), true, "UTF-8");
         layer.printProbabilitiesSortedByValue(outb);

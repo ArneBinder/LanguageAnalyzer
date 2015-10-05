@@ -6,6 +6,7 @@ import java.io.PrintStream;
 import java.lang.*;
 import java.lang.reflect.Array;
 import java.util.*;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Created by Arne on 21.09.2015.
@@ -25,17 +26,27 @@ public class LinguisticLayer {
     HashMap<LinguisticTree, Double> probabilities = new HashMap<>();
     HashMap<String, Double> probabilities2 = new HashMap<>();
 
+    int maxDepth = 3;
     int count = 0;
     int posOffset = 0;
     int processedTreesIndex = 0;
     String tabs = "";
 
-    public LinguisticLayer(){
+    public int getMaxDepth() {
+        return maxDepth;
+    }
+
+    public void setMaxDepth(int maxDepth) {
+        this.maxDepth = maxDepth;
+    }
+
+    public LinguisticLayer(int maxDepth){
+        this.maxDepth = maxDepth;
         //previousTrees.add(new ArrayList<>());
 
     }
 
-    public void feed(LinguisticToken token, int maxDepth){
+    public void feed(LinguisticToken token){
         token.setPosition(count);
 
 
@@ -150,11 +161,57 @@ public class LinguisticLayer {
 
        }
 
-        System.out.println("end");
+        //System.out.println("end");
 
 
     }
 
+
+    public void processBestPaths(int[] startIndices) throws InterruptedException {
+        LinkedBlockingQueue<Integer> indices = new LinkedBlockingQueue<>();
+        for(int index: startIndices) {
+            indices.put(index-posOffset);
+        }
+        int newPos;
+
+        probabilities.clear();
+        treePatterns.clear();
+
+        while(!indices.isEmpty()){
+            for (LinguisticTree tree : bestTrees[indices.poll()]) {
+                // do sth with tree
+                //out.println(tree.serialize(false));
+                for(LinguisticTree subTree:tree.getAllSubtrees(maxDepth)){
+                    addAllTreePattern(subTree.getAllCutTrees());
+                }
+                //out.flush();
+                newPos = tree.getRightPosition() + 1;
+                if(newPos < bestTrees.length)
+                    indices.put(newPos);
+            }
+        }
+        //System.out.println("finished");
+    }
+
+    public void printBestPaths(int[] startIndices, PrintStream out) throws InterruptedException {
+        LinkedBlockingQueue<Integer> indices = new LinkedBlockingQueue<>();
+        for(int index: startIndices) {
+            indices.put(index-posOffset);
+        }
+        int newPos;
+        while(!indices.isEmpty()){
+            for (LinguisticTree tree : bestTrees[indices.poll()]) {
+                // do sth with tree
+                out.println(tree.serialize(false));
+
+                //out.flush();
+                newPos = tree.getRightPosition() + 1;
+                if(newPos < bestTrees.length)
+                    indices.put(newPos);
+            }
+        }
+        //System.out.println("finished");
+    }
 
     private String fltn(ArrayList<String> summands){
         if(summands.isEmpty())
@@ -496,174 +553,7 @@ public class LinguisticLayer {
         return sum;
     }
 
-    //DEPRICATED
-    public double getProbabilityForHead(LinguisticTree tree, LinguisticTree currentHead, LinguisticTree[] remainingTreeParts){
-        //tabs += "\t";
 
-        double result = 0;
-        double currentProb = 0;
-        String blindedSerialization = currentHead.serializeToRoot(currentHead.serialize(false), tree);
-        LinguisticTree currentHeadTreeDummy = new LinguisticTree();
-        currentHeadTreeDummy.setSerializationPL(blindedSerialization);
-        //if(blindedSerialization.equals("[X,[[X,+],X]]"))
-        //    System.out.println("BLA");
-        if(probabilities.containsKey(currentHeadTreeDummy)){
-            //System.out.println(tabs+blindedSerialization+"\tCACHED\t"+probabilities.get(currentHeadTreeDummy));
-            //tabs = tabs.substring(1);
-            return probabilities.get(currentHeadTreeDummy);
-        }
-
-        /*String partitionStr = blindedSerialization;
-        for(LinguisticTree remainingTree: remainingTreeParts){
-            partitionStr+=" o " + remainingTree.serialize(false);
-        }
-        System.out.println(tabs+partitionStr);
-*/
-        currentProb = treePatterns.getProbability(currentHeadTreeDummy);
-        result = currentProb;
-
-
-        for(LinguisticTree remainingTree: remainingTreeParts){
-            result *= getProbabilityForHead(remainingTree, remainingTree, new LinguisticTree[0]);
-        }
-
-        if(currentHead.getLeftChild()!=null){
-            if(currentHead.getRightChild()!=null) {
-                LinguisticTree[] newRemainingTreeParts = new LinguisticTree[remainingTreeParts.length + 1];
-                System.arraycopy(remainingTreeParts, 0, newRemainingTreeParts, 0, remainingTreeParts.length);
-                newRemainingTreeParts[remainingTreeParts.length] = currentHead.getRightChild();
-                result += getProbabilityForHead(tree, currentHead.getLeftChild(), newRemainingTreeParts);
-            }else{
-                result += getProbabilityForHead(tree, currentHead.getLeftChild(), remainingTreeParts);
-            }
-        }
-
-        if(currentHead.getRightChild()!=null){
-            if(currentHead.getLeftChild()!=null) {
-                LinguisticTree[] newRemainingTreeParts = new LinguisticTree[remainingTreeParts.length + 1];
-                System.arraycopy(remainingTreeParts, 0, newRemainingTreeParts, 0, remainingTreeParts.length);
-                newRemainingTreeParts[remainingTreeParts.length] = currentHead.getLeftChild();
-                result += getProbabilityForHead(tree, currentHead.getRightChild(),newRemainingTreeParts);
-            }else{
-                result += getProbabilityForHead(tree, currentHead.getRightChild(), remainingTreeParts);
-            }
-        }
-
-        //System.out.println(tabs + partitionStr + "\tRETURN\t" + result);
-        //tabs = tabs.substring(1);
-
-        probabilities.put(new LinguisticTree(blindedSerialization), result);
-        return result;
-    }
-
-    //DEPRECATED
-    public double getProbability(LinguisticTree tree, LinguisticTree currentPos, int cutCount) {
-        tabs += "\t";
-        System.out.println(tabs + tree.serialize(false) + "\t"+ currentPos.serialize(false) + "\tVISIT \tcutCount: "+cutCount);
-
-        double probability = 0;
-
-        double currentProb = 0;
-
-        //if (tree.serialize(false).equals("[¹,³]")) {
-         //   System.out.println("HERE_A: " + probabilities.get(tree));
-            //print = true;
-        //}
-        if (tree.serialize(false).equals("[[²,X],[¹,³]]")) {
-            System.out.println("HERE");
-            //print = true;
-        }
-
-        if(cutCount==0) {
-            // TODO: fix caching!!
-            if (tree.equals(currentPos)) {
-
-
-                //String s = tree.serialize(false);
-                if (probabilities.containsKey(tree)) {
-                    //if(print) {
-                       System.out.println(tabs + tree.serialize(false) + "\t" + currentPos.serialize(false) + "\tCACHED\t" + probabilities.get(tree));
-                       tabs = tabs.substring(1);
-                    //}
-                    currentProb = probabilities.get(tree);
-                    return currentProb;
-                } else {
-                    currentProb = treePatterns.getProbability(tree);
-                    probability += currentProb;
-                }
-            }
-        }
-
-        if(cutCount > 0) {
-            LinguisticTree leftChild = currentPos.getLeftChild();
-            LinguisticTree rightChild = currentPos.getRightChild();
-
-
-            // cut tree
-            if (leftChild != null && rightChild != null) {
-                // cut left child
-                leftChild = currentPos.deleteLeftChild();
-                //if(print)
-                    System.out.println(tabs+leftChild.serialize(false)+ "\to\t"+  tree.serialize(false) + "\tCUT left\t");
-
-                int cutCountRangeMin = cutCount-1-tree.getLeafCount()+1;
-                int cutCountRangeMax = leftChild.getLeafCount()-1;
-                for(int cutCounta = Math.max(0,cutCountRangeMin); cutCounta < Math.min(cutCount, cutCountRangeMax+1); cutCounta++) {
-                        currentProb = getProbability(leftChild, leftChild, cutCounta) * getProbability(tree, tree, (cutCount - 1) - cutCounta);
-                        probability += currentProb;
-
-                }
-                currentPos.setLeftChild(leftChild);
-
-                // cut right child
-                rightChild = currentPos.deleteRightChild();
-                //if(print)
-                    System.out.println(tabs+tree.serialize(false)+ "\to\t"+ rightChild.serialize(false)+"\tCUT right\t");
-                cutCountRangeMin = cutCount-1-tree.getLeafCount()+1;
-                cutCountRangeMax = rightChild.getLeafCount()-1;
-                for(int cutCounta = Math.max(0,cutCountRangeMin); cutCounta < Math.min(cutCount, cutCountRangeMax+1); cutCounta++) {
-                    currentProb = getProbability(rightChild, rightChild, cutCounta) * getProbability(tree, tree, (cutCount - 1) - cutCounta);
-                    probability += currentProb;
-                }
-                currentPos.setRightChild(rightChild);
-            }
-
-            if (leftChild != null && leftChild.getSize() > 1) {
-                //if(print)
-                System.out.println(tabs + tree.serialize(false) + "\t"+ leftChild.serialize(false) + "\tLEFTCHILD");
-                currentProb = getProbability(tree, leftChild, cutCount);
-                probability += currentProb;
-            }
-
-            if (rightChild != null && rightChild.getSize() > 1) {
-                //if(print)
-                System.out.println(tabs + tree.serialize(false) + "\t"+ rightChild.serialize(false) + "\tRIGHTCHILD");
-                currentProb = getProbability(tree, rightChild, cutCount);
-                probability += currentProb;
-            }
-        }
-
-        //if(print) {
-            System.out.println(tabs + tree.serialize(false) + "\t" + currentPos.serialize(false) + "\tRETURN\t" + probability);
-            tabs = tabs.substring(1);
-        //}
-
-        //if(probability > 0)
-        if(tree.equals(currentPos) && cutCount==0) {
-            if(tree.serialize(false).equals("[¹,³]"))
-                System.out.println("HERE_B: "+probability);
-            probabilities.put(tree.copyThis(), probability);
-            //if(tree.serialize(false).equals("[[²,X],[¹,³]]")) {
-            //    System.out.println("HEREOUT");
-            //    print = false;
-            //}
-        }
-        //else {
-            //if(probability > 0)
-            //    System.out.println("BLAAAA");
-        //}
-        return probability;
-    }
 
     public void calculateTreePatternProbabilities(){
         for(LinguisticTree tree: treePatterns.keySet()){
@@ -693,7 +583,7 @@ public class LinguisticLayer {
                 if(tree.getLeftPosition()==0){
                     //tree.setParents(null);
 
-                    out.println(tree.serialize(false)+"\t"+getProbability(tree, tree, tree.getLeafCount()-1));
+                    out.println(tree.serialize(false)+"\t"+getProb(tree));
 
                     // print cutTrees of maximal trees
                     //for(LinguisticTree cutTree: sortedTrees(tree.getAllCutTreesInclusiveThis())){
