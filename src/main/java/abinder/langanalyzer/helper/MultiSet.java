@@ -84,8 +84,8 @@ public class MultiSet<V> extends HashMap<V, Integer> implements Iterable<V> {
                 .sum();
 
         int divisor = sqsuma*sqsumb;
-        if(divisor==0)
+        if(divisor==0.0)
             return Double.POSITIVE_INFINITY;
-        return divident/(double) divisor;
+        return divident/Math.sqrt(divisor);
     }
 }
