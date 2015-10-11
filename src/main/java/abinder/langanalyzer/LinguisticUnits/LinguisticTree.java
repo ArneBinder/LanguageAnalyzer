@@ -1,6 +1,7 @@
 package abinder.langanalyzer.LinguisticUnits;
 
 import abinder.langanalyzer.helper.IO;
+import abinder.langanalyzer.helper.MultiSet;
 
 import java.lang.*;
 import java.util.*;
@@ -493,7 +494,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
 
     public ArrayList<LinguisticTree> getAllSubtrees(int maxDepth) {
         ArrayList<LinguisticTree> result = new ArrayList<>();
-        if (getDepth() <= maxDepth)
+        if (getDepth() <= maxDepth && maxDepth >= 0)
             result.add(this);
         if (!isLeaf()) {
             if (leftChild != null) {
@@ -520,6 +521,15 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         else
             result.add(this);
         return result;
+    }
+
+    public double getCosineSimilarity(LinguisticTree other){
+        MultiSet<LinguisticTree> thisTrees = new MultiSet<>();
+        this.getAllSubtrees(-1).forEach(element -> getAllCutTrees().forEach(thisTrees::add));
+
+        MultiSet<LinguisticTree> otherTrees = new MultiSet<>();
+        other.getAllSubtrees(-1).forEach(element -> getAllCutTrees().forEach(otherTrees::add));
+        return thisTrees.calcCosineSimilarity(otherTrees);
     }
 
     /*
