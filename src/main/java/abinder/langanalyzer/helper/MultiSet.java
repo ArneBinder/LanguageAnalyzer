@@ -60,4 +60,32 @@ public class MultiSet<V> extends HashMap<V, Integer> implements Iterable<V> {
 
         return result;
     }
+
+    public double calcCosineSimilarity(MultiSet<V> other) {
+        if(this.size()==0 || other.size() == 0)
+            return Double.POSITIVE_INFINITY;
+        int sqsuma = 0;
+        int sqsumb = 0;
+        int divident = 0;
+        for(V elema: this.keySet()){
+            int counta = get(elema);
+            sqsuma += counta*counta;
+            Integer countb = other.get(elema);
+            if(countb!=null){
+                divident += counta*countb;
+                sqsumb += countb*countb;
+            }
+        }
+
+        sqsumb += other.entrySet().stream()
+                .filter(element -> !containsKey(element.getKey()))
+                .mapToInt(Entry::getValue)
+                .map(e -> e*e)
+                .sum();
+
+        int divisor = sqsuma*sqsumb;
+        if(divisor==0)
+            return Double.POSITIVE_INFINITY;
+        return divident/(double) divisor;
+    }
 }
