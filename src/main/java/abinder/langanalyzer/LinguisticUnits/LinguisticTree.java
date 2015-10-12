@@ -362,7 +362,11 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         if (showPosition) {
             if (serialization == null) {
                 if (isLeaf())
-                    serialization = IO.escape(leaf.serialize(showPosition), escapeAbleChars, charEscape);
+                    if(leaf!=null) {
+                        serialization = IO.escape(leaf.serialize(showPosition), escapeAbleChars, charEscape);
+                    }else{
+                        serialization = charNull + "";
+                    }
                 else {
                     serialization = charOpen + (leftChild != null ? leftChild.serialize(showPosition) : charNull + "") + charSeperate + (rightChild != null ? rightChild.serialize(showPosition) : charNull + "") + charClose;
                 }
@@ -371,7 +375,11 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         } else {
             if(serializationPL == null){
                 if (isLeaf())
-                    serializationPL = IO.escape(leaf.serialize(showPosition), escapeAbleChars, charEscape);
+                    if(leaf!=null) {
+                        serializationPL = IO.escape(leaf.serialize(showPosition), escapeAbleChars, charEscape);
+                    }else{
+                        serializationPL = charNull + "";
+                    }
                 else {
                     serializationPL = charOpen + (leftChild != null ? leftChild.serialize(showPosition) : charNull + "") + charSeperate + (rightChild != null ? rightChild.serialize(showPosition) : charNull + "") + charClose;
                 }
@@ -390,7 +398,10 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         if(serialization.charAt(0)!=charOpen || serialization.charAt(serialization.length()-1)!=charClose){
             leftChild = null;
             rightChild = null;
-            leaf = new LinguisticToken(serialization);
+            if(serialization.charAt(0)!=charNull)
+                leaf = new LinguisticToken(serialization);
+            else
+                leaf = null;
             return;
         }
         String s = serialization.substring(1,serialization.length()-1);
@@ -518,8 +529,25 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         }
         if (leftChild != null && rightChild != null)
             result.addAll(combineTreeLists(leftChild.getAllCutTrees(), rightChild.getAllCutTrees(), this));
-        else
+
+        if(leftChild == null && rightChild==null) {
             result.add(this);
+            /*if (leaf!=null){
+                LinguisticTree leafLessTree = this.copyThis();
+                leafLessTree.leaf = null;
+                leafLessTree.resetSerializations();
+                result.add(leafLessTree);
+            }*/
+
+
+        }
+        /*if (leaf!=null){
+                LinguisticTree leafLessTree = this.copyThis();
+                leafLessTree.leaf = null;
+                leafLessTree.resetSerializations();
+                result.add(leafLessTree);
+            }
+*/
         return result;
     }
 
