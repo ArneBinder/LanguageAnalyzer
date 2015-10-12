@@ -394,6 +394,8 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
             System.out.println("ERROR: serialization is empty!");
             return;
         }
+        if(serialization.equals(""))
+            return;
 
         if(serialization.charAt(0)!=charOpen || serialization.charAt(serialization.length()-1)!=charClose){
             leftChild = null;
@@ -521,33 +523,18 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
     public ArrayList<LinguisticTree> getAllCutTrees() {
         ArrayList<LinguisticTree> result = new ArrayList<>();
 
-        if (leftChild != null) {
-            result.addAll(combineTreeLists(leftChild.getAllCutTrees(), Collections.singletonList(null), this));
-        }
-        if (rightChild != null) {
+        if (leftChild == null && rightChild!=null)
             result.addAll(combineTreeLists(Collections.singletonList(null), rightChild.getAllCutTrees(), this));
-        }
+        if (rightChild == null && leftChild!=null)
+            result.addAll(combineTreeLists(leftChild.getAllCutTrees(), Collections.singletonList(null), this));
         if (leftChild != null && rightChild != null)
             result.addAll(combineTreeLists(leftChild.getAllCutTrees(), rightChild.getAllCutTrees(), this));
 
         if(leftChild == null && rightChild==null) {
             result.add(this);
-            /*if (leaf!=null){
-                LinguisticTree leafLessTree = this.copyThis();
-                leafLessTree.leaf = null;
-                leafLessTree.resetSerializations();
-                result.add(leafLessTree);
-            }*/
-
-
         }
-        /*if (leaf!=null){
-                LinguisticTree leafLessTree = this.copyThis();
-                leafLessTree.leaf = null;
-                leafLessTree.resetSerializations();
-                result.add(leafLessTree);
-            }
-*/
+        result.add(new LinguisticTree(""));
+
         return result;
     }
 

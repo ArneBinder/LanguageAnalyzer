@@ -46,10 +46,10 @@ public class LinguisticLayerTest {
     @Test
     public void simpleLayerTest(){
         LinguisticLayer layer = new LinguisticLayer(3);
-        LinguisticTree tree = new LinguisticTree("[[a,b],[c,d]]");
+        LinguisticTree tree = new LinguisticTree("[[a,X],[c,d]]");
         //LinguisticTree tree = new LinguisticTree("[a,b]");
         for(LinguisticTree subTree: tree.getAllSubtrees(layer.getMaxDepth())){
-            System.out.println();
+            System.out.println("\nSUB: "+subTree);
             for(LinguisticTree cutTree: subTree.getAllCutTrees()) {
                 layer.addTreePattern(cutTree);
                 System.out.println(cutTree.serialize(false));
