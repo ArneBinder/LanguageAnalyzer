@@ -420,16 +420,13 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
                 if(open==0){
                     String left = s.substring(0,i);
                     String right = s.substring(i+1);
-                    if(left.equals(charNull+"")){
-                        leftChild = null;
-                    }else{
-                        leftChild = new LinguisticTree();
+                    leftChild = new LinguisticTree();
+                    if(!left.equals(charNull+"")){
                         leftChild.deserialize(left);
                     }
-                    if(right.equals(charNull+"")){
-                        rightChild = null;
-                    }else{
-                        rightChild = new LinguisticTree();
+                    rightChild = new LinguisticTree();
+                    if(!right.equals(charNull+"")){
+
                         rightChild.deserialize(right);
                     }
                     return;
@@ -530,7 +527,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         if (leftChild != null && rightChild != null)
             result.addAll(combineTreeLists(leftChild.getAllCutTrees(), rightChild.getAllCutTrees(), this));
 
-        if(leftChild == null && rightChild==null) {
+        if(leftChild == null && rightChild==null && leaf!=null) {
             result.add(this);
         }
         result.add(new LinguisticTree(""));
