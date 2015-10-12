@@ -491,12 +491,12 @@ public class LinguisticLayer {
                 if(left!=null) {
                     right = currentPos.deleteRightChild();
                     //System.out.println(tabs + right.serialize(false) + " o (" + tree.serialize(false) + " + " + currentPos.serialize(false) + " -> LEFTCHILD)");
-                    Operation nl = getOperations(right);
-                    Operation nl2 = getCutOperations(tree, left, currentPos);
-                    nl2.addOperand(tree.copyThis());
+                    Operation rightBranch = getOperations(right);
+                    Operation leftRemaining = getCutOperations(tree, left, currentPos);
+                    leftRemaining.addOperand(tree.copyThis());
                     Operation product = new Product();
-                    product.addOperand(nl);
-                    product.addOperand(nl2);
+                    product.addOperand(rightBranch);
+                    product.addOperand(leftRemaining);
                     product.flatten();
                     sum.addOperand(product);
                     currentPos.setRightChild(right);
@@ -508,12 +508,12 @@ public class LinguisticLayer {
                 if(right!=null) {
                     left = currentPos.deleteLeftChild();
                     //System.out.println(tabs + left.serialize(false) + " o (" + tree.serialize(false) + " + " + currentPos.serialize(false) + " -> RIGHTCHILD)");
-                    Operation nl =  getOperations(left);
-                    Operation nl2 = getCutOperations(tree, right, currentPos);
-                    nl2.addOperand(tree.copyThis());
+                    Operation leftBranch =  getOperations(left);
+                    Operation rightRemaining = getCutOperations(tree, right, currentPos);
+                    rightRemaining.addOperand(tree.copyThis());
                     Operation product = new Product();
-                    product.addOperand(nl);
-                    product.addOperand(nl2);
+                    product.addOperand(leftBranch);
+                    product.addOperand(rightRemaining);
                     product.flatten();
                     sum.addOperand(product);
                     currentPos.setLeftChild(left);
@@ -524,16 +524,16 @@ public class LinguisticLayer {
             if(right!=null){
                 right = currentPos.deleteRightChild();
                 //System.out.println(tabs + right.serialize(false) + " o (" + tree.serialize(false) + " + " + currentPos.serialize(false) + " -> PARENT)");
-                Operation nl = getOperations(right);
-                Operation nl2;
+                Operation rightBranch = getOperations(right);
+                Operation leftRemaining;
                 if(parent!=null)
-                    nl2 = getCutOperations(tree, parent, currentPos);
+                    leftRemaining = getCutOperations(tree, parent, currentPos);
                 else
-                    nl2 = new Sum();
-                nl2.addOperand(tree.copyThis());
+                    leftRemaining = new Sum();
+                leftRemaining.addOperand(tree.copyThis());
                 Operation product = new Product();
-                product.addOperand(nl);
-                product.addOperand(nl2);
+                product.addOperand(rightBranch);
+                product.addOperand(leftRemaining);
                 product.flatten();
                 sum.addOperand(product);
                 currentPos.setRightChild(right);
