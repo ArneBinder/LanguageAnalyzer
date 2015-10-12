@@ -46,24 +46,30 @@ public class LinguisticLayerTest {
     @Test
     public void simpleLayerTest(){
         LinguisticLayer layer = new LinguisticLayer(3);
-        //LinguisticTree tree = new LinguisticTree("[[a,X],[c,d]]");
-        LinguisticTree tree = new LinguisticTree("[a,X]");
-        for(LinguisticTree subTree: tree.getAllSubtrees(layer.getMaxDepth())){
-            System.out.println("\nSUB: "+subTree);
+        LinguisticTree tree = new LinguisticTree("[[a,b],[c,d]]");
+        //LinguisticTree tree = new LinguisticTree("a");
+        /*for(LinguisticTree subTree: tree.getAllSubtrees(layer.getMaxDepth())){
+            //System.out.println("\nSUB: "+subTree);
             for(LinguisticTree cutTree: subTree.getAllCutTrees()) {
                 layer.addTreePattern(cutTree);
-                System.out.println(cutTree.serialize(false));
+                //System.out.println(cutTree.serialize(false));
             }
-        }
+        }*/
+
+
+
         //ArrayList<String> str = new ArrayList<>();
-        System.out.println(layer.getProb(tree));
+        //System.out.println(layer.getProb(tree));
         /*for(String s:layer.getPartitions(tree)){
             System.out.println(s);
         }*/
+
         Sum sum = layer.getOperations(tree);
         //System.out.println(sum.calculate(layer.getTreePatterns()));
 
         sum.deepFlatten();
+
+        layer.addAllTreePattern(sum.collectTerminals());
         //System.out.println(sum);
         //String partitionString = sum.toString();
         //String[] partitions = partitionString.substring(1, partitionString.length()-1).split(" \\+ ");
@@ -85,8 +91,8 @@ public class LinguisticLayerTest {
 
         PrintStream outc = new PrintStream(new BufferedOutputStream(new FileOutputStream(new File("outc.txt"))), true, "UTF-8");
         LinguisticLayer layer = new LinguisticLayer(3);
-        Iterator<Character> characters = new CharacterIterator("abcd");
-        //Iterator<Character> characters = corpus.tokens();
+        //Iterator<Character> characters = new CharacterIterator("abcd");
+        Iterator<Character> characters = corpus.tokens();
         int index = 0;
         int stepSize = 3;
         System.out.println();
@@ -114,7 +120,10 @@ public class LinguisticLayerTest {
         printTimeMessage("updateTreePatterns");
 
 
+        layer.calculateTreePatternProbabilities();
+        printTimeMessage("calculateTreePatternProbabilities");
 
+/*
         PrintStream outt = new PrintStream(new BufferedOutputStream(new FileOutputStream(new File("outt.txt"))), true, "UTF-8");
 
         for(LinguisticTree tree:layer.getTreePatterns()){
@@ -130,7 +139,7 @@ public class LinguisticLayerTest {
         }
         outt.flush();
         printTimeMessage("print similarities");
-
+*/
         /*
         //PrintStream outs = new PrintStream(new BufferedOutputStream(new FileOutputStream(new File("outs.txt"))), true, "UTF-8");
         layer.printMaximalTreesWithTreeParts(System.out);
@@ -178,7 +187,7 @@ public class LinguisticLayerTest {
         outd.flush();
         printTimeMessage("printBestPaths");
 */
-/*
+
 
         PrintStream outb = new PrintStream(new BufferedOutputStream(new FileOutputStream(new File("outb.txt"))), true, "UTF-8");
         layer.printProbabilitiesSortedByValue(outb);
@@ -190,7 +199,7 @@ public class LinguisticLayerTest {
         layer.printProbabilitiesSortedByValueAndKey(out);
         out.flush();
         printTimeMessage("printProbabilitiesSortedByValueAndKey to file");
-*/
+
 
     }
 

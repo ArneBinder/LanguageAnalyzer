@@ -4,7 +4,6 @@ import abinder.langanalyzer.LinguisticUnits.LinguisticTree;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.stream.Collectors;
 
@@ -94,7 +93,14 @@ public abstract class Operation implements Comparable<Operation> {
         return result;
     }
 
-
+    public ArrayList<LinguisticTree> collectTerminals(){
+        ArrayList<LinguisticTree> result = new ArrayList<>();
+        result.addAll(terminals);
+        for(Operation operation: operations){
+            result.addAll(operation.collectTerminals());
+        }
+        return result;
+    }
 
     public String toString(){
         flatten();
