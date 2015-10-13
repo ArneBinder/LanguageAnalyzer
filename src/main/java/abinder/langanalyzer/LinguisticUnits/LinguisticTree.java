@@ -1,7 +1,6 @@
 package abinder.langanalyzer.LinguisticUnits;
 
-import abinder.langanalyzer.helper.IO;
-import abinder.langanalyzer.helper.MultiSet;
+import abinder.langanalyzer.helper.*;
 
 import java.lang.*;
 import java.util.*;
@@ -535,6 +534,67 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         return result;
     }
 
+    public Sum calcPartitions(LinguisticTree currentPosition){
+        Sum result = new Sum();
+
+        LinguisticTree left = currentPosition.getLeftChild();
+        LinguisticTree right = currentPosition.getRightChild();
+        LinguisticToken leaf = currentPosition.getLeaf();
+
+        if(leaf==null) {
+            if (left != null) {
+                Product product = new Product();
+                left = currentPosition.deleteLeftChild();
+                product.addOperand(this.copyThis());
+                product.addOperand(left.calcPartitions(left));
+                currentPosition.setLeftChild(left);
+                result.addOperand(product);
+
+                Sum sum = calcPartitions(left);
+                for(LinguisticTree summand: sum.getTerminals()) {
+                    result.addOperand(summand);
+                }
+                for(Operation summand: sum.getOperations()) {
+                    result.addOperand(summand);
+                }
+            }
+            if (right != null) {
+                Product product = new Product();
+                right = currentPosition.deleteRightChild();
+                product.addOperand(this.copyThis());
+                product.addOperand(right.calcPartitions(right));
+                currentPosition.setRightChild(right);
+                result.addOperand(product);
+
+                Sum sum = calcPartitions(right);
+                for(LinguisticTree summand: sum.getTerminals()) {
+                    result.addOperand(summand);
+                }
+                for(Operation summand: sum.getOperations()) {
+                    result.addOperand(summand);
+                }
+            }
+            if (left != null && right != null) {
+                Product product = new Product();
+                left = currentPosition.deleteLeftChild();
+                right = currentPosition.deleteRightChild();
+                product.addOperand(this.copyThis());
+                product.addOperand(left.calcPartitions(left));
+                product.addOperand(right.calcPartitions(right));
+                currentPosition.setLeftChild(left);
+                currentPosition.setRightChild(right);
+                result.addOperand(product);
+            }
+        }
+        if(leaf!=null || (left==null && right==null)) {
+            result.addOperand(this);
+        }
+        //result.add(new LinguisticTree(""));
+
+        return result;
+
+    }
+
     public double getCosineSimilarity(LinguisticTree other){
         MultiSet<LinguisticTree> thisTrees = new MultiSet<>();
         for(LinguisticTree subTree: getAllSubtrees(-1)){
@@ -563,6 +623,9 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         }
         return result;
     }
+
+
+
 
     @Override
     public int compareTo(LinguisticTree o) {

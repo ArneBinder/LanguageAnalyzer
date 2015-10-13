@@ -46,7 +46,7 @@ public class LinguisticLayerTest {
     @Test
     public void simpleLayerTest(){
         LinguisticLayer layer = new LinguisticLayer(3);
-        LinguisticTree tree = new LinguisticTree("[[a,b],[c,d]]");
+        LinguisticTree tree = new LinguisticTree("[a,b]");
         //LinguisticTree tree = new LinguisticTree("a");
         /*for(LinguisticTree subTree: tree.getAllSubtrees(layer.getMaxDepth())){
             //System.out.println("\nSUB: "+subTree);
@@ -64,6 +64,12 @@ public class LinguisticLayerTest {
             System.out.println(s);
         }*/
 
+        Sum partitions = tree.calcPartitions(tree);
+        System.out.println(partitions);
+        System.out.println();
+        partitions.deepFlatten();
+        System.out.println(partitions);
+
         Sum sum = layer.getOperations(tree);
         //System.out.println(sum.calculate(layer.getTreePatterns()));
 
@@ -75,10 +81,12 @@ public class LinguisticLayerTest {
         //String[] partitions = partitionString.substring(1, partitionString.length()-1).split(" \\+ ");
         //Arrays.sort(partitions);
         //System.out.println("\npartitions:\n"+String.join("\n", Arrays.asList(partitions))+"\n");
-        System.out.println("\npartitions:\n"+sum.toString().replaceAll(" \\+ ", "\n")+"\n");
 
-        System.out.println("probability:\t"+ sum.calculate(layer.getTreePatterns()));
+        System.out.println("\npartitions:\n"+partitions.toString().replaceAll(" \\+ ", "\n")+"\n");
+
+        //System.out.println("probability:\t"+ partitions.calculate(layer.getTreePatterns()));
         System.out.println("Done");
+
     }
 
     @Test
