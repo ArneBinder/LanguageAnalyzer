@@ -534,63 +534,140 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         return result;
     }
 
-    public Sum calcPartitions(LinguisticTree currentPosition){
+    public int getEdgeCount(){
+        if(leaf!=null || (leftChild==null && rightChild==null))
+            return 0;
+        int result = 0;
+        if(leftChild!=null)
+            result += 1+leftChild.getEdgeCount();
+        if(rightChild!=null)
+            result += 1+rightChild.getEdgeCount();
+        return result;
+    }
+
+    public ArrayList<LinguisticTree> getNodes(){
+        ArrayList<LinguisticTree> result = new ArrayList<>();
+        result.add(this);
+        if(leaf!=null)
+            return result;
+        if(leftChild!=null)
+            result.addAll(leftChild.getNodes());
+        if(rightChild!=null)
+            result.addAll(rightChild.getNodes());
+        return result;
+    }
+
+    public Sum calcPartitions(LinguisticTree currentPosition, int cutCount, Sum previous){
         Sum result = new Sum();
+        if(cutCount == 0){
+            //Product product = new Product();
+            //product.addOperand(previous);
+            //product.addOperand(this);
+            result.addOperand(this.copyThis());
+            return result;
+        }
+
+
 
         LinguisticTree left = currentPosition.getLeftChild();
         LinguisticTree right = currentPosition.getRightChild();
         LinguisticToken leaf = currentPosition.getLeaf();
 
         if(leaf==null) {
-            if (left != null) {
-                Product product = new Product();
-                left = currentPosition.deleteLeftChild();
-                product.addOperand(this.copyThis());
-                product.addOperand(left.calcPartitions(left));
-                currentPosition.setLeftChild(left);
-                result.addOperand(product);
+            if (left != null & right == null) {
+                if(left.getEdgeCount() >= cutCount) {
+                    Sum sum = calcPartitions(left, cutCount, previous);
+                    result.addAllTerminals(sum.getTerminals());
+                    result.addAllOperations(sum.getOperations());
+                }
 
-                Sum sum = calcPartitions(left);
-                for(LinguisticTree summand: sum.getTerminals()) {
-                    result.addOperand(summand);
+
+                cutCount--;
+                if(left.getEdgeCount() >= cutCount) {
+                    Product product = new Product();
+                    left = currentPosition.deleteLeftChild();
+                    //product.addOperand(previous);
+                    product.addOperand(this.copyThis());
+                    product.addOperand(left.calcPartitions(left, cutCount, null));
+                    currentPosition.setLeftChild(left);
+                    result.addOperand(product);
                 }
-                for(Operation summand: sum.getOperations()) {
-                    result.addOperand(summand);
-                }
+                cutCount++;
+
             }
-            if (right != null) {
-                Product product = new Product();
-                right = currentPosition.deleteRightChild();
-                product.addOperand(this.copyThis());
-                product.addOperand(right.calcPartitions(right));
-                currentPosition.setRightChild(right);
-                result.addOperand(product);
+            if (right != null && left==null) {
+                if(right.getEdgeCount()>=cutCount) {
+                    Sum sum = calcPartitions(right, cutCount, previous);
+                    result.addAllTerminals(sum.getTerminals());
+                    result.addAllOperations(sum.getOperations());
+                }
+                cutCount--;
+                if(right.getEdgeCount()>=cutCount) {
+                    Product product = new Product();
+                    right = currentPosition.deleteRightChild();
+                    //product.addOperand(previous);
+                    product.addOperand(this.copyThis());
+                    product.addOperand(right.calcPartitions(right, cutCount, null));
+                    currentPosition.setRightChild(right);
+                    result.addOperand(product);
+                }
+                cutCount++;
 
-                Sum sum = calcPartitions(right);
-                for(LinguisticTree summand: sum.getTerminals()) {
-                    result.addOperand(summand);
-                }
-                for(Operation summand: sum.getOperations()) {
-                    result.addOperand(summand);
-                }
             }
             if (left != null && right != null) {
-                Product product = new Product();
-                left = currentPosition.deleteLeftChild();
-                right = currentPosition.deleteRightChild();
-                product.addOperand(this.copyThis());
-                product.addOperand(left.calcPartitions(left));
-                product.addOperand(right.calcPartitions(right));
-                currentPosition.setLeftChild(left);
-                currentPosition.setRightChild(right);
-                result.addOperand(product);
+                if(cutCount >= 2 && left.getEdgeCount()+right.getEdgeCount() >= cutCount-2) {
+                    cutCount -= 2;
+                    left = currentPosition.deleteLeftChild();
+                    right = currentPosition.deleteRightChild();
+                    Product product = new Product();
+                    //product.addOperand(previous);
+                    product.addOperand(this.copyThis());
+                    product.addOperand(left.calcPartitions(left, cutCount, null));
+                    product.addOperand(right.calcPartitions(right, cutCount, null));
+                    currentPosition.setLeftChild(left);
+                    currentPosition.setRightChild(right);
+                    result.addOperand(product);
+                    cutCount += 2;
+                }
+
+
+                cutCount--;
+                if(left.getEdgeCount()>=cutCount) {
+                    left = currentPosition.deleteLeftChild();
+                    Product product = new Product();
+                    //product.addOperand(previous);
+                    product.addOperand(this.copyThis());
+                    product.addOperand(left.calcPartitions(left, cutCount, null));
+                    currentPosition.setLeftChild(left);
+                    result.addOperand(product);
+                }
+                if(right.getEdgeCount()>=cutCount) {
+                    right = currentPosition.deleteRightChild();
+                    Product product = new Product();
+                    //product.addOperand(previous);
+                    product.addOperand(this.copyThis());
+                    product.addOperand(right.calcPartitions(right, cutCount, null));
+                    currentPosition.setRightChild(right);
+                    result.addOperand(product);
+                }
+                cutCount++;
+
+
+
             }
         }
-        if(leaf!=null || (left==null && right==null)) {
-            result.addOperand(this);
-        }
+        //if(leaf!=null && left==null && right==null) {
+        //    result.addOperand(this);
+        //}
+
+
         //result.add(new LinguisticTree(""));
 
+        //Product product = new Product();
+        //product.addOperand(previous);
+        //product.addOperand(new LinguisticTree(""));
+
+        //result.addOperand(product);
         return result;
 
     }
