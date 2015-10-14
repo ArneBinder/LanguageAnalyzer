@@ -108,11 +108,13 @@ public class LinguisticLayer {
                 for(LinguisticTree tree: trees) {
                     probabilities.clear();
                     tree.setParents(null);
-                    double probability = getProb(tree);//getProbabilityForHead(tree, tree, new LinguisticTree[0]);
+                    //double probability = getProb(tree);//getProbabilityForHead(tree, tree, new LinguisticTree[0]);
                     //if(treePatterns.size() < 20000 ||  probability > threshold) {
-                        out.println(probability + "\t" + tree.serialize(false) + "\t" + treePatterns.getTotalCount()+"\t"+treePatterns.size());
 
-                        addAllTreePattern(tree.getAllCutTrees());
+                    //out.println(probability + "\t" + tree.serialize(false) + "\t" + treePatterns.getTotalCount()+"\t"+treePatterns.size());
+
+                        //addAllTreePattern(tree.getAllCutTrees());
+                    addAllTreePattern(tree.calcPartitions().collectTerminals());
                         /*for (LinguisticTree cutTree : tree.getTreeParts(tree)){//tree.getAllCutTrees()) { //
                             //cutTree.setParents(null);
                             treePatterns.add(cutTree);
@@ -560,8 +562,10 @@ public class LinguisticLayer {
             //System.out.println(tree.serialize(false));
             //if(tree.serialize(false).equals("[[a,b],[c,d]]")) {
                 //getProbability(tree, tree, tree.getLeafCount()-1);
-                tree.setParents(null);
-                getProb(tree);
+                //tree.setParents(null);
+                //getProb(tree);
+
+                probabilities.put(tree,tree.calcPartitions().calculate(getTreePatterns()));
                 //getProbabilityForHead(tree, tree, new LinguisticTree[0]);
             //}
         }
