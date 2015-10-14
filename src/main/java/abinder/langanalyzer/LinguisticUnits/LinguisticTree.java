@@ -30,7 +30,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
     private static final char charOpen = '[';
     private static final char charClose = ']';
     private static final char charSeperate = ',';
-    private static final char charNull = '_';
+    private static final char charNull = 'X';
     private static final HashSet<java.lang.Character> escapeAbleChars = new HashSet<>(Arrays.asList(charEscape, charOpen, charClose, charSeperate, charNull));
 
     private boolean defaultUsePositions = false;
@@ -361,19 +361,19 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         if (showPosition) {
             if (serialization == null) {
                 if (leaf!=null)
-                    serialization = IO.escape(leaf.serialize(showPosition), escapeAbleChars, charEscape)+charOpen+charClose;
+                    serialization = IO.escape(leaf.serialize(showPosition), escapeAbleChars, charEscape);
                 else {
-                    serialization = charNull+""+charOpen + (leftChild != null ? leftChild.serialize(showPosition) : charNull + "") + charSeperate + (rightChild != null ? rightChild.serialize(showPosition) : charNull + "") + charClose;
+                    serialization = charOpen + (leftChild != null ? leftChild.serialize(showPosition) : charNull + "") + charSeperate + (rightChild != null ? rightChild.serialize(showPosition) : charNull + "") + charClose;
                 }
             }
             return serialization;
         } else {
             if(serializationPL == null){
                 if(leaf!=null) {
-                    serializationPL = IO.escape(leaf.serialize(showPosition), escapeAbleChars, charEscape)+charOpen+""+charNull+"" + charSeperate + "" +charNull+""+charClose;
+                    serializationPL = IO.escape(leaf.serialize(showPosition), escapeAbleChars, charEscape);
                 }
                 else {
-                    serializationPL = charNull+""+charOpen + (leftChild != null ? leftChild.serialize(showPosition) : charNull + "") + charSeperate + (rightChild != null ? rightChild.serialize(showPosition) : charNull + "") + charClose;
+                    serializationPL = charOpen + (leftChild != null ? leftChild.serialize(showPosition) : charNull + "") + charSeperate + (rightChild != null ? rightChild.serialize(showPosition) : charNull + "") + charClose;
                 }
             }
             return serializationPL;
