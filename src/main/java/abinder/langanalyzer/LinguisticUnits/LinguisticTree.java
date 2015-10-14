@@ -550,6 +550,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         result.add(this);
         if(leaf!=null)
             return result;
+
         if(leftChild!=null)
             result.addAll(leftChild.getNodes());
         if(rightChild!=null)
@@ -557,119 +558,104 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         return result;
     }
 
-    public Sum calcPartitions(LinguisticTree currentPosition, int cutCount, Sum previous){
+    public Sum calcPartitions(){
         Sum result = new Sum();
-        if(cutCount == 0){
-            //Product product = new Product();
-            //product.addOperand(previous);
-            //product.addOperand(this);
-            result.addOperand(this.copyThis());
-            return result;
-        }
+        ArrayList<LinguisticTree> nodesList = getNodes();
+        LinguisticTree[] nodes = new LinguisticTree[nodesList.size()];
+        nodes = nodesList.toArray(nodes);
 
+        LinguisticTree[] nodeBackups = new LinguisticTree[nodes.length];
+        int[] leftPositions = new int[nodes.length];
+        int[] rightPositions = new int[nodes.length];
 
-
-        LinguisticTree left = currentPosition.getLeftChild();
-        LinguisticTree right = currentPosition.getRightChild();
-        LinguisticToken leaf = currentPosition.getLeaf();
-
-        if(leaf==null) {
-            if (left != null & right == null) {
-                if(left.getEdgeCount() >= cutCount) {
-                    Sum sum = calcPartitions(left, cutCount, previous);
-                    result.addAllTerminals(sum.getTerminals());
-                    result.addAllOperations(sum.getOperations());
+        for(int i=0; i<nodes.length;i++){
+            LinguisticTree tree = nodes[i];
+            /*if(tree.getLeaf()!=null){
+                nodeBackups.add(new LinguisticTree(tree.getLeaf()));
+            }else {
+                nodeBackups.add(new LinguisticTree(tree.getLeftChild(), tree.getRightChild()));
+            }*/
+            nodeBackups[i] = tree.copyThis();
+            LinguisticTree left = tree.getLeftChild();
+            if(left!=null) {
+                for (int j = i + 1; j < nodes.length; j++) {
+                    if(left==nodes[j])
+                        leftPositions[i] = j;
                 }
-
-
-                cutCount--;
-                if(left.getEdgeCount() >= cutCount) {
-                    Product product = new Product();
-                    left = currentPosition.deleteLeftChild();
-                    //product.addOperand(previous);
-                    product.addOperand(this.copyThis());
-                    product.addOperand(left.calcPartitions(left, cutCount, null));
-                    currentPosition.setLeftChild(left);
-                    result.addOperand(product);
-                }
-                cutCount++;
-
             }
-            if (right != null && left==null) {
-                if(right.getEdgeCount()>=cutCount) {
-                    Sum sum = calcPartitions(right, cutCount, previous);
-                    result.addAllTerminals(sum.getTerminals());
-                    result.addAllOperations(sum.getOperations());
+
+            LinguisticTree right = tree.getRightChild();
+            if(right!=null) {
+                for (int j = i + 1; j < nodes.length; j++) {
+                    if (right == nodes[j])
+                        rightPositions[i] = j;
                 }
-                cutCount--;
-                if(right.getEdgeCount()>=cutCount) {
-                    Product product = new Product();
-                    right = currentPosition.deleteRightChild();
-                    //product.addOperand(previous);
-                    product.addOperand(this.copyThis());
-                    product.addOperand(right.calcPartitions(right, cutCount, null));
-                    currentPosition.setRightChild(right);
-                    result.addOperand(product);
-                }
-                cutCount++;
-
-            }
-            if (left != null && right != null) {
-                if(cutCount >= 2 && left.getEdgeCount()+right.getEdgeCount() >= cutCount-2) {
-                    cutCount -= 2;
-                    left = currentPosition.deleteLeftChild();
-                    right = currentPosition.deleteRightChild();
-                    Product product = new Product();
-                    //product.addOperand(previous);
-                    product.addOperand(this.copyThis());
-                    product.addOperand(left.calcPartitions(left, cutCount, null));
-                    product.addOperand(right.calcPartitions(right, cutCount, null));
-                    currentPosition.setLeftChild(left);
-                    currentPosition.setRightChild(right);
-                    result.addOperand(product);
-                    cutCount += 2;
-                }
-
-
-                cutCount--;
-                if(left.getEdgeCount()>=cutCount) {
-                    left = currentPosition.deleteLeftChild();
-                    Product product = new Product();
-                    //product.addOperand(previous);
-                    product.addOperand(this.copyThis());
-                    product.addOperand(left.calcPartitions(left, cutCount, null));
-                    currentPosition.setLeftChild(left);
-                    result.addOperand(product);
-                }
-                if(right.getEdgeCount()>=cutCount) {
-                    right = currentPosition.deleteRightChild();
-                    Product product = new Product();
-                    //product.addOperand(previous);
-                    product.addOperand(this.copyThis());
-                    product.addOperand(right.calcPartitions(right, cutCount, null));
-                    currentPosition.setRightChild(right);
-                    result.addOperand(product);
-                }
-                cutCount++;
-
-
-
             }
         }
-        //if(leaf!=null && left==null && right==null) {
-        //    result.addOperand(this);
-        //}
 
+        //int edgeCount = getEdgeCount();
 
-        //result.add(new LinguisticTree(""));
+        do{
+            // construct partition
+            Product current = constructPartition(0, nodes, nodeBackups, leftPositions, rightPositions ,true);
+            result.addOperand(current);
+            System.out.println(current);
+        }while(incCut(nodes, nodeBackups, leftPositions, rightPositions));
 
-        //Product product = new Product();
-        //product.addOperand(previous);
-        //product.addOperand(new LinguisticTree(""));
-
-        //result.addOperand(product);
         return result;
 
+    }
+
+
+    private Product constructPartition(int pos, LinguisticTree[] nodes, LinguisticTree[] nodeBackups, int[] leftPositions, int[] rightPositions, boolean add){
+        Product result = new Product();
+        LinguisticTree node = nodes[pos];
+        LinguisticTree nodeBackup = nodeBackups[pos];
+        if(add)
+            result.addOperand(node.copyThis());
+        // add left
+        if(leftPositions[pos]>0){
+            Product product = constructPartition(leftPositions[pos],nodes, nodeBackups,leftPositions, rightPositions, node.getLeftChild()==null && nodeBackup.getLeftChild()!=null);
+            result.addAllTerminals(product.getTerminals());
+            //result.addAllOperations(product.getOperations());
+        }
+
+        // add right
+        if(rightPositions[pos]>0) {
+            Product product = constructPartition(rightPositions[pos], nodes, nodeBackups, leftPositions, rightPositions,node.getRightChild()==null && nodeBackup.getRightChild()!=null);
+            result.addAllTerminals(product.getTerminals());
+            //result.addAllOperations(product.getOperations());
+        }
+
+        return result;
+    }
+
+    private boolean incCut(LinguisticTree[] nodes, LinguisticTree[] nodeBackups, int[] leftPositions, int[] rightPositions){
+        for(int i=0; i<nodes.length; i++){
+            LinguisticTree nodeBackup = nodeBackups[i];
+            LinguisticTree node = nodes[i];
+            if(nodeBackup.getLeaf()!=null)
+                continue;
+            if(nodeBackup.getLeftChild()!=null){
+                if(node.getLeftChild()==null){
+                    //remove cut
+                    node.setLeftChild(nodes[leftPositions[i]]);
+                }else{
+                    nodes[leftPositions[i]] = node.deleteLeftChild();
+                    return true;
+                }
+            }
+            if(nodeBackup.getRightChild()!=null){
+                if(node.getRightChild()==null){
+                    //remove cut
+                    node.setRightChild(nodes[rightPositions[i]]);
+                }else{
+                    nodes[rightPositions[i]] = node.deleteRightChild();
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public double getCosineSimilarity(LinguisticTree other){

@@ -64,7 +64,7 @@ public class LinguisticLayerTest {
             System.out.println(s);
         }*/
 
-        Sum partitions = tree.calcPartitions(tree, 3, new Sum());
+        Sum partitions = tree.calcPartitions();
         System.out.println(partitions);
         System.out.println();
         partitions.deepFlatten();
