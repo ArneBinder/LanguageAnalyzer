@@ -48,13 +48,13 @@ public class LinguisticLayerTest {
         LinguisticLayer layer = new LinguisticLayer(3);
         LinguisticTree tree = new LinguisticTree("[[a,b],[c,d]]");
         //LinguisticTree tree = new LinguisticTree("a");
-        /*for(LinguisticTree subTree: tree.getAllSubtrees(layer.getMaxDepth())){
+        for(LinguisticTree subTree: tree.getAllSubtrees(layer.getMaxDepth())){
             //System.out.println("\nSUB: "+subTree);
             for(LinguisticTree cutTree: subTree.getAllCutTrees()) {
-                //layer.addTreePattern(cutTree);
+                layer.addTreePattern(cutTree);
                 System.out.println(cutTree.serialize(false));
             }
-        }*/
+        }
 
 
 
@@ -65,10 +65,7 @@ public class LinguisticLayerTest {
         }*/
 
         Sum partitions = tree.calcPartitions();
-        System.out.println(partitions);
-        System.out.println();
-        partitions.deepFlatten();
-        System.out.println(partitions);
+        //System.out.println(partitions);
 
         //Sum sum = layer.getOperations(tree);
         //System.out.println(sum.calculate(layer.getTreePatterns()));
@@ -85,7 +82,7 @@ public class LinguisticLayerTest {
 
         System.out.println("\npartitions:\n"+partitions.toString().replaceAll(" \\+ ", "\n") + "\n");
 
-        //System.out.println("probability:\t"+ partitions.calculate(layer.getTreePatterns()));
+        System.out.println("probability:\t"+ partitions.calculate(layer.getTreePatterns()));
         System.out.println("Done");
 
     }

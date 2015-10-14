@@ -30,7 +30,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
     private static final char charOpen = '[';
     private static final char charClose = ']';
     private static final char charSeperate = ',';
-    private static final char charNull = 'X';
+    private static final char charNull = '_';
     private static final HashSet<java.lang.Character> escapeAbleChars = new HashSet<>(Arrays.asList(charEscape, charOpen, charClose, charSeperate, charNull));
 
     private boolean defaultUsePositions = false;
@@ -361,19 +361,19 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         if (showPosition) {
             if (serialization == null) {
                 if (leaf!=null)
-                    serialization = IO.escape(leaf.serialize(showPosition), escapeAbleChars, charEscape);
+                    serialization = IO.escape(leaf.serialize(showPosition), escapeAbleChars, charEscape)+charOpen+charClose;
                 else {
-                    serialization = charOpen + (leftChild != null ? leftChild.serialize(showPosition) : charNull + "") + charSeperate + (rightChild != null ? rightChild.serialize(showPosition) : charNull + "") + charClose;
+                    serialization = charNull+""+charOpen + (leftChild != null ? leftChild.serialize(showPosition) : charNull + "") + charSeperate + (rightChild != null ? rightChild.serialize(showPosition) : charNull + "") + charClose;
                 }
             }
             return serialization;
         } else {
             if(serializationPL == null){
                 if(leaf!=null) {
-                    serializationPL = IO.escape(leaf.serialize(showPosition), escapeAbleChars, charEscape);
+                    serializationPL = IO.escape(leaf.serialize(showPosition), escapeAbleChars, charEscape)+charOpen+""+charNull+"" + charSeperate + "" +charNull+""+charClose;
                 }
                 else {
-                    serializationPL = charOpen + (leftChild != null ? leftChild.serialize(showPosition) : charNull + "") + charSeperate + (rightChild != null ? rightChild.serialize(showPosition) : charNull + "") + charClose;
+                    serializationPL = charNull+""+charOpen + (leftChild != null ? leftChild.serialize(showPosition) : charNull + "") + charSeperate + (rightChild != null ? rightChild.serialize(showPosition) : charNull + "") + charClose;
                 }
             }
             return serializationPL;
@@ -589,7 +589,6 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
             // construct partition
             Product current = constructPartition(0, nodes, nodeBackups, leftPositions, rightPositions ,true);
             result.addOperand(current);
-            System.out.println(current);
         }while(incCut(nodes, nodeBackups, leftPositions, rightPositions));
 
         return result;
@@ -607,14 +606,12 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         if(leftPositions[pos]>0){
             Product product = constructPartition(leftPositions[pos],nodes, nodeBackups,leftPositions, rightPositions, node.getLeftChild()==null && nodeBackup.getLeftChild()!=null);
             result.addAllTerminals(product.getTerminals());
-            //result.addAllOperations(product.getOperations());
         }
 
         // add right
         if(rightPositions[pos]>0) {
             Product product = constructPartition(rightPositions[pos], nodes, nodeBackups, leftPositions, rightPositions,node.getRightChild()==null && nodeBackup.getRightChild()!=null);
             result.addAllTerminals(product.getTerminals());
-            //result.addAllOperations(product.getOperations());
         }
 
         return result;
