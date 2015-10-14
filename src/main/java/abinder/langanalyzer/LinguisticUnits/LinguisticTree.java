@@ -412,13 +412,14 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
                 if(open==0){
                     String left = s.substring(0,i);
                     String right = s.substring(i+1);
-                    leftChild = new LinguisticTree();
+
                     if(!left.equals(charNull+"")){
+                        leftChild = new LinguisticTree();
                         leftChild.deserialize(left);
                     }
-                    rightChild = new LinguisticTree();
-                    if(!right.equals(charNull+"")){
 
+                    if(!right.equals(charNull+"")){
+                        rightChild = new LinguisticTree();
                         rightChild.deserialize(right);
                     }
                     return;
@@ -523,10 +524,10 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         if (leftChild != null && rightChild != null)
             result.addAll(combineTreeLists(leftChild.getAllCutTrees(), rightChild.getAllCutTrees(), this));
 
-        if(leftChild == null && rightChild==null && leaf!=null) {
+        if(leaf!=null) {
             result.add(this);
         }
-        result.add(new LinguisticTree(""));
+        result.add(null);
 
         return result;
     }
@@ -665,10 +666,23 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
     }
 
     private static ArrayList<LinguisticTree> combineTreeLists(List<LinguisticTree> leftList, List<LinguisticTree> rightList, LinguisticTree parent) {
-        ArrayList<LinguisticTree> result = new ArrayList<>(leftList.size() * rightList.size());
-        for (LinguisticTree left : leftList) {
-            for (LinguisticTree right : rightList) {
-                result.add(new LinguisticTree(left, right, parent));
+        ArrayList<LinguisticTree> result;
+        if(leftList!=null && rightList!=null){
+            result = new ArrayList<>(leftList.size() * rightList.size());
+            for (LinguisticTree left : leftList) {
+                for (LinguisticTree right : rightList) {
+                    result.add(new LinguisticTree(left, right, parent));
+                }
+            }
+        }else{
+            if(leftList==null && rightList==null) {
+                return combineTreeLists(Collections.singletonList(null), Collections.singletonList(null), parent);
+            }else{
+                if(leftList!=null){
+                    return combineTreeLists(leftList, Collections.singletonList(null), parent);
+                }else{
+                    return combineTreeLists(Collections.singletonList(null),rightList, parent);
+                }
             }
         }
         return result;

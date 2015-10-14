@@ -2,6 +2,7 @@ package abinder.langanalyzer.LinguisticUnits;
 
 import abinder.langanalyzer.corpora.wikipedia.WIKIPEDIACorpus;
 import abinder.langanalyzer.helper.CharacterIterator;
+import abinder.langanalyzer.helper.Operation;
 import abinder.langanalyzer.helper.Sum;
 import org.junit.Test;
 
@@ -48,13 +49,25 @@ public class LinguisticLayerTest {
         LinguisticLayer layer = new LinguisticLayer(3);
         LinguisticTree tree = new LinguisticTree("[[a,b],[c,d]]");
         //LinguisticTree tree = new LinguisticTree("a");
-        for(LinguisticTree subTree: tree.getAllSubtrees(layer.getMaxDepth())){
-            //System.out.println("\nSUB: "+subTree);
+        /*for(LinguisticTree subTree: tree.getAllSubtrees(layer.getMaxDepth())){
+            System.out.println("\nSUB: "+subTree);
             for(LinguisticTree cutTree: subTree.getAllCutTrees()) {
-                layer.addTreePattern(cutTree);
-                System.out.println(cutTree.serialize(false));
+
+               if(cutTree!=null) {
+                   if(!cutTree.noChildren() || cutTree.getLeaf()!=null){
+                       layer.addTreePattern(cutTree);
+                       System.out.println(cutTree.serialize(false));
+                   }else
+                       System.out.println("FALSE");
+
+               }
+               else {
+                   layer.addTreePattern(new LinguisticTree());
+                   System.out.println("NULL");
+               }
+
             }
-        }
+        }*/
 
 
 
@@ -65,6 +78,10 @@ public class LinguisticLayerTest {
         }*/
 
         Sum partitions = tree.calcPartitions();
+        layer.addAllTreePattern(partitions.collectTerminals());
+        for(Operation operation: partitions.getOperations()){
+            System.out.println(operation+"\t"+operation.calculate(layer.getTreePatterns()));
+        }
         //System.out.println(partitions);
 
         //Sum sum = layer.getOperations(tree);
@@ -72,7 +89,7 @@ public class LinguisticLayerTest {
 
         //sum.deepFlatten();
 
-        //layer.addAllTreePattern(sum.collectTerminals());
+
 
         //System.out.println(sum);
         //String partitionString = sum.toString();
