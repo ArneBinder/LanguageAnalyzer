@@ -78,7 +78,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
 
     /*
     public LinguisticTree copyThisWithoutChild(LinguisticTree exceptChild){
-        if(isLeaf())
+        if(noChildren())
             return new LinguisticTree(leaf);
         if(exceptChild.equals(leftChild)){
             if(rightChild!=null)
@@ -97,7 +97,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
 */
     public LinguisticTree copyThis(){
         LinguisticTree result;
-        if(isLeaf())
+        if(noChildren())
             result = new LinguisticTree(leaf);
         else
             result = new LinguisticTree(leftChild!=null?leftChild.copyThis():null, rightChild!=null?rightChild.copyThis():null);
@@ -106,7 +106,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
     }
 
 
-    public boolean isLeaf() {
+    public boolean noChildren() {
         return (leftChild == null && rightChild == null);
     }
 
@@ -146,7 +146,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
     }
 
     public boolean isFull(){
-        if(isLeaf() && leaf!=null)
+        if(noChildren() && leaf!=null)
             return true;
         if(leftChild==null || rightChild==null)
             return false;
@@ -337,7 +337,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
     public int getLeafCount() {
         if(leafCount>=0)
             return leafCount;
-        if(isLeaf()){
+        if(noChildren()){
             if(leaf!=null)
                 leafCount = 1;
             else
@@ -360,12 +360,8 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
     public String serialize(boolean showPosition) {
         if (showPosition) {
             if (serialization == null) {
-                if (isLeaf())
-                    if(leaf!=null) {
-                        serialization = IO.escape(leaf.serialize(showPosition), escapeAbleChars, charEscape);
-                    }else{
-                        serialization = charNull + "";
-                    }
+                if (leaf!=null)
+                    serialization = IO.escape(leaf.serialize(showPosition), escapeAbleChars, charEscape);
                 else {
                     serialization = charOpen + (leftChild != null ? leftChild.serialize(showPosition) : charNull + "") + charSeperate + (rightChild != null ? rightChild.serialize(showPosition) : charNull + "") + charClose;
                 }
@@ -373,12 +369,9 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
             return serialization;
         } else {
             if(serializationPL == null){
-                if (isLeaf())
-                    if(leaf!=null) {
-                        serializationPL = IO.escape(leaf.serialize(showPosition), escapeAbleChars, charEscape);
-                    }else{
-                        serializationPL = charNull + "";
-                    }
+                if(leaf!=null) {
+                    serializationPL = IO.escape(leaf.serialize(showPosition), escapeAbleChars, charEscape);
+                }
                 else {
                     serializationPL = charOpen + (leftChild != null ? leftChild.serialize(showPosition) : charNull + "") + charSeperate + (rightChild != null ? rightChild.serialize(showPosition) : charNull + "") + charClose;
                 }
@@ -454,7 +447,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
     public int getDepth() {
         if(depth >= 0)
             return depth;
-        if (isLeaf()) {
+        if (noChildren()) {
             depth = 0;
         } else {
             depth = Math.max(leftChild != null ? leftChild.getDepth() : 0, rightChild != null ? rightChild.getDepth() : 0) + 1;
@@ -462,10 +455,14 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         return depth;
     }
 
+    public void resetDepth(){
+        depth = -1;
+    }
+
     public int getMinDepth() {
         if(minDepth >= 0)
             return minDepth;
-        if (isLeaf()) {
+        if (noChildren()) {
             minDepth = 0;
         } else {
             minDepth = Math.min(leftChild != null ? leftChild.getDepth() : 0, rightChild != null ? rightChild.getDepth() : 0) + 1;
@@ -476,7 +473,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
     public int getLeftPosition(){
         if(leftPos>=0)
             return leftPos;
-        if(isLeaf())
+        if(noChildren())
             leftPos = leaf.getPosition();
         else {
             if(leftChild!=null)
@@ -490,7 +487,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
     public int getRightPosition(){
         if(rightPos>=0)
             return rightPos;
-        if(isLeaf())
+        if(noChildren())
             rightPos = leaf.getPosition();
         else {
             if(rightChild!=null)
@@ -505,7 +502,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         ArrayList<LinguisticTree> result = new ArrayList<>();
         if (getDepth() <= maxDepth || maxDepth < 0)
             result.add(this);
-        if (!isLeaf()) {
+        if (!noChildren()) {
             if (leftChild != null) {
                 result.addAll(leftChild.getAllSubtrees(maxDepth));
             }
@@ -570,11 +567,6 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
 
         for(int i=0; i<nodes.length;i++){
             LinguisticTree tree = nodes[i];
-            /*if(tree.getLeaf()!=null){
-                nodeBackups.add(new LinguisticTree(tree.getLeaf()));
-            }else {
-                nodeBackups.add(new LinguisticTree(tree.getLeftChild(), tree.getRightChild()));
-            }*/
             nodeBackups[i] = tree.copyThis();
             LinguisticTree left = tree.getLeftChild();
             if(left!=null) {
@@ -592,8 +584,6 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
                 }
             }
         }
-
-        //int edgeCount = getEdgeCount();
 
         do{
             // construct partition
@@ -695,18 +685,25 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         if(o == null)
             return 1;
 
-        if(this.isLeaf()){
+        if(o.getDepth()!=this.getDepth()){
+            if(this.getDepth() < o.getDepth())
+                return -1;
+            else
+                return 1;
+        }
+
+        if(this.noChildren()){
             if(this.leaf == null) {
                 return -1;
             }else{
-                if(o.isLeaf())
+                if(o.noChildren())
                     return leaf.compareTo(o.getLeaf());
                 else
                     return -1;
             }
         }
 
-        if(o.isLeaf())
+        if(o.noChildren())
             return 1;
 
         if(leftChild==null){ // --> rightChild != null
