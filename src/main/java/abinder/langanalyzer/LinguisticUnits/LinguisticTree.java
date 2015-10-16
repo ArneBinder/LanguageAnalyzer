@@ -537,16 +537,17 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
     public ArrayList<LinguisticTree> getAllCutTrees() {
         ArrayList<LinguisticTree> result = new ArrayList<>();
 
-        if (leftChild == null && rightChild!=null)
+        /*if (leftChild == null && rightChild!=null)
             result.addAll(combineTreeLists(Collections.singletonList(null), rightChild.getAllCutTrees(), this));
         if (rightChild == null && leftChild!=null)
             result.addAll(combineTreeLists(leftChild.getAllCutTrees(), Collections.singletonList(null), this));
+        */
         if (leftChild != null && rightChild != null)
             result.addAll(combineTreeLists(leftChild.getAllCutTrees(), rightChild.getAllCutTrees(), this));
 
-        if(leaf!=null) {
+        //if(leaf!=null) {
             result.add(this);
-        }
+       // }
         LinguisticTree emptyTree = new LinguisticTree(LinguisticType.TREE);
 
         result.add(emptyTree);

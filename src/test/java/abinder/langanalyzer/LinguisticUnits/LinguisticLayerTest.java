@@ -54,11 +54,11 @@ public class LinguisticLayerTest {
             for(LinguisticTree cutTree: subTree.getAllCutTrees()) {
 
                if(cutTree!=null) {
-                   if(!cutTree.noChildren() || cutTree.getLeaf()!=null){
+                   //if(!cutTree.noChildren() || cutTree.getLeaf()!=null){
                        layer.addTreePattern(cutTree);
                        System.out.println(cutTree.serialize(false));
-                   }else
-                       System.out.println("FALSE");
+                   //}else
+                     //  System.out.println("FALSE");
 
                }
                else {
