@@ -66,11 +66,11 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         //this.defaultUsePositions = usePositions;
     }*/
 
-    public LinguisticTree(LinguisticTree leftChild, LinguisticTree rightChild, LinguisticTree parent) {
+    /*public LinguisticTree(LinguisticTree leftChild, LinguisticTree rightChild, LinguisticTree parent) {
         this.leftChild = leftChild;
         this.rightChild = rightChild;
         this.parent = parent;
-    }
+    }*/
 
     /*public LinguisticTree(LinguisticTree leftChild, LinguisticTree rightChild, LinguisticType label) {
         this.leftChild = leftChild;
@@ -543,7 +543,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
             result.addAll(combineTreeLists(leftChild.getAllCutTrees(), Collections.singletonList(null), this));
         */
         if (leftChild != null && rightChild != null)
-            result.addAll(combineTreeLists(leftChild.getAllCutTrees(), rightChild.getAllCutTrees(), this));
+            result.addAll(combineTreeLists(leftChild.getAllCutTrees(), rightChild.getAllCutTrees(), label));
 
         //if(leaf!=null) {
             result.add(this);
@@ -688,23 +688,23 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         return thisTrees.calcCosineSimilarity(otherTrees);
     }
 
-    private static ArrayList<LinguisticTree> combineTreeLists(List<LinguisticTree> leftList, List<LinguisticTree> rightList, LinguisticTree parent) {
+    private static ArrayList<LinguisticTree> combineTreeLists(List<LinguisticTree> leftList, List<LinguisticTree> rightList, LinguisticType label) {
         ArrayList<LinguisticTree> result;
         if(leftList!=null && rightList!=null){
             result = new ArrayList<>(leftList.size() * rightList.size());
             for (LinguisticTree left : leftList) {
                 for (LinguisticTree right : rightList) {
-                    result.add(new LinguisticTree(left, right, parent));
+                    result.add(new LinguisticTree(left, right, label));
                 }
             }
         }else{
             if(leftList==null && rightList==null) {
-                return combineTreeLists(Collections.singletonList(null), Collections.singletonList(null), parent);
+                return combineTreeLists(Collections.singletonList(null), Collections.singletonList(null), label);
             }else{
                 if(leftList!=null){
-                    return combineTreeLists(leftList, Collections.singletonList(null), parent);
+                    return combineTreeLists(leftList, Collections.singletonList(null), label);
                 }else{
-                    return combineTreeLists(Collections.singletonList(null),rightList, parent);
+                    return combineTreeLists(Collections.singletonList(null),rightList, label);
                 }
             }
         }
