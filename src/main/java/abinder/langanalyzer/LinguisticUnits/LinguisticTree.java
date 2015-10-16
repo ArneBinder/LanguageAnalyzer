@@ -377,7 +377,10 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
                 if (leaf!=null)
                     serialization = IO.escape(leaf.serialize(), escapeAbleChars, charEscape);
                 else {
-                    serialization = charOpen + (leftChild != null ? leftChild.serialize(showPosition) : charNull + "") + charSeperate + (rightChild != null ? rightChild.serialize(showPosition) : charNull + "") + charClose;
+                    if(noChildren())
+                        serialization = label.toString();
+                    else
+                        serialization = charOpen + (leftChild != null ? leftChild.serialize(showPosition) : charNull + "") + charSeperate + (rightChild != null ? rightChild.serialize(showPosition) : charNull + "") + charClose;
                 }
             }
             return serialization;
@@ -387,7 +390,10 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
                     serializationPL = IO.escape(leaf.serialize(), escapeAbleChars, charEscape);
                 }
                 else {
-                    serializationPL = charOpen + (leftChild != null ? leftChild.serialize(showPosition) : charNull + "") + charSeperate + (rightChild != null ? rightChild.serialize(showPosition) : charNull + "") + charClose;
+                    if(noChildren())
+                        serializationPL = label.toString();
+                    else
+                        serializationPL = charOpen + (leftChild != null ? leftChild.serialize(showPosition) : charNull + "") + charSeperate + (rightChild != null ? rightChild.serialize(showPosition) : charNull + "") + charClose;
                 }
             }
             return serializationPL;
