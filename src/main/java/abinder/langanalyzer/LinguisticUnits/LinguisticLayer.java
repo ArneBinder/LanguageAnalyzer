@@ -51,7 +51,7 @@ public class LinguisticLayer {
 
 
         // construct trees
-        LinguisticTree firstTokenTree = new LinguisticTree(token);
+        LinguisticTree firstTokenTree = new LinguisticTree(token, LinguisticType.TREE);
         ArrayList<LinguisticTree> currentTrees = new ArrayList<>(1);
         currentTrees.add(firstTokenTree);
         ArrayList<ArrayList<LinguisticTree>> newTrees = new ArrayList<>();
@@ -75,7 +75,7 @@ public class LinguisticLayer {
                         if (currentDepth == maxDepth)
                             break;
                         for (LinguisticTree currentPreviousTree : currentPreviousTrees) {
-                            LinguisticTree newTree = new LinguisticTree(currentPreviousTree, currentTokenTree);
+                            LinguisticTree newTree = new LinguisticTree(currentPreviousTree, currentTokenTree, LinguisticType.TREE);
                             currentNewTrees.add(newTree);
                         }
                         currentDepth++;

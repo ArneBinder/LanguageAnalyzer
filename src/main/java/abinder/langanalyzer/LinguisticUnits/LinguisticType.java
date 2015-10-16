@@ -3,27 +3,32 @@ package abinder.langanalyzer.LinguisticUnits;
 /**
  * Created by Arne on 17.09.2015.
  */
-public class LinguisticType implements Comparable<LinguisticType> {
+public enum LinguisticType {
+    TREE(0);
 
-    char id;
+    int id;
     // model
-    public LinguisticType(char id){
+    LinguisticType(int id){
         this.id = id;
     }
 
-    public LinguisticType(String id){
+    /*LinguisticType(char id){
+        this.id = id;
+    }*/
+
+    /*public LinguisticType(String id){
         this.id = id.charAt(0);
-    }
+    }*/
 
     public int getId() {
         return id;
     }
 
-    public String serialize(){
-        return (id)+"";
-    }
+    /*public String serialize(){
+        return id+"";
+    }*/
 
-    @Override
+    /*@Override
     public int compareTo(LinguisticType o) {
         if(o == null)
             return 1;
@@ -39,5 +44,5 @@ public class LinguisticType implements Comparable<LinguisticType> {
         return (o!=null)
                 && (o instanceof LinguisticType)
                 && ((LinguisticType)o).getId() == id;
-    }
+    }*/
 }

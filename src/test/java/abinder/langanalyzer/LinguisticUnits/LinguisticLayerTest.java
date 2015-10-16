@@ -39,7 +39,7 @@ public class LinguisticLayerTest {
 
     @Test
     public void deserializationTest(){
-        LinguisticTree newTree = new LinguisticTree("[\\X,[[e,[a,k]],[m,e]]]");
+        LinguisticTree newTree = new LinguisticTree("[\\X,[[e,[a,k]],[m,e]]]", LinguisticType.TREE);
         //System.out.println(newTree.serialize(false));
         assertEquals("[\\X,[[e,[a,k]],[m,e]]]", newTree.serialize(false));
     }
@@ -47,7 +47,7 @@ public class LinguisticLayerTest {
     @Test
     public void simpleLayerTest(){
         LinguisticLayer layer = new LinguisticLayer(3);
-        LinguisticTree tree = new LinguisticTree("[[a,b],[c,d]]");
+        LinguisticTree tree = new LinguisticTree("[[a,b],[c,d]]", LinguisticType.TREE);
         //LinguisticTree tree = new LinguisticTree("a");
         /*for(LinguisticTree subTree: tree.getAllSubtrees(layer.getMaxDepth())){
             System.out.println("\nSUB: "+subTree);
@@ -121,10 +121,10 @@ public class LinguisticLayerTest {
         System.out.println();
         while(characters.hasNext()){
             char character = characters.next();
-            LinguisticType currentType = new LinguisticType(character);
-            LinguisticToken currentToken = new LinguisticToken(currentType);
-            if(!currentToken.serialize(false).equals("\\n"))
-                System.out.print(currentToken.serialize(false));
+            //LinguisticType currentType = new LinguisticType(character);
+            LinguisticToken currentToken = new LinguisticToken(LinguisticToken.escape(character+""));
+            if(!currentToken.serialize().equals("\\n"))
+                System.out.print(currentToken.serialize());
             else
                 System.out.println();
             layer.feed(currentToken);

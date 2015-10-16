@@ -13,7 +13,7 @@ import java.util.HashSet;
  */
 public class LinguisticToken implements Comparable<LinguisticToken>{
 
-    LinguisticType type;
+    String serialization;
     ArrayList<LinguisticToken> tokens = new ArrayList<>();
     int position;
 
@@ -26,17 +26,17 @@ public class LinguisticToken implements Comparable<LinguisticToken>{
     private static final HashSet<Character> escapeAbleChars = new HashSet<>(Arrays.asList(charEscape, charOpen, charClose, charPosSeperator,charTypeSeperator,charTokenSeperator));
 
 
-    public LinguisticToken(LinguisticType type){
-        this.type = type;
-    }
+    /*public LinguisticToken(LinguisticType type){
+        this.serialization = type;
+    }*/
 
     public LinguisticToken(String serialization){
         deserialize(serialization);
     }
 
-    public LinguisticType getType() {
-        return type;
-    }
+    /*public LinguisticType getSerialization() {
+        return serialization;
+    }*/
 
     public void feed(LinguisticToken token){
         token.setPosition(tokens.size());
@@ -50,6 +50,10 @@ public class LinguisticToken implements Comparable<LinguisticToken>{
 
     public void setPosition(int position) {
         this.position = position;
+    }
+
+    public static String escape(String string){
+        return IO.escape(string,escapeAbleChars,charEscape);
     }
 
     /*public ArrayList<LinguisticTree> getAllTrees(int maxDepth){
@@ -70,15 +74,17 @@ public class LinguisticToken implements Comparable<LinguisticToken>{
         return tokens;
     }
 
-    public String serialize(boolean showPosition){
-        String result = (showPosition?position+""+charPosSeperator:"") + IO.escape(type.serialize(),escapeAbleChars,charEscape);
+    public String serialize(){
+        if(serialization!=null)
+            return serialization;
+        /*String result = (showPosition?position+""+charPosSeperator:"") + IO.escape(type.serialize(),escapeAbleChars,charEscape);
         if(tokens.size()==0)
             return result;
-
-        result += charTypeSeperator+""+charOpen+tokens.get(0).serialize(showPosition);
+*/
+        String result = charOpen+tokens.get(0).serialize();
 
         for(LinguisticToken token: tokens.subList(1,tokens.size())){
-            result +=  charTokenSeperator+token.serialize(showPosition);
+            result +=  charTokenSeperator+token.serialize();
         }
         result += charClose+"";
         return result;
@@ -99,7 +105,7 @@ public class LinguisticToken implements Comparable<LinguisticToken>{
                 currentPos = Integer.parseInt(temp);
                 temp = "";
             }else if(inType && c==charTypeSeperator){
-                type = new LinguisticType(temp);
+                this.serialization = temp;
                 temp = "";
                 inType = false;
             }else if(c==charOpen){
@@ -128,7 +134,7 @@ public class LinguisticToken implements Comparable<LinguisticToken>{
             }
         }
         if(inType){
-            type = new LinguisticType(temp);
+            this.serialization = temp;
             if(currentPos >=0)
                 position = currentPos;
             //temp = "";
@@ -139,6 +145,11 @@ public class LinguisticToken implements Comparable<LinguisticToken>{
     public int compareTo(LinguisticToken o) {
         if(o==null)
             return 1;
-        return this.type.compareTo(o.getType());
+        return this.serialize().compareTo(o.serialize());
+    }
+
+    @Override
+    public String toString(){
+        return this.serialize();
     }
 }

@@ -30,8 +30,8 @@ public class TokenTest {
 
 
 
-        LinguisticType globalType = new LinguisticType((char)0);
-        LinguisticToken globalToken = new LinguisticToken(globalType);
+        //LinguisticType globalType = new LinguisticType((char)0);
+        LinguisticToken globalToken = new LinguisticToken("");
 
         //ImmutableList<Character> chars = Lists.charactersOf("schöne Haus");
         //UnmodifiableListIterator<Character> iter = chars.listIterator();
@@ -41,8 +41,8 @@ public class TokenTest {
         while(tokens.hasNext()){
             char character = tokens.next();
             dummy += character;
-            LinguisticType currentType = new LinguisticType(character);
-            LinguisticToken currentToken = new LinguisticToken(currentType);
+            //LinguisticType currentType = new LinguisticType(character);
+            LinguisticToken currentToken = new LinguisticToken(LinguisticToken.escape(character+""));
             globalToken.feed(currentToken);
             //model.feed(character);
             //out += character;

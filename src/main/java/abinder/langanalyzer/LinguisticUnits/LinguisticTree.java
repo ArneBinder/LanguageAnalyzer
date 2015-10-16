@@ -15,6 +15,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
     private LinguisticTree parent;
     private LinguisticToken leaf;
     private ArrayList<LinguisticTree> parents;
+    private LinguisticType label;
 
     //caching
     private String serialization = null;
@@ -33,29 +34,37 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
     private static final char charNull = 'X';
     private static final HashSet<java.lang.Character> escapeAbleChars = new HashSet<>(Arrays.asList(charEscape, charOpen, charClose, charSeperate, charNull));
 
-    private boolean defaultUsePositions = false;
+    //private boolean defaultUsePositions = false;
 
-    public LinguisticTree(LinguisticToken token) {
+    public LinguisticTree(LinguisticToken token, LinguisticType label) {
         leaf = token;
+        this.label = label;
     }
 
-    public LinguisticTree(String serialization) {
+    public LinguisticTree(String serialization, LinguisticType label) {
         deserialize(serialization);
+        this.label = label;
     }
 
-    public LinguisticTree() {
+    //public LinguisticTree() {
+    //}
+
+    public LinguisticTree(LinguisticType label) {
+        this.label = label;
     }
 
-    public LinguisticTree(LinguisticTree leftChild, LinguisticTree rightChild, boolean usePositions) {
+    public LinguisticTree(LinguisticTree leftChild, LinguisticTree rightChild, LinguisticType label) {
         this.leftChild = leftChild;
         this.rightChild = rightChild;
-        this.defaultUsePositions = usePositions;
+        this.label = label;
+
+        //this.defaultUsePositions = usePositions;
     }
 
-    public LinguisticTree(LinguisticToken token, boolean usePositions) {
+    /*public LinguisticTree(LinguisticToken token) {
         leaf = token;
-        this.defaultUsePositions = usePositions;
-    }
+        //this.defaultUsePositions = usePositions;
+    }*/
 
     public LinguisticTree(LinguisticTree leftChild, LinguisticTree rightChild, LinguisticTree parent) {
         this.leftChild = leftChild;
@@ -63,9 +72,14 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         this.parent = parent;
     }
 
-    public LinguisticTree(LinguisticTree leftChild, LinguisticTree rightChild) {
+    /*public LinguisticTree(LinguisticTree leftChild, LinguisticTree rightChild, LinguisticType label) {
         this.leftChild = leftChild;
         this.rightChild = rightChild;
+        this.label = label;
+    }*/
+
+    public LinguisticType getLabel() {
+        return label;
     }
 
     public void setParents(LinguisticTree parent){
@@ -98,9 +112,9 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
     public LinguisticTree copyThis(){
         LinguisticTree result;
         if(noChildren())
-            result = new LinguisticTree(leaf);
+            result = new LinguisticTree(leaf, this.getLabel());
         else
-            result = new LinguisticTree(leftChild!=null?leftChild.copyThis():null, rightChild!=null?rightChild.copyThis():null);
+            result = new LinguisticTree(leftChild!=null?leftChild.copyThis():null, rightChild!=null?rightChild.copyThis():null, label);
         result.setSerializationPL(this.getSerializationPL());
         return result;
     }
@@ -142,7 +156,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
     public boolean equals(Object other) {
         return (other != null)
                 &&(other instanceof LinguisticTree)
-                && ((LinguisticTree) other).serialize(defaultUsePositions).equals(this.serialize(defaultUsePositions));
+                && ((LinguisticTree) other).serialize(false).equals(this.serialize(false));
     }
 
     public boolean isFull(){
@@ -185,7 +199,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         LinguisticTree oTree = (LinguisticTree) other;
         if(leaf != null){
             return oTree.getLeaf()!=null
-                    && leaf.getType().equals(oTree.getLeaf().getType());
+                    && leaf.getSerialization().equals(oTree.getLeaf().getSerialization());
         }
         boolean result;
         if(leftChild!=null){
@@ -219,7 +233,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
     public LinguisticTree copyToRoot(LinguisticTree childTree, LinguisticTree root) {
         if(this==root)
             return childTree;
-        LinguisticTree newParent = new LinguisticTree();
+        LinguisticTree newParent = new LinguisticTree(LinguisticType.TREE);
         childTree.parent = newParent;
         if(parent.leftChild!=null && parent.leftChild == this){
             newParent.setLeftChild(childTree);
@@ -261,7 +275,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
 
     @Override
     public int hashCode() {
-        return serialize(defaultUsePositions).hashCode();
+        return serialize(false).hashCode();
     }
 
     public boolean equalsPositionDependent(LinguisticTree other) {
@@ -361,7 +375,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         if (showPosition) {
             if (serialization == null) {
                 if (leaf!=null)
-                    serialization = IO.escape(leaf.serialize(showPosition), escapeAbleChars, charEscape);
+                    serialization = IO.escape(leaf.serialize(), escapeAbleChars, charEscape);
                 else {
                     serialization = charOpen + (leftChild != null ? leftChild.serialize(showPosition) : charNull + "") + charSeperate + (rightChild != null ? rightChild.serialize(showPosition) : charNull + "") + charClose;
                 }
@@ -370,7 +384,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         } else {
             if(serializationPL == null){
                 if(leaf!=null) {
-                    serializationPL = IO.escape(leaf.serialize(showPosition), escapeAbleChars, charEscape);
+                    serializationPL = IO.escape(leaf.serialize(), escapeAbleChars, charEscape);
                 }
                 else {
                     serializationPL = charOpen + (leftChild != null ? leftChild.serialize(showPosition) : charNull + "") + charSeperate + (rightChild != null ? rightChild.serialize(showPosition) : charNull + "") + charClose;
@@ -414,12 +428,12 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
                     String right = s.substring(i+1);
 
                     if(!left.equals(charNull+"")){
-                        leftChild = new LinguisticTree();
+                        leftChild = new LinguisticTree(LinguisticType.TREE);
                         leftChild.deserialize(left);
                     }
 
                     if(!right.equals(charNull+"")){
-                        rightChild = new LinguisticTree();
+                        rightChild = new LinguisticTree(LinguisticType.TREE);
                         rightChild.deserialize(right);
                     }
                     return;
@@ -527,7 +541,9 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         if(leaf!=null) {
             result.add(this);
         }
-        result.add(null);
+        LinguisticTree emptyTree = new LinguisticTree(LinguisticType.TREE);
+
+        result.add(emptyTree);
 
         return result;
     }
