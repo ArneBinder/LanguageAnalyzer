@@ -233,7 +233,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
     public LinguisticTree copyToRoot(LinguisticTree childTree, LinguisticTree root) {
         if(this==root)
             return childTree;
-        LinguisticTree newParent = new LinguisticTree(LinguisticType.TREE);
+        LinguisticTree newParent = new LinguisticTree(label);
         childTree.parent = newParent;
         if(parent.leftChild!=null && parent.leftChild == this){
             newParent.setLeftChild(childTree);
