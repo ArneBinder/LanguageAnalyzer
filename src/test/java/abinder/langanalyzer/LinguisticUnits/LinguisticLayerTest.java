@@ -41,7 +41,7 @@ public class LinguisticLayerTest {
     public void deserializationTest(){
         LinguisticTree newTree = new LinguisticTree("[\\X,[[e,[a,k]],[m,e]]]", LinguisticType.TREE);
         //System.out.println(newTree.serialize(false));
-        assertEquals("[\\X,[[e,[a,k]],[m,e]]]", newTree.serialize(false));
+        assertEquals("[\\X,[[e,[a,k]],[m,e]]]", newTree.serialize());
     }
 
     @Test
@@ -56,7 +56,7 @@ public class LinguisticLayerTest {
                //f(cutTree!=null) {
                    //if(!cutTree.noChildren() || cutTree.getLeaf()!=null){
                        layer.addTreePattern(cutTree);
-                       System.out.println(cutTree.serialize(false));
+                       System.out.println(cutTree.serialize());
                    //}else
                      //  System.out.println("FALSE");
 
