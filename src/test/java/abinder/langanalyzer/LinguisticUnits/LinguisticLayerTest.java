@@ -53,18 +53,18 @@ public class LinguisticLayerTest {
             System.out.println("\nSUB: "+subTree);
             for(LinguisticTree cutTree: subTree.getAllCutTrees()) {
 
-               if(cutTree!=null) {
+               //f(cutTree!=null) {
                    //if(!cutTree.noChildren() || cutTree.getLeaf()!=null){
                        layer.addTreePattern(cutTree);
                        System.out.println(cutTree.serialize(false));
                    //}else
                      //  System.out.println("FALSE");
 
-               }
+               /*}
                else {
                    layer.addTreePattern(new LinguisticTree(LinguisticType.TREE));
                    System.out.println("NULL");
-               }
+               }*/
 
             }
         }
@@ -78,7 +78,7 @@ public class LinguisticLayerTest {
         }*/
 
         Sum partitions = tree.calcPartitions();
-        layer.addAllTreePattern(partitions.collectTerminals());
+        //layer.addAllTreePattern(partitions.collectTerminals());
         for(Operation operation: partitions.getOperations()){
             System.out.println(operation+"\t"+operation.calculate(layer.getTreePatterns()));
         }
@@ -97,7 +97,7 @@ public class LinguisticLayerTest {
         //Arrays.sort(partitions);
         //System.out.println("\npartitions:\n"+String.join("\n", Arrays.asList(partitions))+"\n");
 
-        System.out.println("\npartitions:\n"+partitions.toString().replaceAll(" \\+ ", "\n") + "\n");
+        //System.out.println("\npartitions:\n"+partitions.toString().replaceAll(" \\+ ", "\n") + "\n");
 
         System.out.println("probability:\t"+ partitions.calculate(layer.getTreePatterns()));
         System.out.println("Done");

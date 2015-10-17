@@ -549,9 +549,9 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         if (leftChild != null && rightChild != null)
             result.addAll(combineTreeLists(leftChild.getAllCutTrees(), rightChild.getAllCutTrees(), label));
 
-        //if(leaf!=null) {
+        if(leaf!=null) {
             result.add(this);
-       // }
+        }
         LinguisticTree emptyTree = new LinguisticTree(LinguisticType.TREE);
 
         result.add(emptyTree);
