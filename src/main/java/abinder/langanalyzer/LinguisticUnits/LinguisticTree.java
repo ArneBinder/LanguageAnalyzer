@@ -82,6 +82,10 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         return label;
     }
 
+    public boolean isEmptyLeaf(){
+        return noChildren() && leaf==null;
+    }
+
     public void setParents(LinguisticTree parent){
         this.parent = parent;
         if(leftChild!=null)
@@ -320,7 +324,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
 
     public LinguisticTree deleteLeftChild(){
         LinguisticTree left = leftChild;
-        leftChild = null;
+        leftChild = new LinguisticTree(left.getLabel());
         resetSerializations();
         resetLeftPositions(leftPos);
         return left;
@@ -328,7 +332,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
 
     public LinguisticTree deleteRightChild(){
         LinguisticTree right = rightChild;
-        rightChild = null;
+        rightChild = new LinguisticTree(right.getLabel());
         resetSerializations();
         resetRightPositions(rightPos);
         return right;
@@ -628,13 +632,13 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
             result.addOperand(node.copyThis());
         // add left
         if(leftPositions[pos]>0){
-            Product product = constructPartition(leftPositions[pos],nodes, nodeBackups,leftPositions, rightPositions, node.getLeftChild()==null && nodeBackup.getLeftChild()!=null);
+            Product product = constructPartition(leftPositions[pos],nodes, nodeBackups,leftPositions, rightPositions, node.getLeftChild().isEmptyLeaf() && !nodeBackup.getLeftChild().isEmptyLeaf());
             result.addAllTerminals(product.getTerminals());
         }
 
         // add right
         if(rightPositions[pos]>0) {
-            Product product = constructPartition(rightPositions[pos], nodes, nodeBackups, leftPositions, rightPositions,node.getRightChild()==null && nodeBackup.getRightChild()!=null);
+            Product product = constructPartition(rightPositions[pos], nodes, nodeBackups, leftPositions, rightPositions,node.getRightChild().isEmptyLeaf() && !nodeBackup.getRightChild().isEmptyLeaf());
             result.addAllTerminals(product.getTerminals());
         }
 
@@ -647,8 +651,8 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
             LinguisticTree node = nodes[i];
             if(nodeBackup.getLeaf()!=null)
                 continue;
-            if(nodeBackup.getLeftChild()!=null){
-                if(node.getLeftChild()==null){
+            if(!nodeBackup.getLeftChild().isEmptyLeaf()){//!=null){
+                if(node.getLeftChild().isEmptyLeaf()){//==null){
                     //remove cut
                     node.setLeftChild(nodes[leftPositions[i]]);
                 }else{
@@ -656,8 +660,8 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
                     return true;
                 }
             }
-            if(nodeBackup.getRightChild()!=null){
-                if(node.getRightChild()==null){
+            if(!nodeBackup.getRightChild().isEmptyLeaf()){//!=null){
+                if(node.getRightChild().isEmptyLeaf()){//==null){
                     //remove cut
                     node.setRightChild(nodes[rightPositions[i]]);
                 }else{
