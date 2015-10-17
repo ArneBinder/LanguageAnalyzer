@@ -326,7 +326,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         LinguisticTree left = leftChild;
         leftChild = new LinguisticTree(left.getLabel());
         resetSerializations();
-        resetLeftPositions(leftPos);
+        //resetLeftPositions(leftPos);
         return left;
     }
 
@@ -334,20 +334,20 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         LinguisticTree right = rightChild;
         rightChild = new LinguisticTree(right.getLabel());
         resetSerializations();
-        resetRightPositions(rightPos);
+        //resetRightPositions(rightPos);
         return right;
     }
 
     public void setLeftChild(LinguisticTree leftChild) {
         this.leftChild = leftChild;
-        resetLeftPositions(leftPos);
+        //resetLeftPositions(leftPos);
         resetSerializations();
         leftChild.parent = this;
     }
 
     public void setRightChild(LinguisticTree rightChild) {
         this.rightChild = rightChild;
-        resetRightPositions(rightPos);
+        //resetRightPositions(rightPos);
         resetSerializations();
         rightChild.parent = this;
     }
@@ -572,7 +572,8 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
 
     public ArrayList<LinguisticTree> getNodes(){
         ArrayList<LinguisticTree> result = new ArrayList<>();
-        result.add(this);
+        if(!isEmptyLeaf())
+            result.add(this);
         if(leaf!=null)
             return result;
 
