@@ -146,17 +146,36 @@ public class LinguisticLayer {
 
        for(int i=previousTrees.size()-1; i>=0; i--){
            for(ArrayList<LinguisticTree> currentTrees: previousTrees.get(i)){
-               for(LinguisticTree tree: currentTrees){
-                   double newProb = Math.log(tree.calcPartitions().calculate(treePatterns))+bestProbabilities[i+1];
-                   int newPos = tree.getLeftPosition();
-                   if(bestProbabilities[newPos] == 0.0 || newProb >= bestProbabilities[newPos]){
+               ArrayList<LinguisticTree>[] rearrangedTrees = (ArrayList<LinguisticTree>[]) Array.newInstance(ArrayList.class, (int)Math.pow(previousTrees.get(i).size(),2));
 
-                       if(newProb != bestProbabilities[newPos])
-                           bestTrees[newPos] = new ArrayList<>();
-                       bestProbabilities[newPos]= newProb;
-                       bestTrees[newPos].add(tree);
+               for(LinguisticTree tree: currentTrees) {
+                   int size = tree.getRightPosition() - tree.getLeftPosition();
+                   if(rearrangedTrees[size] == null)
+                       rearrangedTrees[size] = new ArrayList<>();
+                   rearrangedTrees[size].add(tree);
+               }
+               for(ArrayList<LinguisticTree> trees: rearrangedTrees){
+                   LinguisticTree bestTree = null;
+                   double bestProb = 0;
+                   double sumProb = 0;
+                   for(LinguisticTree tree: trees) {
+                       double currentProb = tree.calcPartitions().calculate(treePatterns);
+                       sumProb += currentProb;
+                       if(currentProb > bestProb){
+                           bestProb = currentProb;
+                           bestTree = tree;
+                       }
                    }
 
+                   double newProb = Math.log(bestProb / sumProb) + bestProbabilities[i + 1];
+                   int newPos = bestTree.getLeftPosition();
+                   if (bestProbabilities[newPos] == 0.0 || newProb >= bestProbabilities[newPos]) {
+
+                       if (newProb != bestProbabilities[newPos])
+                           bestTrees[newPos] = new ArrayList<>();
+                       bestProbabilities[newPos] = newProb;
+                       bestTrees[newPos].add(bestTree);
+                   }
                }
            }
 

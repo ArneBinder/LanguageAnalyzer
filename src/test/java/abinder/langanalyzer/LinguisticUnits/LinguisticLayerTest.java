@@ -114,8 +114,8 @@ public class LinguisticLayerTest {
 
         PrintStream outc = new PrintStream(new BufferedOutputStream(new FileOutputStream(new File("outc.txt"))), true, "UTF-8");
         LinguisticLayer layer = new LinguisticLayer(3);
-        //Iterator<Character> characters = new CharacterIterator("Sprache mag ich.");
-        Iterator<Character> characters = corpus.tokens();
+        Iterator<Character> characters = new CharacterIterator("Sprache mag ich.");
+        //Iterator<Character> characters = corpus.tokens();
         int index = 0;
         int stepSize = 3;
         System.out.println();
@@ -174,8 +174,8 @@ public class LinguisticLayerTest {
 
         System.out.println();
 
-        int iterations = 5;
-        for(int i = 0; i< iterations; i++) {
+        /*int iterations = 5;
+        for(int i = 0; i < iterations; i++) {
             layer.calcBestPaths();
             printTimeMessage("calcBestPaths");
 
@@ -184,7 +184,7 @@ public class LinguisticLayerTest {
 
             layer.calculateTreePatternProbabilities();
             printTimeMessage("calculateTreePatternProbabilities");
-        }
+        }*/
         layer.calcBestPaths();
         PrintStream outd = new PrintStream(new BufferedOutputStream(new FileOutputStream(new File("outd.txt"))), true, "UTF-8");
         layer.printBestPaths(new int[]{0},outd);
