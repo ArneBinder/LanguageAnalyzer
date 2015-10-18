@@ -18,7 +18,6 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
     private LinguisticType label;
 
     //caching
-    private String serialization = null;
     private String serializationPL = null;
     private int depth = -1;
     private int minDepth = -1;
@@ -61,23 +60,6 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         //this.defaultUsePositions = usePositions;
     }
 
-    /*public LinguisticTree(LinguisticToken token) {
-        leaf = token;
-        //this.defaultUsePositions = usePositions;
-    }*/
-
-    /*public LinguisticTree(LinguisticTree leftChild, LinguisticTree rightChild, LinguisticTree parent) {
-        this.leftChild = leftChild;
-        this.rightChild = rightChild;
-        this.parent = parent;
-    }*/
-
-    /*public LinguisticTree(LinguisticTree leftChild, LinguisticTree rightChild, LinguisticType label) {
-        this.leftChild = leftChild;
-        this.rightChild = rightChild;
-        this.label = label;
-    }*/
-
     public LinguisticType getLabel() {
         return label;
     }
@@ -94,25 +76,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
             rightChild.setParents(this);
     }
 
-    /*
-    public LinguisticTree copyThisWithoutChild(LinguisticTree exceptChild){
-        if(noChildren())
-            return new LinguisticTree(leaf);
-        if(exceptChild.equals(leftChild)){
-            if(rightChild!=null)
-                return new LinguisticTree(null, rightChild.copyThis());
-            else
-                return null;
-        }
-        if(exceptChild.equals(rightChild)){
-            if(leftChild!=null)
-                return new LinguisticTree(leftChild.copyThis(), null);
-            else
-                return null;
-        }
-        return new LinguisticTree(leftChild!=null?leftChild.copyThisWithoutChild(exceptChild):null, rightChild!=null?rightChild.copyThisWithoutChild(exceptChild):null);
-    }
-*/
+
     public LinguisticTree copyThis(){
         LinguisticTree result;
         if(noChildren())
@@ -220,61 +184,6 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
     }
     */
 
-    public String serializeToRoot(String childSerialization, LinguisticTree root) {
-        if(this==root)
-            return childSerialization;
-        if(parent.leftChild!=null && parent.leftChild == this){
-            return parent.serializeToRoot(charOpen + childSerialization + charSeperate + "" + charNull + "" + charClose, root);
-        }else if(parent.rightChild!=null && parent.rightChild == this){
-            return parent.serializeToRoot(charOpen + "" + charNull + "" + charSeperate + childSerialization + charClose, root);
-        }else{
-            System.out.println("ERROR: this ("+this.serialize()+") is neither leftChild nor RightChild of parent: "+parent.serialize());
-            return null;
-            //throw new Exception("this ("+this.serialize(false)+") is neither leftChild nor RightChild of parent: "+parent.serialize(false));
-        }
-    }
-
-    public LinguisticTree copyToRoot(LinguisticTree childTree, LinguisticTree root) {
-        if(this==root)
-            return childTree;
-        LinguisticTree newParent = new LinguisticTree(label);
-        childTree.parent = newParent;
-        if(parent.leftChild!=null && parent.leftChild == this){
-            newParent.setLeftChild(childTree);
-            return parent.copyToRoot(newParent, root);
-        } else if (parent.rightChild != null && parent.rightChild == this){
-            newParent.setRightChild(childTree);
-            return parent.copyToRoot(newParent, root);
-        } else {
-            System.out.println("ERROR: this ("+this.serialize()+") is neither leftChild nor RightChild of parent: "+parent.serialize());
-            return null;
-            //throw new Exception("this ("+this.serialize()+") is neither leftChild nor RightChild of parent: "+parent.serialize());
-        }
-    }
-
-    // TODO: fix this!
-    public ArrayList<LinguisticTree> getTreeParts(LinguisticTree currentHead){
-        ArrayList<LinguisticTree> result = new ArrayList<>();
-
-        LinguisticTree currentRootTree = currentHead.copyToRoot(currentHead.copyThis(),this);
-        result.add(currentRootTree);
-        //System.out.println("\t"+currentRootTree.serialize(false));
-
-        /*if(currentHead.getLeftChild()!=null && currentHead.getRightChild()!=null){
-            result.addAll(currentHead.getLeftChild().getTreeParts(currentHead.getLeftChild()));
-            result.addAll(currentHead.getRightChild().getTreeParts(currentHead.getRightChild()));
-        }*/
-
-        if(currentHead.getLeftChild()!=null){
-            result.addAll(getTreeParts(currentHead.getLeftChild()));
-        }
-
-        if(currentHead.getRightChild()!=null){
-            result.addAll(getTreeParts(currentHead.getRightChild()));
-        }
-
-        return result;
-    }
 
 
     @Override
@@ -284,7 +193,6 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
 
 
     public void resetSerializations(){
-        serialization = null;
         serializationPL = null;
         leafCount = -1;
         if(parent!=null){
