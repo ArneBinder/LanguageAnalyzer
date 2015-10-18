@@ -25,6 +25,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
     private int rightPos = -1;
     private double probability = -1;
     private int leafCount = -1;
+    private Sum partitions;
 
     private static final char charEscape = '\\';
     private static final char charOpen = '[';
@@ -192,11 +193,12 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
     }
 
 
-    public void resetSerializations(){
+    public void resetCachedProperties(){
         serializationPL = null;
         leafCount = -1;
+        partitions = null;
         if(parent!=null){
-            parent.resetSerializations();
+            parent.resetCachedProperties();
         }
     }
 
@@ -230,7 +232,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
     public LinguisticTree deleteLeftChild(){
         LinguisticTree left = leftChild;
         leftChild = new LinguisticTree(left.getLabel());
-        resetSerializations();
+        resetCachedProperties();
         //resetLeftPositions(leftPos);
         return left;
     }
@@ -238,7 +240,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
     public LinguisticTree deleteRightChild(){
         LinguisticTree right = rightChild;
         rightChild = new LinguisticTree(right.getLabel());
-        resetSerializations();
+        resetCachedProperties();
         //resetRightPositions(rightPos);
         return right;
     }
@@ -246,14 +248,14 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
     public void setLeftChild(LinguisticTree leftChild) {
         this.leftChild = leftChild;
         resetLeftPositions(leftPos);
-        resetSerializations();
+        resetCachedProperties();
         leftChild.parent = this;
     }
 
     public void setRightChild(LinguisticTree rightChild) {
         this.rightChild = rightChild;
         resetRightPositions(rightPos);
-        resetSerializations();
+        resetCachedProperties();
         rightChild.parent = this;
     }
 
