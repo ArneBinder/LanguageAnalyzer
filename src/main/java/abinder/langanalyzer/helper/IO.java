@@ -94,10 +94,10 @@ public class IO {
             char c = str.charAt(i);
             if(escapeAbleChars.contains(c))
                 result += charEscape;
-            if(c=='\n')
-                result += "\\n";
-            else
-                result += c;
+            //if(c=='\n')
+            //    result += "\\n";
+            //else
+            result += c;
         }
         return result;
     }
