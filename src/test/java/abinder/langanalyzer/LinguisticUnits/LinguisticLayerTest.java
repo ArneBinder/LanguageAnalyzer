@@ -105,7 +105,7 @@ public class LinguisticLayerTest {
     }
 
     @Test
-    public void layerTest() throws IOException {
+    public void layerTest() throws IOException, InterruptedException {
 
         WIKIPEDIACorpus corpus = new WIKIPEDIACorpus();
         corpus.readFromFile("src/test/resources/abinder/langanalyzer/corpora/wikipedia/Sprache.txt");
@@ -114,7 +114,7 @@ public class LinguisticLayerTest {
 
         PrintStream outc = new PrintStream(new BufferedOutputStream(new FileOutputStream(new File("outc.txt"))), true, "UTF-8");
         LinguisticLayer layer = new LinguisticLayer(3);
-        //Iterator<Character> characters = new CharacterIterator("abcd");
+        //Iterator<Character> characters = new CharacterIterator("Sprache mag ich.");
         Iterator<Character> characters = corpus.tokens();
         int index = 0;
         int stepSize = 3;
@@ -123,10 +123,10 @@ public class LinguisticLayerTest {
             char character = characters.next();
             //LinguisticType currentType = new LinguisticType(character);
             LinguisticToken currentToken = new LinguisticToken(LinguisticToken.escape(character+""));
-            if(!currentToken.serialize().equals("\\n"))
+            //if(!currentToken.serialize().equals("\\n"))
                 System.out.print(currentToken.serialize());
-            else
-                System.out.println();
+            //else
+            //    System.out.println();
             layer.feed(currentToken);
             if(index % stepSize == stepSize -1)
                 layer.updateTreePatterns(outc);
@@ -171,7 +171,7 @@ public class LinguisticLayerTest {
 
 */
 
-        /*
+
         System.out.println();
 
         int iterations = 5;
@@ -179,23 +179,18 @@ public class LinguisticLayerTest {
             layer.calcBestPaths();
             printTimeMessage("calcBestPaths");
 
-            //PrintStream outd = new PrintStream(new BufferedOutputStream(new FileOutputStream(new File("outd.txt"))), true, "UTF-8");
-
-            try {
-                layer.processBestPaths(new int[]{0, 1, 2, 3, 4, 5});
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            //outd.flush();
+            layer.processBestPaths(new int[]{0, 1, 2, 3, 4, 5});
             printTimeMessage("processBestPaths");
-
 
             layer.calculateTreePatternProbabilities();
             printTimeMessage("calculateTreePatternProbabilities");
-
-
         }
-
+        layer.calcBestPaths();
+        PrintStream outd = new PrintStream(new BufferedOutputStream(new FileOutputStream(new File("outd.txt"))), true, "UTF-8");
+        layer.printBestPaths(new int[]{0},outd);
+        outd.flush();
+        printTimeMessage("printBestPaths");
+/*
         PrintStream outa = new PrintStream(new BufferedOutputStream(new FileOutputStream(new File("outa.txt"))), true, "UTF-8");
         layer.printProbabilitiesSortedByValueAndKey(outa);
         outa.flush();

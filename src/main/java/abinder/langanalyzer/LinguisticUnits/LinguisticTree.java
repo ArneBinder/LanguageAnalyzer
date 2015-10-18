@@ -25,14 +25,13 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
     private int rightPos = -1;
     private double probability = -1;
     private int leafCount = -1;
-    private Sum partitions;
 
     private static final char charEscape = '\\';
     private static final char charOpen = '[';
     private static final char charClose = ']';
     private static final char charSeperate = ',';
     private static final char charNull = 'X';
-    private static final HashSet<java.lang.Character> escapeAbleChars = new HashSet<>(Arrays.asList(charEscape, charOpen, charClose, charSeperate, charNull));
+    private static final HashSet<java.lang.Character> escapeAbleChars = new HashSet<>(Arrays.asList(charEscape, charOpen, charClose, charSeperate, charNull, '\n'));
 
     //private boolean defaultUsePositions = false;
 
@@ -85,6 +84,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         else
             result = new LinguisticTree(leftChild!=null?leftChild.copyThis():null, rightChild!=null?rightChild.copyThis():null, label);
         result.setSerializationPL(this.getSerializationPL());
+        // TODO: copy partitions
         return result;
     }
 
@@ -196,7 +196,6 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
     public void resetCachedProperties(){
         serializationPL = null;
         leafCount = -1;
-        partitions = null;
         if(parent!=null){
             parent.resetCachedProperties();
         }
@@ -444,11 +443,6 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
     public ArrayList<LinguisticTree> getAllCutTrees() {
         ArrayList<LinguisticTree> result = new ArrayList<>();
 
-        /*if (leftChild == null && rightChild!=null)
-            result.addAll(combineTreeLists(Collections.singletonList(null), rightChild.getAllCutTrees(), this));
-        if (rightChild == null && leftChild!=null)
-            result.addAll(combineTreeLists(leftChild.getAllCutTrees(), Collections.singletonList(null), this));
-        */
         if (leftChild != null && rightChild != null)
             result.addAll(combineTreeLists(leftChild.getAllCutTrees(), rightChild.getAllCutTrees(), label));
 
@@ -456,9 +450,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
             result.add(this);
         }
         LinguisticTree emptyTree = new LinguisticTree(LinguisticType.TREE);
-
         result.add(emptyTree);
-
         return result;
     }
 
@@ -519,7 +511,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
 
         do{
             // construct partition
-            Product current = constructPartition(0, nodes, nodeBackups, leftPositions, rightPositions ,true);
+            Product current = constructPartition(0, nodes, nodeBackups, leftPositions, rightPositions, true);
             result.addOperand(current);
         }while(incCut(nodes, nodeBackups, leftPositions, rightPositions));
 

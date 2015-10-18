@@ -24,7 +24,7 @@ public class LinguisticLayer {
     // with set parents
     MultiTreeSet treePatterns = new MultiTreeSet();
     HashMap<LinguisticTree, Double> probabilities = new HashMap<>();
-    HashMap<String, Double> probabilities2 = new HashMap<>();
+    private HashMap<LinguisticTree, Sum> partitions;
 
     int maxDepth = 3;
     int count = 0;
@@ -307,13 +307,7 @@ public class LinguisticLayer {
         }
     }*/
 
-    public void printProbabilitiesSortedByValue2(PrintStream out){
-        out.println("print probabilities (sortedByValue):");
-        for(String tree: probabilities2.keySet()){//MultiSet.sortByValue(probabilities).keySet()){
-            if(!tree.contains("X"))
-                out.println(probabilities2.get(tree)+"\t"+tree);
-        }
-    }
+
 
     public void printProbabilitiesSortedByValue(PrintStream out){
         out.println("print treePatterns (sortByValue)");
@@ -346,23 +340,7 @@ public class LinguisticLayer {
 
     }
 
-    public void printProbabilitiesSortedByValueAndKey2(PrintStream out){
-        out.println("print treePatterns (sortedByValueAndKey)");
-        SortedSet<KeyValuePair<Double, String>> sortedSet = new TreeSet<>();
-        for(Map.Entry<String,Double> entry: probabilities2.entrySet()){
-            //if(!entry.getKey().serialize(false).contains("X"))
-            sortedSet.add(new KeyValuePair<>(entry.getValue(), entry.getKey()));
-        }
-        for (KeyValuePair keyValuePair : sortedSet) {
-            out.println(keyValuePair.key+"\t"+keyValuePair.value);
-        }
 
-        /*for(LinguisticTree treePart: treePatterns.sortByValue().keySet()){
-            out.println(treePatterns.get(treePart)+"\t"+treePart.serialize(false) + "\t"+getProbability(treePart, treePart));
-        }*/
-        out.println("treePatterns.size: " + treePatterns.size());
-
-    }
 
     public void printProbabilitiesSortedByValueAndKey3(PrintStream out){
         out.println("print treePatterns (sortedByValueAndKey)");
