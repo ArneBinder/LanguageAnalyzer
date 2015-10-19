@@ -157,8 +157,8 @@ public class LinguisticLayer {
                        rearrangedTrees[size] = new ArrayList<>();
                    rearrangedTrees[size].add(tree);
                }
-               for(ArrayList<LinguisticTree> trees: (ArrayList<LinguisticTree>[])Arrays.stream(rearrangedTrees).filter(e -> e!=null).toArray()){
-
+               for(Object otrees: Arrays.stream(rearrangedTrees).filter(e -> e!=null).toArray()){
+                    ArrayList<LinguisticTree> trees = (ArrayList<LinguisticTree>)otrees;
                    LinguisticTree bestTree = null;
                    double bestProb = 0;
                    double sumProb = 0;
