@@ -19,6 +19,7 @@ public class LinguisticLayer {
 
     ArrayList<LinguisticTree>[] bestTrees;
     double[] bestProbabilities;
+    ArrayList<Double> sequenceProbs = new ArrayList<>();
     //ArrayList<ArrayList<ArrayList<LinguisticTree>>> rightTrees = new ArrayList<>();
 
     // with set parents
@@ -42,6 +43,8 @@ public class LinguisticLayer {
 
     public LinguisticLayer(int maxDepth){
         this.maxDepth = maxDepth;
+        sequenceProbs = new ArrayList<>();
+        sequenceProbs.add(1.0);
         //previousTrees.add(new ArrayList<>());
 
     }
@@ -154,7 +157,8 @@ public class LinguisticLayer {
                        rearrangedTrees[size] = new ArrayList<>();
                    rearrangedTrees[size].add(tree);
                }
-               for(ArrayList<LinguisticTree> trees: rearrangedTrees){
+               for(ArrayList<LinguisticTree> trees: (ArrayList<LinguisticTree>[])Arrays.stream(rearrangedTrees).filter(e -> e!=null).toArray()){
+
                    LinguisticTree bestTree = null;
                    double bestProb = 0;
                    double sumProb = 0;
@@ -171,7 +175,7 @@ public class LinguisticLayer {
                    int newPos = bestTree.getLeftPosition();
                    if (bestProbabilities[newPos] == 0.0 || newProb >= bestProbabilities[newPos]) {
 
-                       if (newProb != bestProbabilities[newPos])
+                       if (bestTrees[newPos]==null)//newProb != bestProbabilities[newPos])
                            bestTrees[newPos] = new ArrayList<>();
                        bestProbabilities[newPos] = newProb;
                        bestTrees[newPos].add(bestTree);
