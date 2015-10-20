@@ -7,16 +7,26 @@ import java.util.stream.Stream;
 /**
  * Created by Arne on 22.09.2015.
  */
-public class MultiSet<V> extends HashMap<V, Integer> implements Iterable<V> {
+public class MultiSet<V> extends HashMap<V, Double> implements Iterable<V> {
 
     int totalCount = 0;
+
+    public MultiSet(int initialCapacity){
+        super(initialCapacity);
+    }
+
+    public MultiSet(Collection<V> collection){
+        super(collection.size());
+        for(V value: collection)
+            add(value);
+    }
 
     public int getTotalCount() {
         return totalCount;
     }
 
     public void add(V value){
-        int count = 0;
+        double count = 0;
         if(this.containsKey(value))
            count = get(value);
         count++;
@@ -24,7 +34,17 @@ public class MultiSet<V> extends HashMap<V, Integer> implements Iterable<V> {
         put(value, count);
     }
 
-    public double getProbability(V value){
+    public void add(V value, double confidence){
+        double count = 0;
+        if(this.containsKey(value))
+            count = get(value);
+        count+=confidence;
+        totalCount+=confidence;
+        put(value, count);
+    }
+
+
+    public double getRelFrequ(V value){
         if(!this.containsKey(value))
             return 0;
         return get(value) / (double) totalCount;
@@ -35,10 +55,10 @@ public class MultiSet<V> extends HashMap<V, Integer> implements Iterable<V> {
         return keySet().iterator();
     }
 
-    public Map<V, java.lang.Integer> sortByValue()
+    public Map<V, Double> sortByValue()
     {
-        Map<V, java.lang.Integer> result = new LinkedHashMap<>();
-        Stream<Entry<V, java.lang.Integer>> st = this.entrySet().stream();
+        Map<V, Double> result = new LinkedHashMap<>();
+        Stream<Entry<V, Double>> st = this.entrySet().stream();
 
         st.sorted(Comparator.comparing(e -> e.getValue()))
                 .forEach(e -> result.put(e.getKey(), e.getValue()));
@@ -64,13 +84,13 @@ public class MultiSet<V> extends HashMap<V, Integer> implements Iterable<V> {
     public double calcCosineSimilarity(MultiSet<V> other) {
         if(this.size()==0 || other.size() == 0)
             return Double.POSITIVE_INFINITY;
-        int sqsuma = 0;
-        int sqsumb = 0;
-        int divident = 0;
+        double sqsuma = 0;
+        double sqsumb = 0;
+        double divident = 0;
         for(V elema: this.keySet()){
-            int counta = get(elema);
+            double counta = get(elema);
             sqsuma += counta*counta;
-            Integer countb = other.get(elema);
+            Double countb = other.get(elema);
             if(countb!=null){
                 divident += counta*countb;
                 sqsumb += countb*countb;
@@ -79,11 +99,11 @@ public class MultiSet<V> extends HashMap<V, Integer> implements Iterable<V> {
 
         sqsumb += other.entrySet().stream()
                 .filter(element -> !containsKey(element.getKey()))
-                .mapToInt(Entry::getValue)
+                .mapToDouble(Entry::getValue)
                 .map(e -> e*e)
                 .sum();
 
-        int divisor = sqsuma*sqsumb;
+        double divisor = sqsuma*sqsumb;
         if(divisor==0.0)
             return Double.POSITIVE_INFINITY;
         return divident/Math.sqrt(divisor);

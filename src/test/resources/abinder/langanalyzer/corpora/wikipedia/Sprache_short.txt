@@ -1,0 +1,8 @@
+Unter Sprache versteht man die Menge, die als Elemente alle komplexen
+Systeme der Kommunikation beinhaltet. Der Term wird meist verwendet, um
+anzuzeigen, dass konkrete Zeichensysteme Elemente dieser Menge sind (z. B.
+die deutsche Sprache, die Programmiersprache Basic); umgekehrt, um
+anzuzeigen, dass diese konkreten Zeichensysteme den Eigenschaften einer
+Definition des Begriffs „Sprache" genügen. Eine andere Definition ist:
+Sprachen sind „die Systeme von Einheiten und Regeln, die den Mitgliedern
+von Sprachgemeinschaften als Mittel der Verständigung dienen".

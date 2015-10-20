@@ -10,8 +10,6 @@ import java.io.*;
 import java.lang.*;
 import java.lang.Character;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Iterator;
 
 import static org.junit.Assert.*;
@@ -46,8 +44,8 @@ public class LinguisticLayerTest {
 
     @Test
     public void simpleLayerTest(){
-        LinguisticLayer layer = new LinguisticLayer(3);
-        LinguisticTree tree = new LinguisticTree("[[a,b],[c,d]]", LinguisticType.TREE);
+        LinguisticLayer layer = new LinguisticLayer(3,2);
+        LinguisticTree tree = new LinguisticTree("[a,b]", LinguisticType.TREE);
         //LinguisticTree tree = new LinguisticTree("a");
         for(LinguisticTree subTree: tree.getAllSubtrees(layer.getMaxDepth())){
             System.out.println("\nSUB: "+subTree);
@@ -77,11 +75,17 @@ public class LinguisticLayerTest {
             System.out.println(s);
         }*/
 
-        Sum partitions = tree.calcPartitions();
+        Sum partitions = tree.getPartitions();
         //layer.addAllTreePattern(partitions.collectTerminals());
+        System.out.println("\npartitions:");
         for(Operation operation: partitions.getOperations()){
             System.out.println(operation+"\t"+operation.calculate(layer.getTreePatterns()));
         }
+
+        for(LinguisticTree partitionTree: partitions.getTerminals()){
+            System.out.println(partitionTree+"\t"+layer.getTreePatterns().getRelFrequ(partitionTree));
+        }
+
         //System.out.println(partitions);
 
         //Sum sum = layer.getOperations(tree);
@@ -108,14 +112,14 @@ public class LinguisticLayerTest {
     public void layerTest() throws IOException, InterruptedException {
 
         WIKIPEDIACorpus corpus = new WIKIPEDIACorpus();
-        corpus.readFromFile("src/test/resources/abinder/langanalyzer/corpora/wikipedia/Sprache.txt");
+        corpus.readFromFile("src/test/resources/abinder/langanalyzer/corpora/wikipedia/Sprache_short.txt");
         //corpus.readFromFile("src/test/resources/abinder/langanalyzer/corpora/wikipedia/Syntax.txt");
         printTimeMessage("corpus read");
 
         PrintStream outc = new PrintStream(new BufferedOutputStream(new FileOutputStream(new File("outc.txt"))), true, "UTF-8");
-        LinguisticLayer layer = new LinguisticLayer(3);
-        Iterator<Character> characters = new CharacterIterator("Sprache mag ich.");
-        //Iterator<Character> characters = corpus.tokens();
+        LinguisticLayer layer = new LinguisticLayer(3, corpus.getSize());
+        //Iterator<Character> characters = new CharacterIterator("Sprache mag ich.");
+        Iterator<Character> characters = corpus.tokens();
         int index = 0;
         int stepSize = 3;
         System.out.println();
@@ -129,22 +133,20 @@ public class LinguisticLayerTest {
             //    System.out.println();
             layer.feed(currentToken);
             if(index % stepSize == stepSize -1)
-                layer.updateTreePatterns(outc);
+                layer.updateTreePatterns();
 
             index++;
         }
-        System.out.println();
-
-        printTimeMessage("fed content");
         //layer.updateTreePatterns((index / stepSize) * stepSize);
-
-        layer.updateTreePatterns(outc);
+        layer.updateTreePatterns();
         outc.flush();
         printTimeMessage("updateTreePatterns");
 
+        System.out.println(LinguisticLayer.t1);
+        System.out.println(LinguisticLayer.t2);
 
-        layer.calculateTreePatternProbabilities();
-        printTimeMessage("calculateTreePatternProbabilities");
+        //layer.calculateTreePatternProbabilities();
+        //printTimeMessage("calculateTreePatternProbabilities");
 
 /*
         PrintStream outt = new PrintStream(new BufferedOutputStream(new FileOutputStream(new File("outt.txt"))), true, "UTF-8");
@@ -185,11 +187,14 @@ public class LinguisticLayerTest {
             layer.calculateTreePatternProbabilities();
             printTimeMessage("calculateTreePatternProbabilities");
         }*/
+
+        /*
         layer.calcBestPaths();
         PrintStream outd = new PrintStream(new BufferedOutputStream(new FileOutputStream(new File("outd.txt"))), true, "UTF-8");
         layer.printBestPaths(new int[]{0},outd);
         outd.flush();
         printTimeMessage("printBestPaths");
+        */
 /*
         PrintStream outa = new PrintStream(new BufferedOutputStream(new FileOutputStream(new File("outa.txt"))), true, "UTF-8");
         layer.printProbabilitiesSortedByValueAndKey(outa);

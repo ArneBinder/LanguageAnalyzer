@@ -25,7 +25,9 @@ public class WIKIPEDIACorpus extends Corpus {
     }*/
 
     public void readFromFile(String filename) throws IOException {
-        articles.add(IO.readFile(filename));
+        String article = IO.readFile(filename);
+        incSize(article.length());
+        articles.add(article);
     }
 
     public void writeToFile(String filename) {

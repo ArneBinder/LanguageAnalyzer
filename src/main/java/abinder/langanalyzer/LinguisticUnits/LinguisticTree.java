@@ -23,8 +23,9 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
     private int minDepth = -1;
     private int leftPos = -1;
     private int rightPos = -1;
-    private double probability = -1;
+    private double relativeFrequency = -1;
     private int leafCount = -1;
+    private Sum partitions = null;
 
     private static final char charEscape = '\\';
     private static final char charOpen = '[';
@@ -101,12 +102,12 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         return leaf;
     }
 
-    public double getProbability() {
-        return probability;
+    public double getRelativeFrequency() {
+        return relativeFrequency;
     }
 
-    public void setProbability(double probability) {
-        this.probability = probability;
+    public void setRelativeFrequency(double relativeFrequency) {
+        this.relativeFrequency = relativeFrequency;
     }
 
     public LinguisticTree getLeftChild() {
@@ -161,6 +162,12 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         return parent.getMaxLeftTree();
     }
 
+    public Sum getPartitions(){
+        if(partitions==null)
+           calcPartitions();
+        return partitions;
+    }
+
     /*
     public boolean equals(Object other) {
         if(other == null || !(other instanceof LinguisticTree))
@@ -196,6 +203,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
     public void resetCachedProperties(){
         serializationPL = null;
         leafCount = -1;
+        partitions = null;
         if(parent!=null){
             parent.resetCachedProperties();
         }
@@ -479,7 +487,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         return result;
     }
 
-    public Sum calcPartitions(){
+    public void calcPartitions(){
         Sum result = new Sum();
         ArrayList<LinguisticTree> nodesList = getNodes();
         LinguisticTree[] nodes = new LinguisticTree[nodesList.size()];
@@ -515,8 +523,8 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
             result.addOperand(current);
         }while(incCut(nodes, nodeBackups, leftPositions, rightPositions));
 
-        return result;
-
+        result.addOperand(new LinguisticTree(LinguisticType.TREE));
+        partitions = result;
     }
 
 
@@ -570,21 +578,8 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
     }
 
     public double getCosineSimilarity(LinguisticTree other){
-        MultiSet<LinguisticTree> thisTrees = new MultiSet<>();
-        for(LinguisticTree subTree: getAllSubtrees(-1)){
-            for(LinguisticTree cutTree: subTree.getAllCutTrees()){
-                thisTrees.add(cutTree.copyThis());
-            }
-        }
-        //this.getAllSubtrees(-1).forEach(element -> getAllCutTrees().forEach(thisTrees::add));
-
-        MultiSet<LinguisticTree> otherTrees = new MultiSet<>();
-        for(LinguisticTree subTree: other.getAllSubtrees(-1)){
-            for(LinguisticTree cutTree: subTree.getAllCutTrees()){
-                otherTrees.add(cutTree.copyThis());
-            }
-        }
-        //other.getAllSubtrees(-1).forEach(element -> getAllCutTrees().forEach(otherTrees::add));
+        MultiSet<LinguisticTree> thisTrees = new MultiSet<>(this.getPartitions().collectTerminals());
+        MultiSet<LinguisticTree> otherTrees = new MultiSet<>(other.getPartitions().collectTerminals());
         return thisTrees.calcCosineSimilarity(otherTrees);
     }
 

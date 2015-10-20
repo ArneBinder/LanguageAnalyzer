@@ -13,6 +13,15 @@ public abstract class Corpus {
     public LinguisticLayer_dep getBasicLayer() {
         return basicLayer;
     }*/
+    private int size = 0;
+
+    public int getSize() {
+        return size;
+    }
+
+    protected void incSize(int value){
+        size += value;
+    }
 
     abstract public void readFromFile(String filename) throws IOException;
 

@@ -77,9 +77,9 @@ public abstract class Operation implements Comparable<Operation> {
             return result;
         if(terminals.size()>0){
             Iterator<LinguisticTree> it = terminals.iterator();
-            result = treePattern.getProbability(it.next());
+            result = treePattern.getRelFrequ(it.next());
             while(it.hasNext()){
-                result = calc(result,treePattern.getProbability(it.next()));
+                result = calc(result,treePattern.getRelFrequ(it.next()));
             }
         }
         if(operations.size()>0){
