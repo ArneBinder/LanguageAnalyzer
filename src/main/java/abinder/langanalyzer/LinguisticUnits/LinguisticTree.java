@@ -139,7 +139,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
 
     public LinkedBlockingQueue<LinguisticTree> getLeafs(){
         LinkedBlockingQueue<LinguisticTree> result = new LinkedBlockingQueue<>();
-        if(leaf!=null) {
+        if(noChildren() || leaf!=null) {
             result.add(this);
             return result;
         }
@@ -151,6 +151,14 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         }*/
         if(rightChild!=null){
             result.addAll(rightChild.getLeafs());
+        }
+        return result;
+    }
+
+    public String serializeLeafs(){
+        String result = "";
+        for(LinguisticTree tree: getLeafs()){
+            result += tree.serialize();
         }
         return result;
     }
@@ -318,10 +326,13 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         if(serialization.charAt(0)!=charOpen || serialization.charAt(serialization.length()-1)!=charClose){
             leftChild = null;
             rightChild = null;
-            if(serialization.charAt(0)!=charNull)
+            Optional<LinguisticType> type = Arrays.stream(LinguisticType.values()).filter(s -> serialization.equals(s.name())).findFirst();
+            if(!type.isPresent())
                 leaf = new LinguisticToken(serialization);
-            else
+            else {
                 leaf = null;
+                label = type.get();
+            }
             return;
         }
         String s = serialization.substring(1,serialization.length()-1);
