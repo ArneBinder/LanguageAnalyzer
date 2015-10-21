@@ -118,9 +118,9 @@ public class LinguisticLayerTest {
         printTimeMessage("corpus read");
 
         PrintStream outc = new PrintStream(new BufferedOutputStream(new FileOutputStream(new File("outc.txt"))), true, "UTF-8");
-        LinguisticLayer layer = new LinguisticLayer(3, corpus.getSize());//16);//
-        //Iterator<Character> characters = new CharacterIterator("Sprache mag ich.");
-        Iterator<Character> characters = corpus.tokens();
+        LinguisticLayer layer = new LinguisticLayer(3, 16);//corpus.getSize());//
+        Iterator<Character> characters = new CharacterIterator("Sprache mag ich.");
+        //Iterator<Character> characters = corpus.tokens();
         int index = 0;
         int stepSize = 3;
         System.out.println();

@@ -9,7 +9,7 @@ import java.util.stream.Stream;
  */
 public class MultiSet<V> extends HashMap<V, Double> implements Iterable<V> {
 
-    int totalCount = 0;
+    double totalCount = 0;
 
     public MultiSet(int initialCapacity){
         super(initialCapacity);
@@ -21,7 +21,7 @@ public class MultiSet<V> extends HashMap<V, Double> implements Iterable<V> {
             add(value);
     }
 
-    public int getTotalCount() {
+    public double getTotalCount() {
         return totalCount;
     }
 
@@ -47,7 +47,7 @@ public class MultiSet<V> extends HashMap<V, Double> implements Iterable<V> {
     public double getRelFrequ(V value){
         if(!this.containsKey(value))
             return 0;
-        return get(value) / (double) totalCount;
+        return get(value) / totalCount;
     }
 
     @Override
