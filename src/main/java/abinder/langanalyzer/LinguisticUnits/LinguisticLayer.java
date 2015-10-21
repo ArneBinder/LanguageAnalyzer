@@ -173,9 +173,9 @@ public class LinguisticLayer {
 
 
     public void calcBestPaths(){
-        if(bestProbabilities == null)
+        //if(bestProbabilities == null)
             bestProbabilities = new double[previousTrees.size()+1]; //new ArrayList<>(previousTrees.size());
-        if(bestTrees==null)
+        //if(bestTrees==null)
             bestTrees = (ArrayList<LinguisticTree>[]) Array.newInstance(ArrayList.class, previousTrees.size());//(new ArrayList[previousTrees.size()]); //new ArrayList<>(previousTrees.size());
 
 
@@ -189,8 +189,10 @@ public class LinguisticLayer {
                        rearrangedTrees[size] = new ArrayList<>();
                    rearrangedTrees[size].add(tree);
                }
-               for(Object otrees: Arrays.stream(rearrangedTrees).filter(e -> e!=null).toArray()){
-                    ArrayList<LinguisticTree> trees = (ArrayList<LinguisticTree>)otrees;
+               for(ArrayList<LinguisticTree> trees: rearrangedTrees){
+                    //ArrayList<LinguisticTree> trees = (ArrayList<LinguisticTree>)otrees;
+                   if(trees==null)
+                       continue;
                    LinguisticTree bestTree = null;
                    double bestProb = 0;
                    double sumProb = 0;
@@ -203,7 +205,7 @@ public class LinguisticLayer {
                        }
                    }
 
-                   double newProb = Math.log(bestProb / sumProb) + bestProbabilities[i + 1];
+                   double newProb = Math.log(bestProb) + bestProbabilities[i + 1];
                    int newPos = bestTree.getLeftPosition();
                    if (bestProbabilities[newPos] == 0.0 || newProb >= bestProbabilities[newPos]) {
 
@@ -251,6 +253,7 @@ public class LinguisticLayer {
     }
 
     public void printBestPaths(int[] startIndices, PrintStream out) throws InterruptedException {
+        MultiSet<String> pseudoWords = new MultiSet<>(previousTrees.size());
         LinkedBlockingQueue<Integer> indices = new LinkedBlockingQueue<>();
         for(int index: startIndices) {
             indices.put(index-posOffset);
@@ -259,7 +262,8 @@ public class LinguisticLayer {
         while(!indices.isEmpty()){
             for (LinguisticTree tree : bestTrees[indices.poll()]) {
                 // do sth with tree
-                out.println(tree.serialize());
+                out.println(tree.serializeLeafs());
+                pseudoWords.add(tree.serializeLeafs());
 
                 //out.flush();
                 newPos = tree.getRightPosition() + 1;
@@ -268,6 +272,11 @@ public class LinguisticLayer {
             }
         }
         //System.out.println("finished");
+
+        out.println("\nPSEUDOWORDS:");
+        for(String pw: pseudoWords.sortByValue().keySet()){
+            out.println(pseudoWords.get(pw)+"\t"+pw.replaceAll("\\\n", "\\n"));
+        }
     }
 
 
