@@ -151,12 +151,14 @@ public class LinguisticLayerTest {
 
         System.out.println();
         layer.updateTreePatterns();
+        outc.flush();
+        printTimeMessage("updateTreePatterns");
+        System.out.println("real pattern size: "+layer.getTreePatterns().size());
         //layer.updateTreePatternsSimple();
 
         //System.out.println("treePatterns.size: "+layer.treePatterns.size());
 
-        outc.flush();
-        printTimeMessage("updateTreePatterns");
+
 
         System.out.println(LinguisticLayer.t1);
         System.out.println(LinguisticLayer.t2);
@@ -204,13 +206,13 @@ public class LinguisticLayerTest {
             printTimeMessage("calculateTreePatternProbabilities");
         }*/
 
-
+/*
         layer.calcBestPaths();
         PrintStream outd = new PrintStream(new BufferedOutputStream(new FileOutputStream(new File("outd.txt"))), true, "UTF-8");
         layer.printBestPaths(new int[]{0},outd);
         outd.flush();
         printTimeMessage("printBestPaths");
-
+*/
 /*
         PrintStream outa = new PrintStream(new BufferedOutputStream(new FileOutputStream(new File("outa.txt"))), true, "UTF-8");
         layer.printProbabilitiesSortedByValueAndKey(outa);

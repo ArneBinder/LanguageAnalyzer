@@ -23,7 +23,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
     private int minHeight = -1;
     private int leftPos = -1;
     private int rightPos = -1;
-    private double relativeFrequency = -1;
+    private double probability = -1;
     private int leafCount = -1;
     private Sum partitions = null;
 
@@ -101,12 +101,12 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         return leaf;
     }
 
-    public double getRelativeFrequency() {
-        return relativeFrequency;
+    public double getProbability() {
+        return probability;
     }
 
-    public void setRelativeFrequency(double relativeFrequency) {
-        this.relativeFrequency = relativeFrequency;
+    public void setProbability(double probability) {
+        this.probability = probability;
     }
 
     public LinguisticTree getLeftChild() {

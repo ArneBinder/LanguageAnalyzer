@@ -165,7 +165,7 @@ public class LinguisticLayer {
                 for(LinguisticTree treeFixedPosSize: previousTreesBySize.get(endPos).get(size)) {
                     double relFrequ = treeFixedPosSize.getPartitions().calculate(treePatterns);
                     sizeRelFrequ += relFrequ;
-                    treeFixedPosSize.setRelativeFrequency(relFrequ);
+                    treeFixedPosSize.setProbability(relFrequ);
                 }
                 double newSequProb = sequenceProbs.get(processedTreesIndex + 1 - size)* sizeRelFrequ;
                 sequenceProbs.add(processedTreesIndex + 1, newSequProb);//>=1.0?1.0:newSequProb);
@@ -179,7 +179,7 @@ public class LinguisticLayer {
                     for(int tempEndPos = addPos; tempEndPos < addPos + size; tempEndPos++){
                         double prevSequProb = sequenceProbs.get(tempEndPos - size +1);
                         for(LinguisticTree tree: previousTreesBySize.get(tempEndPos).get(size)) {
-                            probSum += prevSequProb*tree.getRelativeFrequency();
+                            probSum += prevSequProb*tree.getProbability();
                         }
                     }
                 }
@@ -188,7 +188,7 @@ public class LinguisticLayer {
                     //for(int tempEndPos = addPos; tempEndPos < addPos + size; tempEndPos++){
                         double prevSequProb = sequenceProbs.get(addPos - size +1);
                         for(LinguisticTree tree: previousTreesBySize.get(addPos).get(size)) {
-                            double currentProb = prevSequProb*tree.getRelativeFrequency() / probSum;
+                            double currentProb = prevSequProb*tree.getProbability() / probSum;
                             for(LinguisticTree part: tree.getPartitions().collectTerminals()) {
                                 treePatterns.add(part, currentProb);
                             }
@@ -303,9 +303,12 @@ public class LinguisticLayer {
 
 
     public void calculateTreePatternProbabilities(){
-        probabilities = new HashMap<>(treePatterns.size());
+        //probabilities = new HashMap<>(treePatterns.size());
+        int counter = 0;
         for(LinguisticTree tree: treePatterns.keySet()){
-            probabilities.put(tree,tree.getPartitions().calculate(getTreePatterns()));
+            tree.setProbability(tree.getPartitions().calculate(getTreePatterns()));
+            counter++;
+            //probabilities.put(tree,);
         }
     }
 
@@ -347,7 +350,7 @@ public class LinguisticLayer {
         for(LinguisticTree tree: treePatterns.keySet()){
             if(tree.isFull()) {
                 //sortedSet.add(new KeyValuePair<>(probabilities.get(tree), tree));
-                strings.add(tree.serializeLeafs().replaceAll("\\\n", "\\n"), probabilities.get(tree));
+                strings.add(tree.serialize().replaceAll("\\\n", "\\n"), tree.getProbability());
             }
         }
 
@@ -362,7 +365,7 @@ public class LinguisticLayer {
             out.println(treePatterns.get(treePart)+"\t"+treePart.serialize(false) + "\t"+getRelFrequ(treePart, treePart));
         }*/
         out.println("treePatterns.size: " + treePatterns.size());
-        out.println("probabilities.size: " + probabilities.size());
+        //out.println("probabilities.size: " + probabilities.size());
         out.println("sortedSet.size: " + sortedSet.size());
 
     }
