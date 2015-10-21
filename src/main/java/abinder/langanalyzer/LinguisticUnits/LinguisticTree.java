@@ -19,8 +19,8 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
 
     //caching
     private String serializationPL = null;
-    private int depth = -1;
-    private int minDepth = -1;
+    private int height = -1;
+    private int minHeight = -1;
     private int leftPos = -1;
     private int rightPos = -1;
     private double relativeFrequency = -1;
@@ -375,36 +375,36 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
     }
 
     /**
-     * Calculates the depth of the tree.
-     * If leftChild and rightChild are null (this is a leaf), the depth is 0.
-     * Otherwise it is the maximum depth of the children +1.
+     * Calculates the height of the tree.
+     * If leftChild and rightChild are null (this is a leaf), the height is 0.
+     * Otherwise it is the maximum height of the children +1.
      *
-     * @return the depth of the current tree
+     * @return the height of the current tree
      */
-    public int getDepth() {
-        if(depth >= 0)
-            return depth;
+    public int getHeight() {
+        if(height >= 0)
+            return height;
         if (noChildren()) {
-            depth = 0;
+            height = 0;
         } else {
-            depth = Math.max(leftChild != null ? leftChild.getDepth() : 0, rightChild != null ? rightChild.getDepth() : 0) + 1;
+            height = Math.max(leftChild != null ? leftChild.getHeight() : 0, rightChild != null ? rightChild.getHeight() : 0) + 1;
         }
-        return depth;
+        return height;
     }
 
-    public void resetDepth(){
-        depth = -1;
+    public void resetHeight(){
+        height = -1;
     }
 
-    public int getMinDepth() {
-        if(minDepth >= 0)
-            return minDepth;
+    public int getMinHeight() {
+        if(minHeight >= 0)
+            return minHeight;
         if (noChildren()) {
-            minDepth = 0;
+            minHeight = 0;
         } else {
-            minDepth = Math.min(leftChild != null ? leftChild.getDepth() : 0, rightChild != null ? rightChild.getDepth() : 0) + 1;
+            minHeight = Math.min(leftChild != null ? leftChild.getHeight() : 0, rightChild != null ? rightChild.getHeight() : 0) + 1;
         }
-        return minDepth;
+        return minHeight;
     }
 
     public int getLeftPosition() {
@@ -443,16 +443,16 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         return rightPos;
     }
 
-    public ArrayList<LinguisticTree> getAllSubtrees(int maxDepth) {
+    public ArrayList<LinguisticTree> getAllSubtrees(int maxHeight) {
         ArrayList<LinguisticTree> result = new ArrayList<>();
-        if (getDepth() <= maxDepth || maxDepth < 0)
+        if (getHeight() <= maxHeight || maxHeight < 0)
             result.add(this);
         if (!noChildren()) {
             if (leftChild != null) {
-                result.addAll(leftChild.getAllSubtrees(maxDepth));
+                result.addAll(leftChild.getAllSubtrees(maxHeight));
             }
             if (rightChild != null) {
-                result.addAll(rightChild.getAllSubtrees(maxDepth));
+                result.addAll(rightChild.getAllSubtrees(maxHeight));
             }
         }
         return result;
@@ -629,8 +629,8 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         if(o == null)
             return 1;
 
-        if(o.getDepth()!=this.getDepth()){
-            if(this.getDepth() < o.getDepth())
+        if(o.getHeight()!=this.getHeight()){
+            if(this.getHeight() < o.getHeight())
                 return -1;
             else
                 return 1;

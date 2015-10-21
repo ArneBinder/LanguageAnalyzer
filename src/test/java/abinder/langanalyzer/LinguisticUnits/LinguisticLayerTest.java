@@ -4,6 +4,7 @@ import abinder.langanalyzer.corpora.wikipedia.WIKIPEDIACorpus;
 import abinder.langanalyzer.helper.CharacterIterator;
 import abinder.langanalyzer.helper.Operation;
 import abinder.langanalyzer.helper.Sum;
+import abinder.langanalyzer.helper.Utils;
 import org.junit.Test;
 
 import java.io.*;
@@ -48,7 +49,7 @@ public class LinguisticLayerTest {
         LinguisticTree tree = new LinguisticTree("[[a,TREE],[c,d]]", LinguisticType.TREE);
         System.out.println(tree.serializeLeafs());
         //LinguisticTree tree = new LinguisticTree("a");
-        for(LinguisticTree subTree: tree.getAllSubtrees(layer.getMaxDepth())){
+        for(LinguisticTree subTree: tree.getAllSubtrees(layer.getMaxHeight())){
             System.out.println("\nSUB: "+subTree);
             for(LinguisticTree cutTree: subTree.getAllCutTrees()) {
 
@@ -113,16 +114,23 @@ public class LinguisticLayerTest {
     public void layerTest() throws IOException, InterruptedException {
 
         WIKIPEDIACorpus corpus = new WIKIPEDIACorpus();
-        corpus.readFromFile("src/test/resources/abinder/langanalyzer/corpora/wikipedia/Sprache.txt");
+        corpus.readFromFile("src/test/resources/abinder/langanalyzer/corpora/wikipedia/Sprache_short.txt");
         //corpus.readFromFile("src/test/resources/abinder/langanalyzer/corpora/wikipedia/Syntax.txt");
         printTimeMessage("corpus read");
 
         PrintStream outc = new PrintStream(new BufferedOutputStream(new FileOutputStream(new File("outc.txt"))), true, "UTF-8");
-        LinguisticLayer layer = new LinguisticLayer(3, 16);//corpus.getSize());//
-        Iterator<Character> characters = new CharacterIterator("Sprache mag ich.");
-        //Iterator<Character> characters = corpus.tokens();
+        LinguisticLayer layer = new LinguisticLayer(3, corpus.getSize());//16);//
+        String simpleInput = "abcde";
+        //Iterator<Character> characters = new CharacterIterator(simpleInput);
+        Iterator<Character> characters = corpus.tokens();
+
+        /*System.out.println("length: "+ simpleInput.length());
+        System.out.println("getCatalan: "+Utils.getCatalan(simpleInput.length()));
+        System.out.println("getSparseTreeCount: "+Utils.getSparseTreeCount(simpleInput.length()));
+        System.out.println("getTreeCount: "+Utils.getTreeCount(simpleInput.length()));
+        */
         int index = 0;
-        int stepSize = 3;
+        int stepSize = 1;
         System.out.println();
         while(characters.hasNext()){
             char character = characters.next();
@@ -133,15 +141,20 @@ public class LinguisticLayerTest {
             //else
             //    System.out.println();
             layer.feed(currentToken);
+
             if(index % stepSize == stepSize -1)
                 layer.updateTreePatterns();
 
             index++;
         }
 
+
         System.out.println();
-        //layer.updateTreePatterns((index / stepSize) * stepSize);
         layer.updateTreePatterns();
+        //layer.updateTreePatternsSimple();
+
+        //System.out.println("treePatterns.size: "+layer.treePatterns.size());
+
         outc.flush();
         printTimeMessage("updateTreePatterns");
 
@@ -216,9 +229,9 @@ public class LinguisticLayerTest {
 
 
         PrintStream outb = new PrintStream(new BufferedOutputStream(new FileOutputStream(new File("outb.txt"))), true, "UTF-8");
-        layer.printProbabilitiesSortedByValue(outb);
+        layer.printTreePatternsSortedByKey(outb);
         outb.flush();
-        printTimeMessage("printProbabilitiesSortedByValue to file");
+        printTimeMessage("printTreePatternsSortedByKey to file");
 
         //new OutputStreamWriter(new FileOutputStream(filename), "UTF-8")
         PrintStream out = new PrintStream(new BufferedOutputStream(new FileOutputStream(new File("out.txt"))), true, "UTF-8");

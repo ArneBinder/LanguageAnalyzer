@@ -56,15 +56,15 @@ public class LinguisticToken implements Comparable<LinguisticToken>{
         return IO.escape(string,escapeAbleChars,charEscape);
     }
 
-    /*public ArrayList<LinguisticTree> getAllTrees(int maxDepth){
-        return LinguisticTree.constructTrees(tokens, maxDepth);
+    /*public ArrayList<LinguisticTree> getAllTrees(int maxHeight){
+        return LinguisticTree.constructTrees(tokens, maxHeight);
     }*/
 
     /*
-    public ArrayList<LinguisticTree> getAllSubtrees(int maxDepth){
+    public ArrayList<LinguisticTree> getAllSubtrees(int maxHeight){
         ArrayList<LinguisticTree> result = new ArrayList<>();
-        for(LinguisticTree currentTree:getAllTrees(maxDepth)){
-            result.addAll(currentTree.getAllSubtrees(maxDepth));
+        for(LinguisticTree currentTree:getAllTrees(maxHeight)){
+            result.addAll(currentTree.getAllSubtrees(maxHeight));
         }
         return result;
     }
