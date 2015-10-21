@@ -113,7 +113,7 @@ public class LinguisticLayerTest {
     public void layerTest() throws IOException, InterruptedException {
 
         WIKIPEDIACorpus corpus = new WIKIPEDIACorpus();
-        corpus.readFromFile("src/test/resources/abinder/langanalyzer/corpora/wikipedia/Sprache_short.txt");
+        corpus.readFromFile("src/test/resources/abinder/langanalyzer/corpora/wikipedia/Sprache.txt");
         //corpus.readFromFile("src/test/resources/abinder/langanalyzer/corpora/wikipedia/Syntax.txt");
         printTimeMessage("corpus read");
 
@@ -148,8 +148,8 @@ public class LinguisticLayerTest {
         System.out.println(LinguisticLayer.t1);
         System.out.println(LinguisticLayer.t2);
 
-        //layer.calculateTreePatternProbabilities();
-        //printTimeMessage("calculateTreePatternProbabilities");
+        layer.calculateTreePatternProbabilities();
+        printTimeMessage("calculateTreePatternProbabilities");
 
 /*
         PrintStream outt = new PrintStream(new BufferedOutputStream(new FileOutputStream(new File("outt.txt"))), true, "UTF-8");

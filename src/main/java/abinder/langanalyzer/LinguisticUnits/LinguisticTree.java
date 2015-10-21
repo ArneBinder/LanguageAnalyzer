@@ -77,7 +77,6 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
             rightChild.setParents(this);
     }
 
-
     public LinguisticTree copyThis(){
         LinguisticTree result;
         if(noChildren())
@@ -500,6 +499,11 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
 
     public void calcPartitions(){
         Sum result = new Sum();
+        if(isEmptyLeaf()){
+            result.addOperand(copyThis());
+            partitions = result;
+            return;
+        }
         ArrayList<LinguisticTree> nodesList = getNodes();
         LinguisticTree[] nodes = new LinguisticTree[nodesList.size()];
         nodes = nodesList.toArray(nodes);
