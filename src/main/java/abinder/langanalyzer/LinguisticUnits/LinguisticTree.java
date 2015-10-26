@@ -173,9 +173,9 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         return parent.getMaxLeftTree();
     }
 
-    public Sum getPartitions(){
+    public Sum getPartitions(ReconnectedMultiSet<LinguisticTree> treeParts){
         if(partitions==null)
-           calcPartitions();
+           calcPartitions(treeParts);
         return partitions;
     }
 
@@ -503,7 +503,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         return result;
     }
 
-    public void calcPartitions(){
+    public void calcPartitions(ReconnectedMultiSet<LinguisticTree> treeParts){
         Sum result = new Sum();
         if(isEmptyLeaf()){
             result.addOperand(copyThis());
@@ -542,16 +542,16 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
 
         do{
             // construct partition
-            Product current = constructPartition(0, nodes, nodeBackups, leftPositions, rightPositions, true);
+            Product current = constructPartition(0, nodes, nodeBackups, leftPositions, rightPositions, true, treeParts);
             result.addOperand(current);
-        }while(incCut(nodes, nodeBackups, leftPositions, rightPositions));
+        }while(incCut(nodes, nodeBackups, leftPositions, rightPositions, treeParts));
 
         result.addOperand(new LinguisticTree(LinguisticType.TREE));
         partitions = result;
     }
 
 
-    private Product constructPartition(int pos, LinguisticTree[] nodes, LinguisticTree[] nodeBackups, int[] leftPositions, int[] rightPositions, boolean add){
+    private Product constructPartition(int pos, LinguisticTree[] nodes, LinguisticTree[] nodeBackups, int[] leftPositions, int[] rightPositions, boolean add, ReconnectedMultiSet<LinguisticTree> treeParts){
         Product result = new Product();
         LinguisticTree node = nodes[pos];
         LinguisticTree nodeBackup = nodeBackups[pos];
@@ -559,20 +559,20 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
             result.addOperand(node.copyThis());
         // add left
         if(leftPositions[pos]>0){
-            Product product = constructPartition(leftPositions[pos],nodes, nodeBackups,leftPositions, rightPositions, node.getLeftChild().isEmptyLeaf() && !nodeBackup.getLeftChild().isEmptyLeaf());
+            Product product = constructPartition(leftPositions[pos],nodes, nodeBackups,leftPositions, rightPositions, node.getLeftChild().isEmptyLeaf() && !nodeBackup.getLeftChild().isEmptyLeaf(), treeParts);
             result.addAllTerminals(product.getTerminals());
         }
 
         // add right
         if(rightPositions[pos]>0) {
-            Product product = constructPartition(rightPositions[pos], nodes, nodeBackups, leftPositions, rightPositions,node.getRightChild().isEmptyLeaf() && !nodeBackup.getRightChild().isEmptyLeaf());
+            Product product = constructPartition(rightPositions[pos], nodes, nodeBackups, leftPositions, rightPositions,node.getRightChild().isEmptyLeaf() && !nodeBackup.getRightChild().isEmptyLeaf(), treeParts);
             result.addAllTerminals(product.getTerminals());
         }
 
         return result;
     }
 
-    private static boolean incCut(LinguisticTree[] nodes, LinguisticTree[] nodeBackups, int[] leftPositions, int[] rightPositions){
+    private static boolean incCut(LinguisticTree[] nodes, LinguisticTree[] nodeBackups, int[] leftPositions, int[] rightPositions, ReconnectedMultiSet<LinguisticTree> treeParts){
         for(int i=0; i<nodes.length; i++){
             LinguisticTree nodeBackup = nodeBackups[i];
             LinguisticTree node = nodes[i];
@@ -603,8 +603,9 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
     }
 
     public double getCosineSimilarity(LinguisticTree other){
-        MultiSet<LinguisticTree> thisTrees = new MultiSet<>(this.getPartitions().collectTerminals());
-        MultiSet<LinguisticTree> otherTrees = new MultiSet<>(other.getPartitions().collectTerminals());
+        // TODO: remove new ReconnectedMultiSet
+        MultiSet<LinguisticTree> thisTrees = new MultiSet<>(this.getPartitions(new ReconnectedMultiSet<>(0)).collectTerminals());
+        MultiSet<LinguisticTree> otherTrees = new MultiSet<>(other.getPartitions(new ReconnectedMultiSet<>(0)).collectTerminals());
         return thisTrees.calcCosineSimilarity(otherTrees);
     }
 
