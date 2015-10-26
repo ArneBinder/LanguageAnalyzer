@@ -156,6 +156,7 @@ public class LinguisticLayerTest {
         //System.out.println("treePatterns.size: "+layer.treePatterns.size());
 
 
+        //TODO: not all chars are processed!!!
 
         System.out.println(LinguisticLayer.t1);
         System.out.println(LinguisticLayer.t2);
