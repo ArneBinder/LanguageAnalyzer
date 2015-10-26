@@ -117,7 +117,7 @@ public class LinguisticLayerTest {
 
         PrintStream outc = new PrintStream(new BufferedOutputStream(new FileOutputStream(new File("outc.txt"))), true, "UTF-8");
         LinguisticLayer layer = new LinguisticLayer(3, 16);//corpus.getSize());//
-        String simpleInput = "abcde";
+        String simpleInput = "abcdefg";
         Iterator<Character> characters = new CharacterIterator(simpleInput);
         //Iterator<Character> characters = corpus.tokens();
 

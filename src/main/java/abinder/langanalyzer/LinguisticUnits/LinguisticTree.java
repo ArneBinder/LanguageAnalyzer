@@ -179,6 +179,10 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         return partitions;
     }
 
+    public Sum getPartitions(){
+        return partitions;
+    }
+
     /*
     public boolean equals(Object other) {
         if(other == null || !(other instanceof LinguisticTree))
@@ -555,8 +559,18 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         Product result = new Product();
         LinguisticTree node = nodes[pos];
         LinguisticTree nodeBackup = nodeBackups[pos];
-        if(add)
+        if(add) {
+            if(treeParts.containsKey(node)){
+                Sum loadedPartitions = treeParts.getKey(node).getPartitions();
+                if(loadedPartitions!=null) {
+                    result.addAllTerminals(loadedPartitions.getTerminals());
+                    //result.addAllOperations(loadedPartitions.getOperations());
+                    //result.flatten();
+                    return result;
+                }
+            }
             result.addOperand(node.copyThis());
+        }
         // add left
         if(leftPositions[pos]>0){
             Product product = constructPartition(leftPositions[pos],nodes, nodeBackups,leftPositions, rightPositions, node.getLeftChild().isEmptyLeaf() && !nodeBackup.getLeftChild().isEmptyLeaf(), treeParts);
