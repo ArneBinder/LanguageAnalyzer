@@ -45,8 +45,8 @@ public class LinguisticLayerTest {
 
     @Test
     public void simpleLayerTest(){
-        LinguisticLayer layer = new LinguisticLayer(3,2);
-        LinguisticTree tree = new LinguisticTree("[[a,TREE],[c,d]]", LinguisticType.TREE);
+        LinguisticLayer layer = new LinguisticLayer(3,4);
+        LinguisticTree tree = new LinguisticTree("[a,[b,[c,d]]]", LinguisticType.TREE);
         System.out.println(tree.serializeLeafs());
         //LinguisticTree tree = new LinguisticTree("a");
         for(LinguisticTree subTree: tree.getAllSubtrees(layer.getMaxHeight())){

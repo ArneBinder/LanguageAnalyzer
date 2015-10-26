@@ -121,6 +121,10 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         return parent;
     }
 
+    public void setParent(LinguisticTree parent) {
+        this.parent = parent;
+    }
+
     @Override
     public boolean equals(Object other) {
         return (other != null)
@@ -245,6 +249,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
 
     public LinguisticTree deleteLeftChild(){
         LinguisticTree left = leftChild;
+        left.setParent(null);
         leftChild = new LinguisticTree(left.getLabel());
         resetCachedProperties();
         //resetLeftPositions(leftPos);
@@ -253,6 +258,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
 
     public LinguisticTree deleteRightChild(){
         LinguisticTree right = rightChild;
+        right.setParent(null);
         rightChild = new LinguisticTree(right.getLabel());
         resetCachedProperties();
         //resetRightPositions(rightPos);
@@ -504,6 +510,8 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
             partitions = result;
             return;
         }
+        setParents(null);
+
         ArrayList<LinguisticTree> nodesList = getNodes();
         LinguisticTree[] nodes = new LinguisticTree[nodesList.size()];
         nodes = nodesList.toArray(nodes);
@@ -564,7 +572,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         return result;
     }
 
-    private boolean incCut(LinguisticTree[] nodes, LinguisticTree[] nodeBackups, int[] leftPositions, int[] rightPositions){
+    private static boolean incCut(LinguisticTree[] nodes, LinguisticTree[] nodeBackups, int[] leftPositions, int[] rightPositions){
         for(int i=0; i<nodes.length; i++){
             LinguisticTree nodeBackup = nodeBackups[i];
             LinguisticTree node = nodes[i];
@@ -574,6 +582,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
                 if(node.getLeftChild().isEmptyLeaf()){//==null){
                     //remove cut
                     node.setLeftChild(nodes[leftPositions[i]]);
+                    node.getLeftChild().setParent(node);
                 }else{
                     nodes[leftPositions[i]] = node.deleteLeftChild();
                     return true;
@@ -583,6 +592,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
                 if(node.getRightChild().isEmptyLeaf()){//==null){
                     //remove cut
                     node.setRightChild(nodes[rightPositions[i]]);
+                    node.getRightChild().setParent(node);
                 }else{
                     nodes[rightPositions[i]] = node.deleteRightChild();
                     return true;

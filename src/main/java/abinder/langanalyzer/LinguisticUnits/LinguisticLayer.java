@@ -49,6 +49,7 @@ public class LinguisticLayer {
     public LinguisticLayer(int maxHeight, int expectedSize){
         this.maxHeight = maxHeight;
         maxTreeSize = 1 << maxHeight;
+        expectedSize = Math.max(maxTreeSize, expectedSize);
 
         previousTrees = new HashMap<>(expectedSize);
         previousTreesBySize = new ArrayList<>(expectedSize);
@@ -190,7 +191,10 @@ public class LinguisticLayer {
                         for(LinguisticTree tree: previousTreesBySize.get(addPos).get(size)) {
                             double currentProb = prevSequProb*tree.getProbability() / probSum;
                             for(LinguisticTree part: tree.getPartitions().collectTerminals()) {
-                                treePatterns.add(part, currentProb);
+                                if(!part.equals(tree))
+                                    treePatterns.add(part, currentProb);
+                                else
+                                    treePatterns.add(tree, currentProb);
                             }
                         }
                     //}
