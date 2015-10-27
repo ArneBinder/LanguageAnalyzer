@@ -13,7 +13,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class LinguisticLayer {
 
-    ArrayList<LinguisticToken> tokens = new ArrayList<>();
+    //ArrayList<LinguisticToken> tokens = new ArrayList<>();
     // ATTENTION: parents aren't set!
     HashMap<Integer, ArrayList<ArrayList<LinguisticTree>>> previousTrees;
     ArrayList<HashMap<Integer, HashSet<LinguisticTree>>> previousTreesBySize;
@@ -26,7 +26,7 @@ public class LinguisticLayer {
     // with set parents
     ReconnectedMultiSet<LinguisticTree> treePatterns;
     HashMap<LinguisticTree, Double> probabilities;
-    private HashMap<LinguisticTree, Sum> partitions;
+    //private HashMap<LinguisticTree, Sum> partitions;
 
     int maxHeight = 3;
     int feededTokenCount = 0;

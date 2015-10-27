@@ -600,11 +600,11 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
             long start6 = System.currentTimeMillis();
             result.addOperand(node.copyThis());
             t6+=System.currentTimeMillis()-start6;
+        }else {
+            long start9 = System.currentTimeMillis();
+            result = new Product();
+            t9 += System.currentTimeMillis() - start9;
         }
-        long start9 = System.currentTimeMillis();
-        result = new Product();
-        t9+=System.currentTimeMillis()-start9;
-
         // add left
         if(leftPositions[pos]>0){
             Product product = constructPartition(leftPositions[pos],nodes, nodeBackups,leftPositions, rightPositions, node.getLeftChild().isEmptyLeaf() && !nodeBackup.getLeftChild().isEmptyLeaf(), treeParts);

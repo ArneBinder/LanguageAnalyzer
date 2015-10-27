@@ -170,7 +170,7 @@ public class LinguisticLayerTest {
         System.out.println("t9: "+LinguisticTree.t9);
         System.out.println("t10: "+LinguisticTree.t10);
 
-        layer.calculateTreePatternProbabilities();
+        //layer.calculateTreePatternProbabilities();
         printTimeMessage("calculateTreePatternProbabilities");
 
 /*
