@@ -310,6 +310,8 @@ public class LinguisticLayer {
         //probabilities = new HashMap<>(treePatterns.size());
         int counter = 0;
         for(LinguisticTree tree: treePatterns.keySet()){
+            if(tree.serialize().equals("[[[e,TREE],\\,],TREE]"))
+                System.out.println();
             tree.setProbability(tree.getPartitions(treePatterns).calculate(getTreePatterns()));
             counter++;
             //probabilities.put(tree,);

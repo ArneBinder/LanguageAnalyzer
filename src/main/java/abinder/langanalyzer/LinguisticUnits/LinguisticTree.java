@@ -14,7 +14,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
     private LinguisticTree rightChild;
     private LinguisticTree parent;
     private LinguisticToken leaf;
-    private ArrayList<LinguisticTree> parents;
+    //private ArrayList<LinguisticTree> parents;
     private LinguisticType label;
 
     //caching
@@ -26,6 +26,8 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
     private double probability = -1;
     private int leafCount = -1;
     private Sum partitions = null;
+
+    public static long t1, t2, t3, t4, t5, t6, t7, t8, t9, t10;
 
     private static final char charEscape = '\\';
     private static final char charOpen = '[';
@@ -508,10 +510,13 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
     }
 
     public void calcPartitions(ReconnectedMultiSet<LinguisticTree> treeParts){
+        long start1, start2;
+        start1 = System.currentTimeMillis();
         Sum result = new Sum();
         if(isEmptyLeaf()){
             result.addOperand(copyThis());
             partitions = result;
+            t1+=System.currentTimeMillis()-start1;
             return;
         }
         setParents(null);
@@ -546,47 +551,81 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
 
         do{
             // construct partition
+            start2 = System.currentTimeMillis();
             Product current = constructPartition(0, nodes, nodeBackups, leftPositions, rightPositions, true, treeParts);
+            t2+=System.currentTimeMillis()-start2;
             result.addOperand(current);
         }while(incCut(nodes, nodeBackups, leftPositions, rightPositions, treeParts));
 
         result.addOperand(new LinguisticTree(LinguisticType.TREE));
         partitions = result;
+        t1+=System.currentTimeMillis()-start1;
     }
 
 
     private Product constructPartition(int pos, LinguisticTree[] nodes, LinguisticTree[] nodeBackups, int[] leftPositions, int[] rightPositions, boolean add, ReconnectedMultiSet<LinguisticTree> treeParts){
-        Product result = new Product();
+
+
+        Product result;
+        long start3 = System.currentTimeMillis();
         LinguisticTree node = nodes[pos];
+        t3+=System.currentTimeMillis()-start3;
+        long start4 = System.currentTimeMillis();
         LinguisticTree nodeBackup = nodeBackups[pos];
+        t4+=System.currentTimeMillis()-start4;
+
         if(add) {
-            if(treeParts.containsKey(node)){
+            long start5 = System.currentTimeMillis();
+            boolean temp =treeParts.containsKey(node);
+            t5+=System.currentTimeMillis()-start5;
+            if(temp){
+                //long start6 = System.currentTimeMillis();
                 Sum loadedPartitions = treeParts.getKey(node).getPartitions();
+                //t6+=System.currentTimeMillis()-start6;
                 if(loadedPartitions!=null) {
+                    long start7 = System.currentTimeMillis();
+                    result = new Product();
+                    t7+=System.currentTimeMillis()-start7;
+                    //long start8 = System.currentTimeMillis();
                     result.addAllTerminals(loadedPartitions.getTerminals());
-                    //result.addAllOperations(loadedPartitions.getOperations());
-                    //result.flatten();
+                    //t8+=System.currentTimeMillis()-start8;
                     return result;
                 }
             }
+
+
+            long start8 = System.currentTimeMillis();
+            result = new Product();
+            t8+=System.currentTimeMillis()-start8;
+            long start6 = System.currentTimeMillis();
             result.addOperand(node.copyThis());
+            t6+=System.currentTimeMillis()-start6;
         }
+        long start9 = System.currentTimeMillis();
+        result = new Product();
+        t9+=System.currentTimeMillis()-start9;
+
         // add left
         if(leftPositions[pos]>0){
             Product product = constructPartition(leftPositions[pos],nodes, nodeBackups,leftPositions, rightPositions, node.getLeftChild().isEmptyLeaf() && !nodeBackup.getLeftChild().isEmptyLeaf(), treeParts);
+            long start10 = System.currentTimeMillis();
             result.addAllTerminals(product.getTerminals());
+            t10+=System.currentTimeMillis()-start10;
         }
 
         // add right
         if(rightPositions[pos]>0) {
             Product product = constructPartition(rightPositions[pos], nodes, nodeBackups, leftPositions, rightPositions,node.getRightChild().isEmptyLeaf() && !nodeBackup.getRightChild().isEmptyLeaf(), treeParts);
+            long start10 = System.currentTimeMillis();
             result.addAllTerminals(product.getTerminals());
+            t10+=System.currentTimeMillis()-start10;
         }
 
         return result;
     }
 
     private static boolean incCut(LinguisticTree[] nodes, LinguisticTree[] nodeBackups, int[] leftPositions, int[] rightPositions, ReconnectedMultiSet<LinguisticTree> treeParts){
+        long start3 = System.currentTimeMillis();
         for(int i=0; i<nodes.length; i++){
             LinguisticTree nodeBackup = nodeBackups[i];
             LinguisticTree node = nodes[i];
@@ -599,6 +638,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
                     node.getLeftChild().setParent(node);
                 }else{
                     nodes[leftPositions[i]] = node.deleteLeftChild();
+                    t3+=System.currentTimeMillis()-start3;
                     return true;
                 }
             }
@@ -609,10 +649,12 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
                     node.getRightChild().setParent(node);
                 }else{
                     nodes[rightPositions[i]] = node.deleteRightChild();
+                    t3+=System.currentTimeMillis()-start3;
                     return true;
                 }
             }
         }
+        t3+=System.currentTimeMillis()-start3;
         return false;
     }
 

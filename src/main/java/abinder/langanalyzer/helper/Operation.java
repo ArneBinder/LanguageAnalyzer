@@ -5,6 +5,7 @@ import abinder.langanalyzer.LinguisticUnits.LinguisticTree;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.stream.Collectors;
 
 /**
@@ -12,8 +13,8 @@ import java.util.stream.Collectors;
  */
 public abstract class Operation implements Comparable<Operation> {
     String operator;
-    ArrayList<Operation> operations = new ArrayList<>(1);
-    ArrayList<LinguisticTree> terminals = new ArrayList<>(1);
+    LinkedList<Operation> operations = new LinkedList<>();
+    LinkedList<LinguisticTree> terminals = new LinkedList<>();
 
     public abstract double calc(double oa, double ob);
     public abstract void deepFlatten();
@@ -26,11 +27,11 @@ public abstract class Operation implements Comparable<Operation> {
         return operator;
     }
 
-    public ArrayList<Operation> getOperations() {
+    public LinkedList<Operation> getOperations() {
         return operations;
     }
 
-    public ArrayList<LinguisticTree> getTerminals() {
+    public LinkedList<LinguisticTree> getTerminals() {
         return terminals;
     }
 

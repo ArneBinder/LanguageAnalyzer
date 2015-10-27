@@ -116,10 +116,10 @@ public class LinguisticLayerTest {
         printTimeMessage("corpus read");
 
         PrintStream outc = new PrintStream(new BufferedOutputStream(new FileOutputStream(new File("outc.txt"))), true, "UTF-8");
-        LinguisticLayer layer = new LinguisticLayer(3, 16);//corpus.getSize());//
+        LinguisticLayer layer = new LinguisticLayer(3, corpus.getSize());//16);//
         String simpleInput = "abcdefg";
-        Iterator<Character> characters = new CharacterIterator(simpleInput);
-        //Iterator<Character> characters = corpus.tokens();
+        //Iterator<Character> characters = new CharacterIterator(simpleInput);
+        Iterator<Character> characters = corpus.tokens();
 
         /*System.out.println("length: "+ simpleInput.length());
         System.out.println("getCatalan: "+Utils.getCatalan(simpleInput.length()));
@@ -154,12 +154,21 @@ public class LinguisticLayerTest {
         //layer.updateTreePatternsSimple();
 
         //System.out.println("treePatterns.size: "+layer.treePatterns.size());
+        
 
-
-        //TODO: not all chars are processed!!!
-
-        System.out.println(LinguisticLayer.t1);
-        System.out.println(LinguisticLayer.t2);
+        System.out.println("t1: "+LinguisticLayer.t1);
+        System.out.println("t2: "+LinguisticLayer.t2);
+        System.out.println();
+        System.out.println("t1: "+LinguisticTree.t1);
+        System.out.println("t2: "+LinguisticTree.t2);
+        System.out.println("t3: "+LinguisticTree.t3);
+        System.out.println("t4: "+LinguisticTree.t4);
+        System.out.println("t5: "+LinguisticTree.t5);
+        System.out.println("t6: "+LinguisticTree.t6);
+        System.out.println("t7: "+LinguisticTree.t7);
+        System.out.println("t8: "+LinguisticTree.t8);
+        System.out.println("t9: "+LinguisticTree.t9);
+        System.out.println("t10: "+LinguisticTree.t10);
 
         layer.calculateTreePatternProbabilities();
         printTimeMessage("calculateTreePatternProbabilities");
