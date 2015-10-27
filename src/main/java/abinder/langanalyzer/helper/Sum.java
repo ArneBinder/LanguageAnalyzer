@@ -3,7 +3,7 @@ package abinder.langanalyzer.helper;
 /**
  * Created by Arne on 01.10.2015.
  */
-public class Sum extends Operation {
+public class Sum<V extends Comparable<V>> extends Operation<V> {
     public Sum(){
         super("+");
     }
@@ -15,7 +15,7 @@ public class Sum extends Operation {
 
     @Override
     public void deepFlatten() {
-        Operation result = new Sum();
+        Operation<V> result = new Sum<>();
         result.addAllTerminals(this.getTerminals());
         for(Operation operation: operations){
             operation.deepFlatten();

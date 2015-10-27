@@ -74,10 +74,10 @@ public class LinguisticLayerTest {
             System.out.println(s);
         }*/
 
-        Sum partitions = tree.getPartitions(new ReconnectedMultiSet<>(0));
+        Sum<LinguisticTree> partitions = tree.getPartitions(new ReconnectedMultiSet<>(0));
         //layer.addAllTreePattern(partitions.collectTerminals());
         System.out.println("\npartitions:");
-        for(Operation operation: partitions.getOperations()){
+        for(Operation<LinguisticTree> operation: partitions.getOperations()){
             System.out.println(operation+"\t"+operation.calculate(layer.getTreePatterns()));
         }
 
@@ -169,7 +169,9 @@ public class LinguisticLayerTest {
         System.out.println("t8: "+LinguisticTree.t8);
         System.out.println("t9: "+LinguisticTree.t9);
         System.out.println("t10: "+LinguisticTree.t10);
+        System.out.println();
 
+        System.out.println("c1: "+LinguisticTree.c1);
         //layer.calculateTreePatternProbabilities();
         printTimeMessage("calculateTreePatternProbabilities");
 

@@ -1,6 +1,7 @@
 package abinder.langanalyzer.helper;
 
 import abinder.langanalyzer.LinguisticUnits.LinguisticTree;
+import com.sun.istack.internal.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,10 +12,10 @@ import java.util.stream.Collectors;
 /**
  * Created by Arne on 30.09.2015.
  */
-public abstract class Operation implements Comparable<Operation> {
+public abstract class Operation<V extends Comparable<V>> implements Comparable<Operation<V>> {
     String operator;
-    LinkedList<Operation> operations = new LinkedList<>();
-    LinkedList<LinguisticTree> terminals = new LinkedList<>();
+    LinkedList<Operation<V>> operations = new LinkedList<>();
+    LinkedList<V> terminals = new LinkedList<>();
 
     public abstract double calc(double oa, double ob);
     public abstract void deepFlatten();
@@ -27,36 +28,36 @@ public abstract class Operation implements Comparable<Operation> {
         return operator;
     }
 
-    public LinkedList<Operation> getOperations() {
+    public LinkedList<Operation<V>> getOperations() {
         return operations;
     }
 
-    public LinkedList<LinguisticTree> getTerminals() {
+    public LinkedList<V> getTerminals() {
         return terminals;
     }
 
-    public void addOperand(Operation operand){
+    public void addOperand(Operation<V> operand){
         operations.add(operand);
     }
 
-    public void addOperand(LinguisticTree operand){
+    public void addOperand(V operand){
         terminals.add(operand);
     }
 
-    public void addAllOperations(Collection<Operation> operands){
+    public void addAllOperations(Collection<Operation<V>> operands){
         operations.addAll(operands);
     }
 
-    public void addAllTerminals(Collection<LinguisticTree> operands){
+    public void addAllTerminals(Collection<V> operands){
         terminals.addAll(operands);
     }
 
     public void flatten(){
-        ArrayList<Operation> tempOps = new ArrayList<>();
-        ArrayList<LinguisticTree> tempTers = new ArrayList<>();
-        Iterator<Operation> it = operations.iterator();
+        LinkedList<Operation<V>> tempOps = new LinkedList<>();
+        LinkedList<V> tempTers = new LinkedList<>();
+        Iterator<Operation<V>> it = operations.iterator();
         while(it.hasNext()){
-            Operation op = it.next();
+            Operation<V> op = it.next();
             if(op.getOperator().equals(operator) || op.getOperations().size()+op.getTerminals().size() <= 1){
                 tempOps.addAll(op.getOperations());
                 tempTers.addAll(op.getTerminals());
@@ -72,19 +73,19 @@ public abstract class Operation implements Comparable<Operation> {
         return operations.size()+terminals.size();
     }
 
-    public double calculate(MultiSet<LinguisticTree> treePattern){
+    public double calculate(MultiSet<V> treePattern){
         double result=0.0;
         if(size()==0)
             return result;
         if(terminals.size()>0){
-            Iterator<LinguisticTree> it = terminals.iterator();
+            Iterator<V> it = terminals.iterator();
             result = treePattern.getRelFrequ(it.next());
             while(it.hasNext()){
                 result = calc(result,treePattern.getRelFrequ(it.next()));
             }
         }
         if(operations.size()>0){
-            Iterator<Operation> it = operations.iterator();
+            Iterator<Operation<V>> it = operations.iterator();
             if(result==0.0)
                 result = it.next().calculate(treePattern);
             while(it.hasNext()){
@@ -94,10 +95,10 @@ public abstract class Operation implements Comparable<Operation> {
         return result;
     }
 
-    public ArrayList<LinguisticTree> collectTerminals(){
-        ArrayList<LinguisticTree> result = new ArrayList<>();
+    public ArrayList<V> collectTerminals(){
+        ArrayList<V> result = new ArrayList<>();
         result.addAll(terminals);
-        for(Operation operation: operations){
+        for(Operation<V> operation: operations){
             result.addAll(operation.collectTerminals());
         }
         return result;
@@ -107,7 +108,7 @@ public abstract class Operation implements Comparable<Operation> {
         flatten();
         String joinedTerminals = terminals.stream()
                 .sorted()
-                .map(LinguisticTree::toString)
+                .map(V::toString)
                 .collect(Collectors.joining(" " + operator + " "));
         String joinedOperations = operations.stream()
                 .sorted()
@@ -127,7 +128,7 @@ public abstract class Operation implements Comparable<Operation> {
     }
 
     @Override
-    public int compareTo(Operation other){
+    public int compareTo(@NotNull Operation<V> other){
         if (other==null){
             return 1;
         }

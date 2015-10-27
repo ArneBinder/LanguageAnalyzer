@@ -3,7 +3,7 @@ package abinder.langanalyzer.helper;
 /**
  * Created by Arne on 01.10.2015.
  */
-public class Product extends Operation {
+public class Product<V extends Comparable<V>> extends Operation<V> {
     public Product() {
         super("o");
     }
@@ -15,8 +15,8 @@ public class Product extends Operation {
 
     @Override
     public void deepFlatten() {
-        Operation result = new Sum();
-        Product product;
+        Operation<V> result = new Sum<>();
+        Product<V> product;
         for(Operation operation:operations){
             operation.deepFlatten();
             operation.flatten();
@@ -25,10 +25,10 @@ public class Product extends Operation {
 
         int[] indices = new int[operations.size()];
         do {
-             product = new Product();
+             product = new Product<>();
              product.addAllTerminals(terminals);
              int i=0;
-             for (Operation operation : operations) {
+             for (Operation<V> operation : operations) {
                  if(indices[i]<operation.terminals.size())
                     product.addOperand(operation.terminals.get(indices[i]));
                  else
