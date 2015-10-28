@@ -128,7 +128,7 @@ public class LinguisticLayerTest {
         System.out.println("getTreeCount: "+Utils.getTreeCount(simpleInput.length()));
         */
         int index = 0;
-        int stepSize = 1;
+        int stepSize = 10;
         System.out.println();
         while(characters.hasNext()){
             char character = characters.next();
@@ -151,7 +151,8 @@ public class LinguisticLayerTest {
         layer.updateTreePatterns();
         outc.flush();
         printTimeMessage("updateTreePatterns");
-        System.out.println("real pattern size: "+layer.getTreePatterns().size());
+        System.out.println("real pattern size(hashmap): "+layer.getTreePatterns().size());
+        System.out.println("tree pattern totalCount: "+layer.getTreePatterns().getTotalCount());
         //layer.updateTreePatternsSimple();
 
         //System.out.println("treePatterns.size: "+layer.treePatterns.size());

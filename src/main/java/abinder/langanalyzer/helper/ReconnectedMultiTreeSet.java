@@ -7,7 +7,8 @@ import abinder.langanalyzer.LinguisticUnits.LinguisticTree;
  */
 public class ReconnectedMultiTreeSet extends ReconnectedMultiSet<LinguisticTree> {
 
-    double leafTypeInfluence = 0.5;
+    private double leafTypeInfluence = 0.5;
+
 
     public ReconnectedMultiTreeSet(int initialCapacity) {
         super(initialCapacity);
@@ -38,4 +39,6 @@ public class ReconnectedMultiTreeSet extends ReconnectedMultiSet<LinguisticTree>
         if(newKey.getProbability()!=0)
             oldKey.setProbability(newKey.getProbability());
     }
+
+
 }

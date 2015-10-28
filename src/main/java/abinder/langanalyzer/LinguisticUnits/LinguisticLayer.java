@@ -212,6 +212,7 @@ public class LinguisticLayer {
             t2+=System.currentTimeMillis()-start2;
             processedTreesIndex++;
         }
+        treePatterns.clean();
     }
 
     public void addAllTreePattern(List<LinguisticTree> trees){
