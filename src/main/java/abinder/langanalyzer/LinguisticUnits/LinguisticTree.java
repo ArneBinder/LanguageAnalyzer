@@ -511,6 +511,8 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
     }
 
     public void calcPartitions(ReconnectedMultiSet<LinguisticTree> treeParts){
+        //if(this.serialize().equals("[TREE,[[TREE,TREE],i]]"))
+        //    System.out.println();
         long start1, start2;
         start1 = System.currentTimeMillis();
         Sum<LinguisticTree> result = new Sum<>();
@@ -521,6 +523,11 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
             c1+=result.size();
             return;
         }
+        if(treeParts.containsKey(this) && treeParts.getKey(this).getPartitions()!=null){
+            partitions = treeParts.getKey(this).getPartitions();
+            return;
+        }
+
         setParents(null);
 
         LinkedList<LinguisticTree> nodesList = getNodes();
@@ -556,6 +563,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
             start2 = System.currentTimeMillis();
             Product<LinguisticTree> current = constructPartition(0, nodes, nodeBackups, leftPositions, rightPositions, true, treeParts);
             t2+=System.currentTimeMillis()-start2;
+            //result.deepFlatten();
             result.addOperand(current);
         }while(incCut(nodes, nodeBackups, leftPositions, rightPositions, treeParts));
 
@@ -568,8 +576,8 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
 
     private Product<LinguisticTree> constructPartition(int pos, LinguisticTree[] nodes, LinguisticTree[] nodeBackups, int[] leftPositions, int[] rightPositions, boolean add, ReconnectedMultiSet<LinguisticTree> treeParts){
 
-
-        Product<LinguisticTree> result;
+        boolean found = false;
+        Product<LinguisticTree> result = new Product<>();
         long start3 = System.currentTimeMillis();
         LinguisticTree node = nodes[pos];
         t3+=System.currentTimeMillis()-start3;
@@ -579,52 +587,44 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
 
         if(add) {
             long start5 = System.currentTimeMillis();
-            boolean temp = treeParts.containsKey(node);
+            found = treeParts.containsKey(node);
             t5+=System.currentTimeMillis()-start5;
-            if(temp){
+            if(found){
                 //long start6 = System.currentTimeMillis();
                 Sum<LinguisticTree> loadedPartitions = treeParts.getKey(node).getPartitions();
                 //t6+=System.currentTimeMillis()-start6;
                 if(loadedPartitions!=null) {
-                    long start7 = System.currentTimeMillis();
-                    result = new Product<>();
-                    t7+=System.currentTimeMillis()-start7;
                     //long start8 = System.currentTimeMillis();
-                    result.addAllTerminals(loadedPartitions.getTerminals());
+                    //result.addAllTerminals(loadedPartitions.getTerminals());
+                    result.addOperand(loadedPartitions);
                     //t8+=System.currentTimeMillis()-start8;
-                    return result;
+                    //return result;
                 }
+            }else {
+                long start6 = System.currentTimeMillis();
+                //result.addOperand(new LinguisticTree(node.serialize(),node.getLabel()));
+                result.addOperand(node.copyThis());
+                t6 += System.currentTimeMillis() - start6;
             }
-
-
-            long start8 = System.currentTimeMillis();
-            result = new Product<>();
-            t8+=System.currentTimeMillis()-start8;
-            long start6 = System.currentTimeMillis();
-            //result.addOperand(new LinguisticTree(node.serialize(),node.getLabel()));
-            result.addOperand(node.copyThis());
-            t6+=System.currentTimeMillis()-start6;
-        }else {
-            long start9 = System.currentTimeMillis();
-            result = new Product<>();
-            t9 += System.currentTimeMillis() - start9;
         }
         // add left
-        if(leftPositions[pos]>0){
+        if(leftPositions[pos]>0 && (!found || (node.getLeftChild().isEmptyLeaf() && !nodeBackup.getLeftChild().isEmptyLeaf()))){
             Product<LinguisticTree> product = constructPartition(leftPositions[pos],nodes, nodeBackups,leftPositions, rightPositions, node.getLeftChild().isEmptyLeaf() && !nodeBackup.getLeftChild().isEmptyLeaf(), treeParts);
             long start10 = System.currentTimeMillis();
             result.addAllTerminals(product.getTerminals());
+            result.addAllOperations(product.getOperations());
             t10+=System.currentTimeMillis()-start10;
         }
 
         // add right
-        if(rightPositions[pos]>0) {
+        if(rightPositions[pos]>0 && (!found || (node.getRightChild().isEmptyLeaf() && !nodeBackup.getRightChild().isEmptyLeaf()))) {
             Product<LinguisticTree> product = constructPartition(rightPositions[pos], nodes, nodeBackups, leftPositions, rightPositions,node.getRightChild().isEmptyLeaf() && !nodeBackup.getRightChild().isEmptyLeaf(), treeParts);
             long start10 = System.currentTimeMillis();
             result.addAllTerminals(product.getTerminals());
+            result.addAllOperations(product.getOperations());
             t10+=System.currentTimeMillis()-start10;
         }
-
+        //result.flatten();
         return result;
     }
 
