@@ -9,6 +9,7 @@ import java.lang.*;
 import java.lang.Character;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 
 import static org.junit.Assert.*;
 
@@ -46,7 +47,7 @@ public class LinguisticLayerTest {
         LinguisticTree tree = new LinguisticTree("[ä,[[TREE,TREE],i]]", LinguisticType.TREE);
         System.out.println(tree.serializeLeafs());
         //LinguisticTree tree = new LinguisticTree("a");
-        for(LinguisticTree subTree: tree.getAllSubtrees(layer.getMaxHeight())){
+        for(LinguisticTree subTree: tree.getAllSubtrees(layer.getMaxHeight(), new LinkedList<>())){
             System.out.println("\nSUB: "+subTree);
             for(LinguisticTree cutTree: subTree.getAllCutTrees()) {
 

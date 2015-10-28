@@ -90,8 +90,6 @@ public abstract class Proposition<V extends Comparable<V>> implements Comparable
                 result = calc(result,it.next().calculate(treePattern));
             }
         }
-        // TODO: fix this temporary solution!
-        result += treePattern.getRelFrequ((V)new LinguisticTree(LinguisticType.TREE));
         return result;
     }
 

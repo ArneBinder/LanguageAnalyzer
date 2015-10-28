@@ -13,6 +13,8 @@ public class ReconnectedMultiSet<V> extends MultiSet<V> {
         super(initialCapacity);
     }
 
+    public void merge(V oldKey, V newKey){ }
+
     public void add(V value){
         double count = 1;
         V key = keys.get(value);
@@ -32,6 +34,7 @@ public class ReconnectedMultiSet<V> extends MultiSet<V> {
         V key = keys.get(value);
         if(key!=null) {
             count += get(value);
+            merge(key, value);
             put(key, count);
         }else{
             put(value, count);

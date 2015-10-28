@@ -23,7 +23,7 @@ public class LinguisticToken implements Comparable<LinguisticToken>{
     private static final char charTokenSeperator = ';';
     private static final char charOpen = '(';
     private static final char charClose = ')';
-    private static final HashSet<Character> escapeAbleChars = new HashSet<>(Arrays.asList(charEscape, charOpen, charClose, charPosSeperator,charTypeSeperator,charTokenSeperator, '\n'));
+    private static final HashSet<Character> escapeAbleChars = new HashSet<>(Arrays.asList(charEscape, charOpen, charClose, charPosSeperator,charTypeSeperator,charTokenSeperator, '\n', '"'));
 
 
     /*public LinguisticToken(LinguisticType type){

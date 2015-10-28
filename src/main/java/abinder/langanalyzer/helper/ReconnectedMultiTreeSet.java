@@ -30,4 +30,12 @@ public class ReconnectedMultiTreeSet extends ReconnectedMultiSet<LinguisticTree>
             return get(value) / totalCount;
         }
     }
+
+    @Override
+    public void merge(LinguisticTree oldKey, LinguisticTree newKey){
+        if(newKey.getPartitions()!=null)
+            oldKey.setPartitions(newKey.getPartitions());
+        if(newKey.getProbability()!=0)
+            oldKey.setProbability(newKey.getProbability());
+    }
 }

@@ -167,6 +167,7 @@ public class LinguisticLayer {
                     double relFrequ = treeFixedPosSize.getPartitions(treePatterns).calculate(treePatterns);
                     sizeRelFrequ += relFrequ;
                     treeFixedPosSize.setProbability(relFrequ);
+                    treePatterns.add(treeFixedPosSize,0);
                 }
                 double newSequProb = sequenceProbs.get(processedTreesIndex + 1 - size)* sizeRelFrequ;
                 sequenceProbs.add(processedTreesIndex + 1, newSequProb);//>=1.0?1.0:newSequProb);
@@ -190,13 +191,18 @@ public class LinguisticLayer {
                         double prevSequProb = sequenceProbs.get(addPos - size +1);
                         for(LinguisticTree tree: previousTreesBySize.get(addPos).get(size)) {
                             double currentProb = prevSequProb*tree.getProbability() / probSum;
-                            for(LinguisticTree part: tree.getPartitions(treePatterns).collectTerminals()) {
-                                //if(!part.equals(tree)) {
-                                //    part.calcPartitions(treePatterns);
+                            for(LinguisticTree subTree: tree.getAllSubtrees(maxHeight, new LinkedList<>())) {
+                                for (LinguisticTree part : subTree.getAllCutTrees()){  //tree.getPartitions(treePatterns).collectTerminals()) {
+                                    //if(!part.equals(tree)) {
+                                    //    part.calcPartitions(treePatterns);
+                                    if(part.toString().equals("[[e,n],\"]"))
+                                        System.out.println();
+                                    part.getPartitions(treePatterns);
                                     treePatterns.add(part, currentProb);
-                                //}
-                                //else
-                                //    treePatterns.add(tree, currentProb);
+                                    //}
+                                    //else
+                                    //    treePatterns.add(tree, currentProb);
+                                }
                             }
                         }
                     //}
@@ -268,7 +274,7 @@ public class LinguisticLayer {
             for (LinguisticTree tree : bestTrees[indices.poll()]) {
                 // do sth with tree
                 //out.println(tree.serialize(false));
-                for(LinguisticTree subTree:tree.getAllSubtrees(maxHeight)){
+                for(LinguisticTree subTree:tree.getAllSubtrees(maxHeight, new LinkedList<>())){
                     addAllTreePattern(subTree.getAllCutTrees());
                 }
                 //out.flush();
@@ -312,9 +318,9 @@ public class LinguisticLayer {
         //probabilities = new HashMap<>(treePatterns.size());
         int counter = 0;
         for(LinguisticTree tree: treePatterns.keySet()){
-            if(tree.serialize().equals("[[[e,TREE],\\,],TREE]"))
-                System.out.println();
-            tree.setProbability(tree.getPartitions(treePatterns).calculate(getTreePatterns()));
+            //if(tree.serialize().equals("[[[e,TREE],\\,],TREE]"))
+            //    System.out.println();
+            tree.setProbability(tree.getPartitions(treePatterns).calculate(treePatterns));
             counter++;
             //probabilities.put(tree,);
         }
