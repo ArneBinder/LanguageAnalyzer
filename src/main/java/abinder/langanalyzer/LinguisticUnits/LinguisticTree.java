@@ -25,7 +25,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
     private int rightPos = -1;
     private double probability = -1;
     private int leafCount = -1;
-    private Sum<LinguisticTree> partitions = null;
+    private Disjunction<LinguisticTree> partitions = null;
 
     public static long t1, t2, t3, t4, t5, t6, t7, t8, t9, t10;
     public static int c1;
@@ -69,7 +69,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
     }
 
     public boolean isEmptyLeaf(){
-        return noChildren() && leaf==null;
+        return leftChild == null && rightChild == null && leaf==null;
     }
 
     public void setParents(LinguisticTree parent){
@@ -99,6 +99,8 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
     public boolean isRoot(){
         return parent==null;
     }
+
+    public boolean isLeaf() {return leaf!=null;}
 
     public LinguisticToken getLeaf() {
         return leaf;
@@ -176,13 +178,13 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         return parent.getMaxLeftTree();
     }
 
-    public Sum<LinguisticTree> getPartitions(ReconnectedMultiSet<LinguisticTree> treeParts){
+    public Disjunction<LinguisticTree> getPartitions(ReconnectedMultiTreeSet treeParts){
         if(partitions==null)
            calcPartitions(treeParts);
         return partitions;
     }
 
-    public Sum<LinguisticTree> getPartitions(){
+    public Disjunction<LinguisticTree> getPartitions(){
         return partitions;
     }
 
@@ -510,12 +512,12 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         return result;
     }
 
-    public void calcPartitions(ReconnectedMultiSet<LinguisticTree> treeParts){
+    public void calcPartitions(ReconnectedMultiTreeSet treeParts){
         //if(this.serialize().equals("[TREE,[[TREE,TREE],i]]"))
         //    System.out.println();
         long start1, start2;
         start1 = System.currentTimeMillis();
-        Sum<LinguisticTree> result = new Sum<>();
+        Disjunction<LinguisticTree> result = new Disjunction<>();
         if(isEmptyLeaf()){
             result.addOperand(copyThis());
             partitions = result;
@@ -561,7 +563,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         do{
             // construct partition
             start2 = System.currentTimeMillis();
-            Product<LinguisticTree> current = constructPartition(0, nodes, nodeBackups, leftPositions, rightPositions, true, treeParts);
+            Conjunction<LinguisticTree> current = constructPartition(0, nodes, nodeBackups, leftPositions, rightPositions, true, treeParts);
             t2+=System.currentTimeMillis()-start2;
             //result.deepFlatten();
             result.addOperand(current);
@@ -574,10 +576,10 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
     }
 
 
-    private Product<LinguisticTree> constructPartition(int pos, LinguisticTree[] nodes, LinguisticTree[] nodeBackups, int[] leftPositions, int[] rightPositions, boolean add, ReconnectedMultiSet<LinguisticTree> treeParts){
+    private Conjunction<LinguisticTree> constructPartition(int pos, LinguisticTree[] nodes, LinguisticTree[] nodeBackups, int[] leftPositions, int[] rightPositions, boolean add, ReconnectedMultiTreeSet treeParts){
 
         boolean found = false;
-        Product<LinguisticTree> result = new Product<>();
+        Conjunction<LinguisticTree> result = new Conjunction<>();
         long start3 = System.currentTimeMillis();
         LinguisticTree node = nodes[pos];
         t3+=System.currentTimeMillis()-start3;
@@ -591,7 +593,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
             t5+=System.currentTimeMillis()-start5;
             if(found){
                 //long start6 = System.currentTimeMillis();
-                Sum<LinguisticTree> loadedPartitions = treeParts.getKey(node).getPartitions();
+                Disjunction<LinguisticTree> loadedPartitions = treeParts.getKey(node).getPartitions();
                 //t6+=System.currentTimeMillis()-start6;
                 if(loadedPartitions!=null) {
                     //long start8 = System.currentTimeMillis();
@@ -609,26 +611,26 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         }
         // add left
         if(leftPositions[pos]>0 && (!found || (node.getLeftChild().isEmptyLeaf() && !nodeBackup.getLeftChild().isEmptyLeaf()))){
-            Product<LinguisticTree> product = constructPartition(leftPositions[pos],nodes, nodeBackups,leftPositions, rightPositions, node.getLeftChild().isEmptyLeaf() && !nodeBackup.getLeftChild().isEmptyLeaf(), treeParts);
+            Conjunction<LinguisticTree> conjunction = constructPartition(leftPositions[pos],nodes, nodeBackups,leftPositions, rightPositions, node.getLeftChild().isEmptyLeaf() && !nodeBackup.getLeftChild().isEmptyLeaf(), treeParts);
             long start10 = System.currentTimeMillis();
-            result.addAllTerminals(product.getTerminals());
-            result.addAllOperations(product.getOperations());
+            result.addAllTerminals(conjunction.getTerminals());
+            result.addAllOperations(conjunction.getPropositions());
             t10+=System.currentTimeMillis()-start10;
         }
 
         // add right
         if(rightPositions[pos]>0 && (!found || (node.getRightChild().isEmptyLeaf() && !nodeBackup.getRightChild().isEmptyLeaf()))) {
-            Product<LinguisticTree> product = constructPartition(rightPositions[pos], nodes, nodeBackups, leftPositions, rightPositions,node.getRightChild().isEmptyLeaf() && !nodeBackup.getRightChild().isEmptyLeaf(), treeParts);
+            Conjunction<LinguisticTree> conjunction = constructPartition(rightPositions[pos], nodes, nodeBackups, leftPositions, rightPositions,node.getRightChild().isEmptyLeaf() && !nodeBackup.getRightChild().isEmptyLeaf(), treeParts);
             long start10 = System.currentTimeMillis();
-            result.addAllTerminals(product.getTerminals());
-            result.addAllOperations(product.getOperations());
+            result.addAllTerminals(conjunction.getTerminals());
+            result.addAllOperations(conjunction.getPropositions());
             t10+=System.currentTimeMillis()-start10;
         }
         //result.flatten();
         return result;
     }
 
-    private static boolean incCut(LinguisticTree[] nodes, LinguisticTree[] nodeBackups, int[] leftPositions, int[] rightPositions, ReconnectedMultiSet<LinguisticTree> treeParts){
+    private static boolean incCut(LinguisticTree[] nodes, LinguisticTree[] nodeBackups, int[] leftPositions, int[] rightPositions, ReconnectedMultiTreeSet treeParts){
         long start3 = System.currentTimeMillis();
         for(int i=0; i<nodes.length; i++){
             LinguisticTree nodeBackup = nodeBackups[i];
@@ -663,9 +665,9 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
     }
 
     public double getCosineSimilarity(LinguisticTree other){
-        // TODO: remove new ReconnectedMultiSet
-        MultiSet<LinguisticTree> thisTrees = new MultiSet<>(this.getPartitions(new ReconnectedMultiSet<>(0)).collectTerminals());
-        MultiSet<LinguisticTree> otherTrees = new MultiSet<>(other.getPartitions(new ReconnectedMultiSet<>(0)).collectTerminals());
+        // TODO: remove new ReconnectedMultiTreeSet
+        MultiSet<LinguisticTree> thisTrees = new MultiSet<>(this.getPartitions(new ReconnectedMultiTreeSet(0)).collectTerminals());
+        MultiSet<LinguisticTree> otherTrees = new MultiSet<>(other.getPartitions(new ReconnectedMultiTreeSet(0)).collectTerminals());
         return thisTrees.calcCosineSimilarity(otherTrees);
     }
 

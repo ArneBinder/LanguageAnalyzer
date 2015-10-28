@@ -13,15 +13,18 @@ import java.util.stream.Collectors;
 /**
  * Created by Arne on 30.09.2015.
  */
-public abstract class Operation<V extends Comparable<V>> implements Comparable<Operation<V>> {
+public abstract class Proposition<V extends Comparable<V>> implements Comparable<Proposition<V>> {
     String operator;
-    LinkedList<Operation<V>> operations = new LinkedList<>();
+    LinkedList<Proposition<V>> propositions = new LinkedList<>();
     LinkedList<V> terminals = new LinkedList<>();
 
     public abstract double calc(double oa, double ob);
     public abstract void deepFlatten();
+    //protected double addProb(MultiSet<V> treePattern, V terminal){
 
-    public Operation(String operator){
+    //}
+
+    public Proposition(String operator){
         this.operator = operator;
     }
 
@@ -29,24 +32,24 @@ public abstract class Operation<V extends Comparable<V>> implements Comparable<O
         return operator;
     }
 
-    public LinkedList<Operation<V>> getOperations() {
-        return operations;
+    public LinkedList<Proposition<V>> getPropositions() {
+        return propositions;
     }
 
     public LinkedList<V> getTerminals() {
         return terminals;
     }
 
-    public void addOperand(Operation<V> operand){
-        operations.add(operand);
+    public void addOperand(Proposition<V> operand){
+        propositions.add(operand);
     }
 
     public void addOperand(V operand){
         terminals.add(operand);
     }
 
-    public void addAllOperations(Collection<Operation<V>> operands){
-        operations.addAll(operands);
+    public void addAllOperations(Collection<Proposition<V>> operands){
+        propositions.addAll(operands);
     }
 
     public void addAllTerminals(Collection<V> operands){
@@ -54,24 +57,24 @@ public abstract class Operation<V extends Comparable<V>> implements Comparable<O
     }
 
     public void flatten(){
-        LinkedList<Operation<V>> tempOps = new LinkedList<>();
+        LinkedList<Proposition<V>> tempOps = new LinkedList<>();
         LinkedList<V> tempTers = new LinkedList<>();
-        Iterator<Operation<V>> it = operations.iterator();
+        Iterator<Proposition<V>> it = propositions.iterator();
         while(it.hasNext()){
-            Operation<V> op = it.next();
-            if(op.getOperator().equals(operator) || op.getOperations().size()+op.getTerminals().size() <= 1){
-                tempOps.addAll(op.getOperations());
+            Proposition<V> op = it.next();
+            if(op.getOperator().equals(operator) || op.getPropositions().size()+op.getTerminals().size() <= 1){
+                tempOps.addAll(op.getPropositions());
                 tempTers.addAll(op.getTerminals());
                 it.remove();
             }
         }
-        operations.addAll(tempOps);
+        propositions.addAll(tempOps);
         terminals.addAll(tempTers);
 
     }
 
     public int size(){
-        return operations.size()+terminals.size();
+        return propositions.size()+terminals.size();
     }
 
     public double calculate(MultiSet<V> treePattern){
@@ -85,8 +88,8 @@ public abstract class Operation<V extends Comparable<V>> implements Comparable<O
                 result = calc(result,treePattern.getRelFrequ(it.next()));
             }
         }
-        if(operations.size()>0){
-            Iterator<Operation<V>> it = operations.iterator();
+        if(propositions.size()>0){
+            Iterator<Proposition<V>> it = propositions.iterator();
             if(result==0.0)
                 result = it.next().calculate(treePattern);
             while(it.hasNext()){
@@ -101,8 +104,8 @@ public abstract class Operation<V extends Comparable<V>> implements Comparable<O
     public ArrayList<V> collectTerminals(){
         ArrayList<V> result = new ArrayList<>();
         result.addAll(terminals);
-        for(Operation<V> operation: operations){
-            result.addAll(operation.collectTerminals());
+        for(Proposition<V> proposition : propositions){
+            result.addAll(proposition.collectTerminals());
         }
         return result;
     }
@@ -113,9 +116,9 @@ public abstract class Operation<V extends Comparable<V>> implements Comparable<O
                 .sorted()
                 .map(V::toString)
                 .collect(Collectors.joining(" " + operator + " "));
-        String joinedOperations = operations.stream()
+        String joinedOperations = propositions.stream()
                 .sorted()
-                .map(Operation::toString)
+                .map(Proposition::toString)
                 .collect(Collectors.joining(" " + operator + " "));
 
         String result = joinedTerminals;
@@ -125,13 +128,13 @@ public abstract class Operation<V extends Comparable<V>> implements Comparable<O
         if(result==null || result.equals("")){
             result = joinedOperations;
         }
-        if(terminals.size()+ operations.size()>1 && operator.equals("+"))
+        if(terminals.size()+ propositions.size()>1 && operator.equals("+"))
             return "("+result+")";
         else return result;
     }
 
     @Override
-    public int compareTo(@NotNull Operation<V> other){
+    public int compareTo(@NotNull Proposition<V> other){
         if (other==null){
             return 1;
         }
@@ -145,8 +148,8 @@ public abstract class Operation<V extends Comparable<V>> implements Comparable<O
                     return result;
             }
 
-            for(int i=0; i<operations.size();i++){
-                result = operations.get(i).compareTo(other.operations.get(i));
+            for(int i=0; i< propositions.size();i++){
+                result = propositions.get(i).compareTo(other.propositions.get(i));
                 if(result!=0)
                     return result;
             }

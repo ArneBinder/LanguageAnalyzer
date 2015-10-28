@@ -3,8 +3,8 @@ package abinder.langanalyzer.helper;
 /**
  * Created by Arne on 01.10.2015.
  */
-public class Sum<V extends Comparable<V>> extends Operation<V> {
-    public Sum(){
+public class Disjunction<V extends Comparable<V>> extends Proposition<V> {
+    public Disjunction(){
         super("+");
     }
 
@@ -15,11 +15,11 @@ public class Sum<V extends Comparable<V>> extends Operation<V> {
 
     @Override
     public void deepFlatten() {
-        Operation<V> result = new Sum<>();
+        Proposition<V> result = new Disjunction<>();
         result.addAllTerminals(this.getTerminals());
-        for(Operation operation: operations){
-            operation.deepFlatten();
-            operation.flatten();
+        for(Proposition proposition : propositions){
+            proposition.deepFlatten();
+            proposition.flatten();
         }
         flatten();
     }

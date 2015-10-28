@@ -24,9 +24,9 @@ public class LinguisticLayer {
     //ArrayList<ArrayList<ArrayList<LinguisticTree>>> rightTrees = new ArrayList<>();
 
     // with set parents
-    ReconnectedMultiSet<LinguisticTree> treePatterns;
+    ReconnectedMultiTreeSet treePatterns;
     HashMap<LinguisticTree, Double> probabilities;
-    //private HashMap<LinguisticTree, Sum> partitions;
+    //private HashMap<LinguisticTree, Disjunction> partitions;
 
     int maxHeight = 3;
     int feededTokenCount = 0;
@@ -61,7 +61,7 @@ public class LinguisticLayer {
         System.out.println("expectedPatternSize: "+expectedPatternSize);
         if(expectedPatternSize > Integer.MAX_VALUE)
             System.out.println("ERROR: expectedPatternSize = "+expectedPatternSize+" > Integer.MAX_VALUE = "+Integer.MAX_VALUE);
-        treePatterns = new ReconnectedMultiSet<>((int) expectedPatternSize);
+        treePatterns = new ReconnectedMultiTreeSet((int) expectedPatternSize);
         treePatterns.add(new LinguisticTree(LinguisticType.TREE));
         // set position zero to 100%
         sequenceProbs.add(0);

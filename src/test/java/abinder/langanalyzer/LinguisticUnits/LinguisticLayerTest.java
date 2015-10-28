@@ -74,11 +74,11 @@ public class LinguisticLayerTest {
             System.out.println(s);
         }*/
 
-        Sum<LinguisticTree> partitions = tree.getPartitions(new ReconnectedMultiSet<>(0));
+        Disjunction<LinguisticTree> partitions = tree.getPartitions(new ReconnectedMultiSet<>(0));
         //layer.addAllTreePattern(partitions.collectTerminals());
         System.out.println("\npartitions:");
-        for(Operation<LinguisticTree> operation: partitions.getOperations()){
-            System.out.println(operation+"\t"+operation.calculate(layer.getTreePatterns()));
+        for(Proposition<LinguisticTree> proposition : partitions.getPropositions()){
+            System.out.println(proposition +"\t"+ proposition.calculate(layer.getTreePatterns()));
         }
 
         for(LinguisticTree partitionTree: partitions.getTerminals()){
@@ -87,7 +87,7 @@ public class LinguisticLayerTest {
 
         //System.out.println(partitions);
 
-        //Sum sum = layer.getOperations(tree);
+        //Disjunction sum = layer.getPropositions(tree);
         //System.out.println(sum.calculate(layer.getTreePatterns()));
 
         //sum.deepFlatten();
