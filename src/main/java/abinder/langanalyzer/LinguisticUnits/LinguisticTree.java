@@ -567,7 +567,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
             result.addOperand(current);
         }while(incCut(nodes, nodeBackups, leftPositions, rightPositions, treeParts));
 
-        result.addOperand(new LinguisticTree(LinguisticType.TREE));
+        //result.addOperand(new LinguisticTree(LinguisticType.TREE));
         partitions = result;
         t1+=System.currentTimeMillis()-start1;
         c1+=result.size();

@@ -1,6 +1,7 @@
 package abinder.langanalyzer.helper;
 
 import abinder.langanalyzer.LinguisticUnits.LinguisticTree;
+import abinder.langanalyzer.LinguisticUnits.LinguisticType;
 import com.sun.istack.internal.NotNull;
 
 import java.util.ArrayList;
@@ -92,6 +93,8 @@ public abstract class Operation<V extends Comparable<V>> implements Comparable<O
                 result = calc(result,it.next().calculate(treePattern));
             }
         }
+        // TODO: fix this temporary solution!
+        result += treePattern.getRelFrequ((V)new LinguisticTree(LinguisticType.TREE));
         return result;
     }
 
