@@ -74,7 +74,7 @@ public class LinguisticLayerTest {
             System.out.println(s);
         }*/
 
-        Disjunction<LinguisticTree> partitions = tree.getPartitions(new ReconnectedMultiSet<>(0));
+        Disjunction<LinguisticTree> partitions = tree.getPartitions(new ReconnectedMultiTreeSet(0));
         //layer.addAllTreePattern(partitions.collectTerminals());
         System.out.println("\npartitions:");
         for(Proposition<LinguisticTree> proposition : partitions.getPropositions()){
