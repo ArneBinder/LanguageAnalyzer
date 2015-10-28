@@ -4,10 +4,7 @@ import abinder.langanalyzer.LinguisticUnits.LinguisticTree;
 import abinder.langanalyzer.LinguisticUnits.LinguisticType;
 import com.sun.istack.internal.NotNull;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -20,9 +17,6 @@ public abstract class Proposition<V extends Comparable<V>> implements Comparable
 
     public abstract double calc(double oa, double ob);
     public abstract void deepFlatten();
-    //protected double addProb(MultiSet<V> treePattern, V terminal){
-
-    //}
 
     public Proposition(String operator){
         this.operator = operator;
@@ -116,10 +110,15 @@ public abstract class Proposition<V extends Comparable<V>> implements Comparable
                 .sorted()
                 .map(V::toString)
                 .collect(Collectors.joining(" " + operator + " "));
-        String joinedOperations = propositions.stream()
-                .sorted()
-                .map(Proposition::toString)
-                .collect(Collectors.joining(" " + operator + " "));
+        String joinedOperations;
+        try {
+            joinedOperations = propositions.stream()
+                    .sorted()
+                    .map(Proposition::toString)
+                    .collect(Collectors.joining(" " + operator + " "));
+        }catch(IllegalArgumentException e){
+            throw e;
+        }
 
         String result = joinedTerminals;
         if(result!= null && !result.equals("") && joinedOperations!=null && !joinedOperations.equals("")){
@@ -134,27 +133,38 @@ public abstract class Proposition<V extends Comparable<V>> implements Comparable
     }
 
     @Override
-    public int compareTo(@NotNull Proposition<V> other){
-        if (other==null){
-            return 1;
-        }
-        int result = size()-other.size();
-        if(result==0)
-            result = other.terminals.size()-terminals.size();
-        if(result==0){
-            for(int i=0; i<terminals.size();i++){
-                result = terminals.get(i).compareTo(other.terminals.get(i));
-                if(result!=0)
-                    return result;
-            }
+    public int compareTo(Proposition<V> other){
 
-            for(int i=0; i< propositions.size();i++){
-                result = propositions.get(i).compareTo(other.propositions.get(i));
-                if(result!=0)
-                    return result;
+        if (other==null)
+            return 1;
+        int result = size() - other.size();
+        if (result == 0)
+            result = other.terminals.size() - terminals.size();
+        if (result == 0) {
+            Collections.sort(this.terminals);
+            Collections.sort(other.terminals);
+            for (int i = 0; i < terminals.size(); i++) {
+                result = terminals.get(i).compareTo(other.terminals.get(i));
+                if (result != 0) {
+                    break;
+                    //return result;
+                }
+            }
+            if(result==0) {
+                Collections.sort(this.propositions);
+                Collections.sort(other.propositions);
+                for (int i = 0; i < propositions.size(); i++) {
+                    result = propositions.get(i).compareTo(other.propositions.get(i));
+                    if (result != 0) {
+                        break;
+                        //return result;
+                    }
+                }
             }
         }
         return result;
+
+        //return this.toString().compareTo(other.toString());
     }
 
 }

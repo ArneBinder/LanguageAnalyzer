@@ -513,8 +513,8 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
     }
 
     public void calcPartitions(ReconnectedMultiTreeSet treeParts){
-        //if(this.serialize().equals("[TREE,[[TREE,TREE],i]]"))
-        //    System.out.println();
+        if(this.serialize().equals("[t,[[e,r],[ ,S]]]"))
+            System.out.println();
         long start1, start2;
         start1 = System.currentTimeMillis();
         Disjunction<LinguisticTree> result = new Disjunction<>();
@@ -571,6 +571,14 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
 
         //result.addOperand(new LinguisticTree(LinguisticType.TREE));
         partitions = result;
+        if(this.serialize().equals("[t,[[e,r],[ ,S]]]")) {
+            System.out.println();
+            String resString = result.toString();
+            if (resString.length() < 1)
+                System.out.println();
+            if (resString.substring(1).contains("("))
+                System.out.println();
+        }
         t1+=System.currentTimeMillis()-start1;
         c1+=result.size();
     }
@@ -601,6 +609,11 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
                     result.addOperand(loadedPartitions);
                     //t8+=System.currentTimeMillis()-start8;
                     //return result;
+                }else{
+                    long start6 = System.currentTimeMillis();
+                    //result.addOperand(new LinguisticTree(node.serialize(),node.getLabel()));
+                    result.addOperand(node.copyThis());
+                    t6 += System.currentTimeMillis() - start6;
                 }
             }else {
                 long start6 = System.currentTimeMillis();
@@ -702,6 +715,23 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         if(o == null)
             return 1;
 
+        // check leafs
+        if(this.isLeaf()){
+            if(o.isLeaf())
+                return leaf.compareTo(o.getLeaf());
+            else
+                return -1;
+
+        }
+        if (o.isLeaf())
+            return 1;
+
+        // check label
+        int result = this.getLabel().compareTo(o.getLabel());
+        if(result != 0)
+            return result;
+
+        // check heights
         if(o.getHeight()!=this.getHeight()){
             if(this.getHeight() < o.getHeight())
                 return -1;
@@ -709,43 +739,23 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
                 return 1;
         }
 
-        if(this.noChildren()){
-            if(this.leaf == null) {
-                return -1;
-            }else{
-                if(o.noChildren())
-                    return leaf.compareTo(o.getLeaf());
-                else
-                    return -1;
-            }
-        }
-
-        if(o.noChildren())
-            return 1;
-
-        if(leftChild==null){ // --> rightChild != null
-            if(o.leftChild==null){ // --> o.rightChild != null
-                return rightChild.compareTo(o.rightChild);
-            }else{ //o.leftChild != null
-                return -1;
-            }
-        }else{  // --> leftChild != null
-            if(o.leftChild==null){ // --> o.rightChild != null
+        // check empty
+        if(!this.noChildren()){
+            if(o.noChildren())
                 return 1;
-            }else{ // --> o.leftChild != null
-                int comp = leftChild.compareTo(o.leftChild);
-                if(comp!=0)
-                    return comp;
-                if(rightChild==null) {
-                    if(o.rightChild == null)
-                        return 0;
-                    return -1;
-                }
-                return rightChild.compareTo(o.rightChild);
-            }
+            // check leftChild
+            result = this.leftChild.compareTo(o.leftChild);
+            if(result!=0)
+                return result;
+            // check rightChild
+            result = this.rightChild.compareTo(o.rightChild);
+            if(result!=0)
+                return result;
         }
+        if(!o.noChildren())
+            return -1;
 
-        //return 0;
+        return 0;
     }
 
     public String toString(){
