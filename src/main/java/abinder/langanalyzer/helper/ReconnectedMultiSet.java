@@ -14,13 +14,30 @@ public class ReconnectedMultiSet<V> extends MultiSet<V> {
     }
 
     public void add(V value){
-        keys.put(value, value);
-        super.add(value);
+        double count = 1;
+        V key = keys.get(value);
+        if(key!=null) {
+            count += get(value);
+            put(key, count);
+        }else{
+            put(value, count);
+            keys.put(value, value);
+        }
+        totalCount++;
+
     }
 
     public void add(V value, double confidence){
-        keys.put(value, value);
-        super.add(value, confidence);
+        double count = confidence;
+        V key = keys.get(value);
+        if(key!=null) {
+            count += get(value);
+            put(key, count);
+        }else{
+            put(value, count);
+            keys.put(value, value);
+        }
+        totalCount+= confidence;
     }
 
     public V getKey(V key){

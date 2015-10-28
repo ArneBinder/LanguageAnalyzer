@@ -191,12 +191,12 @@ public class LinguisticLayer {
                         for(LinguisticTree tree: previousTreesBySize.get(addPos).get(size)) {
                             double currentProb = prevSequProb*tree.getProbability() / probSum;
                             for(LinguisticTree part: tree.getPartitions(treePatterns).collectTerminals()) {
-                                if(!part.equals(tree)) {
-                                    part.calcPartitions(treePatterns);
+                                //if(!part.equals(tree)) {
+                                //    part.calcPartitions(treePatterns);
                                     treePatterns.add(part, currentProb);
-                                }
-                                else
-                                    treePatterns.add(tree, currentProb);
+                                //}
+                                //else
+                                //    treePatterns.add(tree, currentProb);
                             }
                         }
                     //}
