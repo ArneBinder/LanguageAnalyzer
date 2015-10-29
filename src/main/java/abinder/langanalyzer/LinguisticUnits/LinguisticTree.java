@@ -519,8 +519,8 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
     }
 
     public void calcPartitions(ReconnectedMultiTreeSet treeParts){
-        //if(this.serialize().equals("[t,[[e,r],[ ,S]]]"))
-        //    System.out.println();
+        if(this.serialize().equals("[[[TREE,TREE],TREE],TREE]"))
+            System.out.println();
         long start1, start2;
         start1 = System.currentTimeMillis();
         Disjunction<LinguisticTree> result = new Disjunction<>();
@@ -647,7 +647,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
             //result.addAllOperations(conjunction.getPropositions());
             t10+=System.currentTimeMillis()-start10;
         }
-        //result.flatten();
+        result.flatten();
         return result;
     }
 

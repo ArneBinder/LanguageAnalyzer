@@ -191,8 +191,10 @@ public class LinguisticLayer {
                         double prevSequProb = sequenceProbs.get(addPos - size +1);
                         for(LinguisticTree tree: previousTreesBySize.get(addPos).get(size)) {
                             double currentProb = prevSequProb*tree.getProbability() / probSum;
-                            for(LinguisticTree subTree: tree.getAllSubtrees(maxHeight, new LinkedList<>())) {
-                                for (LinguisticTree part : subTree.getAllCutTrees()){  //tree.getPartitions(treePatterns).collectTerminals()) {
+                            LinkedList<LinguisticTree> subTrees = tree.getAllSubtrees(maxHeight, new LinkedList<>());
+                            for(LinguisticTree subTree: subTrees) {
+                                LinkedList<LinguisticTree> cutTrees = subTree.getAllCutTrees();
+                                for (LinguisticTree part : cutTrees){  //tree.getPartitions(treePatterns).collectTerminals()) {
                                     //if(!part.equals(tree)) {
                                     //    part.calcPartitions(treePatterns);
                                     if(part.toString().equals("[[e,n],\"]"))

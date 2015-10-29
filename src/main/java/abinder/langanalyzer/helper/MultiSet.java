@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 public class MultiSet<V> extends HashMap<V, Double> implements Iterable<V> {
 
     protected double totalCount = 0;
-    private double maxSize = 1000;
+
 
     public MultiSet(int initialCapacity){
         super(initialCapacity);
@@ -110,22 +110,5 @@ public class MultiSet<V> extends HashMap<V, Double> implements Iterable<V> {
         return divident/Math.sqrt(divisor);
     }
 
-    public void clean(){
-        double overhead = totalCount - maxSize;
-        while(overhead > 0){
-            double rem = overhead / size();
-            for(Iterator<Map.Entry<V, Double>> it = entrySet().iterator(); it.hasNext(); ) {
-                Map.Entry<V, Double> entry = it.next();
-                double newValue = entry.getValue() - rem;
-                if(newValue > 0) {
-                    entry.setValue(newValue);
-                    overhead -= rem;
-                }else{
-                    overhead -= entry.getValue();
-                    it.remove();
-                }
-            }
-        }
 
-    }
 }

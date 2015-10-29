@@ -2,12 +2,16 @@ package abinder.langanalyzer.helper;
 
 import abinder.langanalyzer.LinguisticUnits.LinguisticTree;
 
+import java.util.Iterator;
+import java.util.Map;
+
 /**
  * Created by Arne on 28.10.2015.
  */
 public class ReconnectedMultiTreeSet extends ReconnectedMultiSet<LinguisticTree> {
 
     private double leafTypeInfluence = 0.5;
+    private double maxSize = 1000;
 
 
     public ReconnectedMultiTreeSet(int initialCapacity) {
@@ -40,5 +44,22 @@ public class ReconnectedMultiTreeSet extends ReconnectedMultiSet<LinguisticTree>
             oldKey.setProbability(newKey.getProbability());
     }
 
+    public void clean(){
+        while(totalCount > maxSize + 1){ // add 1, otherwise it could hang
+            double rem = (totalCount-maxSize) / size();
+            for(Iterator<Entry<LinguisticTree, Double>> it = entrySet().iterator(); it.hasNext(); ) {
+                Map.Entry<LinguisticTree, Double> entry = it.next();
+                double newValue = entry.getValue() - rem;
+                if(newValue > 0) {
+                    entry.setValue(newValue);
+                    totalCount -= rem;
+                }else{
+                    totalCount -= entry.getValue();
+                    keys.remove(entry.getKey());
+                    it.remove();
+                }
+            }
+        }
+    }
 
 }
