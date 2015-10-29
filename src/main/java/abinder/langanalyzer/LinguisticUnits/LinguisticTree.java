@@ -620,6 +620,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
                     //result.addOperand(new LinguisticTree(node.serialize(),node.getLabel()));
                     result.addOperand(node.copyThis());
                     t6 += System.currentTimeMillis() - start6;
+                    found = false;
                 }
             }else {
                 long start6 = System.currentTimeMillis();
