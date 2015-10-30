@@ -11,7 +11,7 @@ import java.util.Map;
 public class ReconnectedMultiTreeSet extends ReconnectedMultiSet<LinguisticTree> {
 
     private double leafTypeInfluence = 0.5;
-    private double maxSize = 1000;
+    private double maxSize = 10000;
 
 
     public ReconnectedMultiTreeSet(int initialCapacity) {

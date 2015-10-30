@@ -61,7 +61,8 @@ public class LinguisticLayer {
         System.out.println("expectedPatternSize: "+expectedPatternSize);
         if(expectedPatternSize > Integer.MAX_VALUE)
             System.out.println("ERROR: expectedPatternSize = "+expectedPatternSize+" > Integer.MAX_VALUE = "+Integer.MAX_VALUE);
-        treePatterns = new ReconnectedMultiTreeSet((int) expectedPatternSize);
+        //treePatterns = new ReconnectedMultiTreeSet((int) expectedPatternSize);
+        treePatterns = new ReconnectedMultiTreeSet(expectedSize);
         treePatterns.add(new LinguisticTree(LinguisticType.TREE));
         // set position zero to 100%
         sequenceProbs.add(0);
@@ -197,8 +198,8 @@ public class LinguisticLayer {
                                 for (LinguisticTree part : cutTrees){  //tree.getPartitions(treePatterns).collectTerminals()) {
                                     //if(!part.equals(tree)) {
                                     //    part.calcPartitions(treePatterns);
-                                    if(part.toString().equals("[[e,n],\"]"))
-                                        System.out.println();
+                                    //if(part.toString().equals("[[e,n],\"]"))
+                                    //    System.out.println();
                                     part.getPartitions(treePatterns);
                                     treePatterns.add(part, currentProb);
                                     //}
