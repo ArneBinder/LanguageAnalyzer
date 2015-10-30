@@ -319,14 +319,18 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
     public String serialize() {
 
             if(serializationPL == null){
-                if(leaf!=null) {
+                if(isLeaf()) {
                     serializationPL = IO.escape(leaf.serialize(), escapeAbleChars, charEscape);
                 }
                 else {
                     if(noChildren())
                         serializationPL = label.toString();
-                    else
-                        serializationPL = charOpen + (leftChild != null ? leftChild.serialize() : charNull + "") + charSeperate + (rightChild != null ? rightChild.serialize() : charNull + "") + charClose;
+                    else {
+                        serializationPL = "";
+                        if(label!=LinguisticType.TREE)
+                            serializationPL = label.toString();
+                        serializationPL += charOpen + leftChild.serialize() + charSeperate + rightChild.serialize() + charClose;
+                    }
                 }
             }
             return serializationPL;
@@ -346,8 +350,10 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         if(serialization.charAt(0)!=charOpen){// || serialization.charAt(serialization.length()-1)!=charClose){
             charOpenPos = serialization.length();
             for(int i=0; i<serialization.length(); i++){
-                if(serialization.charAt(i)==charEscape)
+                if(serialization.charAt(i)==charEscape) {
+                    i++;
                     continue;
+                }
                 if(serialization.charAt(i)==charOpen){
                     charOpenPos = i;
                     break;
@@ -363,8 +369,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
                 leaf = new LinguisticToken(typeOrLeaf);
                 label = LinguisticType.TREE;
                 return;
-            }
-            else {
+            } else {
                 leaf = null;
                 label = type.get();
             }

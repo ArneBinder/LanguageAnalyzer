@@ -4,7 +4,8 @@ package abinder.langanalyzer.LinguisticUnits;
  * Created by Arne on 17.09.2015.
  */
 public enum LinguisticType {
-    TREE(0);
+    TREE(0),
+    CHR(1);
 
     int id;
     // model

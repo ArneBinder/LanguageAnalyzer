@@ -36,9 +36,9 @@ public class LinguisticLayerTest {
 
     @Test
     public void deserializationTest() throws Exception {
-        LinguisticTree newTree = new LinguisticTree("[\\X,[TREE[e,[a,k]],[m,e]]]");
-        //System.out.println(newTree.serialize(false));
-        assertEquals("[\\X,[[e,[a,k]],[m,e]]]", newTree.serialize());
+        LinguisticTree newTree = new LinguisticTree("[\\X,[TREE[e,[a,k]],CHR[m,e]]]");
+        System.out.println(newTree);
+        assertEquals("[\\X,[[e,[a,k]],CHR[m,e]]]", newTree.serialize());
     }
 
     @Test
