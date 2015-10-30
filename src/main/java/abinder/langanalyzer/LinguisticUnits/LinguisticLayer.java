@@ -171,6 +171,8 @@ public class LinguisticLayer {
                     treePatterns.add(treeFixedPosSize,0);
                 }
                 double newSequProb = sequenceProbs.get(processedTreesIndex + 1 - size)* sizeRelFrequ;
+                if(Double.isInfinite(newSequProb))
+                    System.out.println("INFINITY");
                 sequenceProbs.add(processedTreesIndex + 1, newSequProb);//>=1.0?1.0:newSequProb);
             }
             t1+=System.currentTimeMillis()-start1;

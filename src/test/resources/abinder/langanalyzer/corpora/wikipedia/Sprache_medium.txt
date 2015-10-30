@@ -1,0 +1,169 @@
+Sprache
+
+Unter Sprache versteht man die Menge, die als Elemente alle komplexen
+Systeme der Kommunikation beinhaltet. Der Term wird meist verwendet, um
+anzuzeigen, dass konkrete Zeichensysteme Elemente dieser Menge sind (z. B.
+die deutsche Sprache, die Programmiersprache Basic); umgekehrt, um
+anzuzeigen, dass diese konkreten Zeichensysteme den Eigenschaften einer
+Definition des Begriffs „Sprache" genügen. Eine andere Definition ist:
+Sprachen sind „die Systeme von Einheiten und Regeln, die den Mitgliedern
+von Sprachgemeinschaften als Mittel der Verständigung dienen".
+
+Es werden zahlreiche Einzelsprachen unterschieden. Zudem werden sie auf
+unterschiedlicher Weise unterteilt (z. B. in konstruierte Sprachen und
+natürliche Sprachen). Beispiele unter Menschen sind die Lautsprache und die
+Körpersprache (Unterschied aufgrund akustischer bzw. optischer
+Informationsübertragung). Die wissenschaftliche Disziplin, die sich mit der
+menschlichen Sprache in umfassender Weise beschäftigt, ist die Linguistik
+(Sprachwissenschaft). Auch im Tierreich existieren Zeichensysteme und
+kommunikative Handlungen, die als Sprache bezeichnet werden.
+
+Sprache und Sprachverwendung sind auch Inhalt anderer Wissenschaften wie
+Psychologie, Neurologie, Kognitionswissenschaft,
+Kommunikationswissenschaft, Rhetorik, Philosophie (Sprachphilosophie),
+Medienwissenschaft, Semiotik, Literaturwissenschaft, Sprechwissenschaft,
+Religionswissenschaft, Theologie, Anthropologie und Ethnologie.
+
+Sprache als Zeichensystem
+
+Einzelsprachen
+
+→ Hauptartikel: Einzelsprache
+
+Im speziellen Sinn bezeichnet das Wort Sprache eine bestimmte Einzelsprache
+wie Deutsch, Japanisch oder Swahili etc. Die gesprochenen Sprachen der
+Menschheit werden gemäß ihrer genetischen Verwandtschaft in Sprachfamilien
+gegliedert. Jede einzelne Sprache wird dabei anhand der sogenannten
+Language Codes nach den ISO-639-Teilnormen international eindeutig
+klassifiziert. Von den heute rund 6500 gezählten Einzelsprachen – laut
+National Geographic Society seien 2005 weltweit sogar 6912 Sprachen aktiv
+verwendet worden¹ – sind mehr als die Hälfte vom Aussterben bedroht, da sie
+kaum noch gesprochen und häufig auch nicht mehr an Kinder weitergegeben
+werden. Man vermutet, dass daher in den nächsten 100 Jahren ein großer Teil
+der heute noch vorhandenen Sprachen verschwinden wird. Derzeit werden die
+häufigsten 50 Sprachen von rund 80 Prozent der Menschheit als Muttersprache
+(und von rund 90 % auch als Zweitsprache) gesprochen, alle anderen (noch)
+existierenden Sprachen von den restlichen 20 Prozent der Menschen.²
+
+Aus ethnologischer und soziolinguistischer Sicht werden die vom Menschen im
+Alltag verwendeten Sprachen hinsichtlich ihrer Entstehung in natürlich
+entstandene ethnische Sprachen und in bewusst ausgearbeitete, also
+konstruierte Plansprachen geteilt. Ein Beispiel einer typischen und auch
+weitverbreiteten Plansprache ist Esperanto.
+
+Ethnische Sprachen und Plansprachen können auch nahe beieinanderliegen, so
+etwa im Falle des Deutschen in der Bibelübersetzung von Martin Luther.
+Diese Varietät des Deutschen stellte insofern eine Plansprache dar, als es
+sich um eine konstruierte Form handelte, die allerorten verstanden werden
+sollte. In der Folge wurde diese „geplante" Variante des Deutschen
+letztlich zur Verkehrssprache und wird heute als natürliche Sprache
+wahrgenommen. Varianten von ethnischen Sprachen werden im Zuge von
+sprachpolitischen Maßnahmen manchmal zu einer Varietät nach Plan
+„vereinheitlicht", wie etwa im Falle des Ladinischen in
+Südtirol/Norditalien.
+
+Konstruierte und formale Sprachen
+
+→ Hauptartikel: Formale Sprache
+
+Anders als die natürlichen Einzelsprachen sind formale Sprachen durch Logik
+und Mengenlehre beschreibbar (aufzählbare Menge von Basisausdrücken, klare
+Regeln der Komposition, wohlgeformte Ausdrücke). Sie finden z. B. in der
+theoretischen Informatik, vor allem bei der Berechenbarkeitstheorie und dem
+Compilerbau Anwendung. Programmiersprachen wie ALGOL, APL, Fortran, COBOL,
+BASIC, C, C++, Ada, Lisp, Prolog, Python, Java, Perl u.a. sind für
+bestimmte Zwecke konstruiert und beruhen auf theoretischen sowie
+pragmatischen Überlegungen.
+
+Der Mathematiker Paul Lorenzen verfolgte mit seinem Projekt des
+Orthosprachenprogramms die Konstruktion einer eindeutigen und methodisch
+aufgebauten Wissenschaftssprache, was aber selbst „in der methodischen
+Philosophie höchst umstritten" war.³
+
+Die Beschreibungsprinzipien der formalen Logik werden auch auf die
+natürliche Sprache angewendet; Pionierarbeit hat dazu der amerikanische
+Logiker Richard Montague geleistet.
+
+Die menschliche gesprochene Sprache als Zeichensystem
+
+Auch die menschliche gesprochene Sprache kann als Zeichensystem (s.
+Semiotik) verstanden werden, bestehend aus einer Vielzahl von Zeichen, die
+eine Bedeutung haben (s. Semantik), welche mittels grammatikalischer Regeln
+(Syntaktik) zu unendlich vielen Aussagen verknüpft werden können. Ferdinand
+de Saussure konzipierte das Sprachzeichen als zwingende Verbindung von
+Lautbild (signifiant = das Bezeichnende) und Vorstellung (signifié = das
+Bezeichnete), also als etwas Mentales.
+
+Evolution der Sprachfähigkeit
+
+Sprache als „Instinkt zu lernen"
+
+Bereits Darwin unterschied zwischen der biologischen Fähigkeit des
+Menschen, die ihm ermöglicht, Sprache zu erwerben, und bestimmten Sprachen
+als solchen.⁴ Diese theoretische Unterscheidung wird von der modernen
+Kognitionsbiologie übernommen. Babys haben einen Instinkt zu brabbeln,
+müssen aber Sprache lernen. Für den Ethologen Peter Marler war daher
+Sprache wie für Darwin kein Instinkt, sondern „Sprache ist ein Instinkt zu
+lernen, deren Ausdruck beinhaltet, dass sowohl biologische als auch externe
+Voraussetzungen erfüllt sind".⁵ Auf diesen „Instinkt", Sprache zu lernen,
+ist die biologisch evolutionäre Erforschung der Sprachfähigkeit gerichtet.
+Ein wichtiges sprachbezogenes Gen, das in diesem Umfeld entdeckt wurde, ist
+FOXP2, ein phylogenetisch alter Transkriptionsfaktor, der für die flexibel
+oral-motorische Stimmkontrolle eine Rolle spielt. FOXP2 erfuhr bei der
+Gattung Mensch vor mindestens 400.000 Jahren eine entscheidende Mutation,
+was man daraus schließt, dass der Neandertaler dasselbe Allel besitzt.⁶ Für
+simple Aspekte der Syntax wurde ein Satz von 4 charakteristischen Genen
+identifiziert.
+
+Anatomie
+
+Die vorherrschende Ansicht zur evolutionären Sprachfähigkeit des Menschen
+war bis etwa 2010, dass den anatomisch modernen Menschen (Homo sapiens)
+sein Sprechvermögen von den Menschenaffen unterscheide. Variationsreiche
+Sprache wurde demnach erst durch anatomische Veränderungen im Laufe der
+Stammesgeschichte des Menschen möglich. Wie ausgeprägt das Sprechvermögen
+beim gemeinsamen Vorfahren von Neandertaler und Homo sapiens, dem Homo
+erectus, entwickelt war, ist unbekannt. Ebenso ist unbekannt, wie
+„fortgeschritten" das morphologische und funktionale Potential für
+differenzierte sprachliche Kommunikation beim Übergang von Homo erectus zum
+frühen anatomisch modernen Menschen war. Die Vergrößerung des Rachenraumes
+(als Resonanzkörper), die Absenkung des Kehlkopfes und die bereits beim
+Homo erectus beginnende Aufwölbung des Gaumens wurden als Notwendigkeit zur
+größeren Bewegungsfreiheit der Zunge gesehen. Im Zusammenwirken von
+Rachenraum, Mund- und Nasenhöhle, Gaumensegel, Lippen und Zunge kann danach
+der von den Stimmbändern erzeugte Grundton zu Vokalen und Konsonanten
+moduliert werden. Schädelfunde belegen, dass die Aufwölbung des Gaumens und
+die Absenkung des Kehlkopfes vor etwa 100.000 Jahren abgeschlossen waren.
+
+In der Kebara-Höhle bei Haifa in Israel wurde bei einem etwa 60.000 Jahre
+alten Skelett eines Neandertalers ein Zungenbein gefunden, was den Schluss
+zulässt, dass dieser Mann zur Lautsprache fähig war. Anthropologen aus
+Durham vermuten, dass die Vorfahren der Neandertaler bereits vor mehr als
+300.000 Jahren sprechen konnten. Sie verglichen die Größe des „Canalis
+nervi hypoglossi", einer Öffnung in der Schädelbasis, in Schädeln des
+modernen Menschen mit verschiedenen Fossilien. Nach Ansicht dieser
+Anthropologen ist ein großer Nervus hypoglossus die Voraussetzung für eine
+differenzierte Sprache. Durch diese Öffnung an der Schädelbasis verläuft
+der Nerv, über den das Gehirn die Zungenbewegung steuert. Wissenschaftler
+stellten fest, dass der Canalis nervi hypoglossi bei Neandertalern ähnlich
+groß war wie beim heutigen Menschen. Bei den Vormenschen der Gattung
+Australopithecus, die vor rund zwei Millionen Jahren lebten, ist er dagegen
+deutlich kleiner.
+
+Jüngere Forschungsergebnisse belegen, dass die Absenkung des Kehlkopfs kein
+allein menschliches Merkmal war, sondern im Tierreich vielfach vorkam, etwa
+beim Rothirsch oder Wapiti-Hirsch. Gleichzeitig wird die früher geleugnete
+Dynamik und Rekonfigurierbarkeit des Stimmumfangs heute in empirischen
+Untersuchungen für Tiere bestätigt, etwa bei vielen Säugetieren wie Hunden,
+Ziegen, Robben, ferner auch bei Alligatoren.⁷ Wegen der phylogenetisch
+unterschiedlichen Abstammung der genannten Artenbeispiele wird angenommen,
+dass die Absenkung des Kehlkopfs ein evolutionär frühes Merkmal war. Die
+Gründe dafür können, etwa beim Hirsch, in sexueller Selektion durch
+tieferliegende Vokalisation liegen. Die Lernfähigkeit für Gesang ist auch
+Vögeln eigen.⁸ Diese Erkenntnisse bedeuten, dass erstens der Vokaltrakt zu
+jedem Zeitpunkt der Primatenevolution ausreichend flexibel für komplexe
+Sprachentwicklung war und zweitens Fossilfunde von Menschenvorfahren wenig
+Hinweise für die Sprachfähigkeit liefern. Die evolutionären Voraussetzungen
+für Sprache werden heute vielmehr in der neurologischen Kontrolle bzw. in
+neurologischen Mechanismen und weniger in der Anatomie des Vokaltrakts
+gesehen.
