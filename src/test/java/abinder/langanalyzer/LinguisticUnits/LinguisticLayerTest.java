@@ -35,16 +35,16 @@ public class LinguisticLayerTest {
     }
 
     @Test
-    public void deserializationTest(){
-        LinguisticTree newTree = new LinguisticTree("[\\X,[[e,[a,k]],[m,e]]]", LinguisticType.TREE);
+    public void deserializationTest() throws Exception {
+        LinguisticTree newTree = new LinguisticTree("[\\X,[TREE[e,[a,k]],[m,e]]]");
         //System.out.println(newTree.serialize(false));
         assertEquals("[\\X,[[e,[a,k]],[m,e]]]", newTree.serialize());
     }
 
     @Test
-    public void simpleLayerTest(){
+    public void simpleLayerTest() throws Exception {
         LinguisticLayer layer = new LinguisticLayer(3,4);
-        LinguisticTree tree = new LinguisticTree("[ä,[[TREE,TREE],i]]", LinguisticType.TREE);
+        LinguisticTree tree = new LinguisticTree("[ä,[[TREE,TREE],i]]");
         System.out.println(tree.serializeLeafs());
         //LinguisticTree tree = new LinguisticTree("a");
         for(LinguisticTree subTree: tree.getAllSubtrees(layer.getMaxHeight(), new LinkedList<>())){

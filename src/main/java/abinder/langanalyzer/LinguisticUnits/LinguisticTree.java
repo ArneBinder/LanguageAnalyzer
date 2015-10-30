@@ -44,9 +44,8 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         this.label = label;
     }
 
-    public LinguisticTree(String serialization, LinguisticType label) {
+    public LinguisticTree(String serialization) throws Exception {
         deserialize(serialization);
-        this.label = label;
     }
 
     //public LinguisticTree() {
@@ -335,7 +334,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
 
 
 
-    public void deserialize(String serialization){
+    public void deserialize(String serialization) throws Exception {
         if(serialization==null) {
             System.out.println("ERROR: serialization is empty!");
             return;
@@ -343,19 +342,38 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         if(serialization.equals(""))
             return;
 
-        if(serialization.charAt(0)!=charOpen || serialization.charAt(serialization.length()-1)!=charClose){
+        int charOpenPos = 0;
+        if(serialization.charAt(0)!=charOpen){// || serialization.charAt(serialization.length()-1)!=charClose){
+            charOpenPos = serialization.length();
+            for(int i=0; i<serialization.length(); i++){
+                if(serialization.charAt(i)==charEscape)
+                    continue;
+                if(serialization.charAt(i)==charOpen){
+                    charOpenPos = i;
+                    break;
+                }
+            }
+            final String typeOrLeaf = serialization.substring(0, charOpenPos);
             leftChild = null;
             rightChild = null;
-            Optional<LinguisticType> type = Arrays.stream(LinguisticType.values()).filter(s -> serialization.equals(s.name())).findFirst();
-            if(!type.isPresent())
-                leaf = new LinguisticToken(serialization);
+            Optional<LinguisticType> type = Arrays.stream(LinguisticType.values()).filter(s -> typeOrLeaf.equals(s.name())).findFirst();
+            if(!type.isPresent()) {
+                if(charOpenPos!=serialization.length())
+                    throw new Exception("unknown tree type: "+typeOrLeaf);
+                leaf = new LinguisticToken(typeOrLeaf);
+                label = LinguisticType.TREE;
+                return;
+            }
             else {
                 leaf = null;
                 label = type.get();
             }
-            return;
+        }else{
+            label = LinguisticType.TREE;
         }
-        String s = serialization.substring(1,serialization.length()-1);
+        charOpenPos++;
+
+        String s = serialization.substring(charOpenPos, serialization.length()-1);
         int open = 0;
         for(int i=0; i < s.length(); i++){
             char c = s.charAt(i);
@@ -371,13 +389,13 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
                     String right = s.substring(i+1);
 
                     if(!left.equals(charNull+"")){
-                        leftChild = new LinguisticTree(LinguisticType.TREE);
-                        leftChild.deserialize(left);
+                        leftChild = new LinguisticTree(left);
+                        //leftChild.deserialize(left);
                     }
 
                     if(!right.equals(charNull+"")){
-                        rightChild = new LinguisticTree(LinguisticType.TREE);
-                        rightChild.deserialize(right);
+                        rightChild = new LinguisticTree(right);
+                        //rightChild.deserialize(right);
                     }
                     return;
                 }
