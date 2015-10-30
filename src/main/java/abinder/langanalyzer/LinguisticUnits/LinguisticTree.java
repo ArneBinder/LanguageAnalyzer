@@ -321,6 +321,8 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
             if(serializationPL == null){
                 if(isLeaf()) {
                     serializationPL = IO.escape(leaf.serialize(), escapeAbleChars, charEscape);
+                    if(label!=LinguisticType.TREE)
+                        serializationPL = label.toString() + charOpen+ serializationPL + charClose;
                 }
                 else {
                     if(noChildren())
@@ -372,11 +374,29 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
             } else {
                 leaf = null;
                 label = type.get();
+                for(int i=charOpenPos+1; i<serialization.length(); i++){
+                    if(serialization.charAt(i)==charEscape) {
+                        i++;
+                        continue;
+                    }
+                    if(serialization.charAt(i)==charSeperate || serialization.charAt(i)==charOpen){
+                        break;
+                    }
+                    if(serialization.charAt(i)==charClose){
+                        leaf = new LinguisticToken(serialization.substring(charOpenPos+1, i));
+                        return;
+                    }
+                }
             }
         }else{
             label = LinguisticType.TREE;
         }
         charOpenPos++;
+
+        // empty tree?
+        if(charOpenPos > serialization.length()){
+            return;
+        }
 
         String s = serialization.substring(charOpenPos, serialization.length()-1);
         int open = 0;
