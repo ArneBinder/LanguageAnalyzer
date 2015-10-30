@@ -571,8 +571,8 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
     }
 
     public void calcPartitions(ReconnectedMultiTreeSet treeParts){
-        if(this.serialize().equals("[[[TREE,TREE],TREE],TREE]"))
-            System.out.println();
+        //if(this.serialize().equals("[[[TREE,TREE],TREE],TREE]"))
+        //    System.out.println();
         long start1, start2;
         start1 = System.currentTimeMillis();
         Disjunction<LinguisticTree> result = new Disjunction<>();
@@ -710,7 +710,7 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
         for(int i=0; i<nodes.length; i++){
             LinguisticTree nodeBackup = nodeBackups[i];
             LinguisticTree node = nodes[i];
-            //LinguisticTree root = node.getRoot();
+            LinguisticTree root = node.getRoot();
             if(nodeBackup.getLeaf()!=null)// || (treeParts.containsKey(root) && treeParts.getKey(root).getPartitions()!=null))
                 continue;
             if(!nodeBackup.getLeftChild().isEmptyLeaf()){//!=null){
@@ -719,9 +719,11 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
                     node.setLeftChild(nodes[leftPositions[i]]);
                     node.getLeftChild().setParent(node);
                 }else{
-                    nodes[leftPositions[i]] = node.deleteLeftChild();
-                    t3+=System.currentTimeMillis()-start3;
-                    return true;
+                    if(!(treeParts.containsKey(root) && treeParts.getKey(root).getPartitions()!=null)) {
+                        nodes[leftPositions[i]] = node.deleteLeftChild();
+                        t3 += System.currentTimeMillis() - start3;
+                        return true;
+                    }
                 }
             }
             if(!nodeBackup.getRightChild().isEmptyLeaf()){//!=null){
@@ -730,9 +732,11 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
                     node.setRightChild(nodes[rightPositions[i]]);
                     node.getRightChild().setParent(node);
                 }else{
-                    nodes[rightPositions[i]] = node.deleteRightChild();
-                    t3+=System.currentTimeMillis()-start3;
-                    return true;
+                    if(!(treeParts.containsKey(root) && treeParts.getKey(root).getPartitions()!=null)) {
+                        nodes[rightPositions[i]] = node.deleteRightChild();
+                        t3 += System.currentTimeMillis() - start3;
+                        return true;
+                    }
                 }
             }
         }
