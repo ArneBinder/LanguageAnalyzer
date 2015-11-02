@@ -195,8 +195,11 @@ public class LinguisticTree implements Comparable<LinguisticTree>{
     }
 
     public Disjunction<LinguisticTree> getPartitions(ReconnectedMultiTreeSet treeParts){
-        if(partitions==null)
-           calcPartitions(treeParts);
+        if(partitions==null) {
+            calcPartitions(treeParts);
+            // TODO: why does this fix the concurrentException... bug in getPartitions().calculate()?
+            partitions.flatten();
+        }
         return partitions;
     }
 
