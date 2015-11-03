@@ -47,7 +47,7 @@ public class LinguisticLayer {
         this.maxHeight = maxHeight;
     }
 
-    public LinguisticLayer(int maxHeight, int expectedSize){
+    public LinguisticLayer(int maxHeight, int expectedSize) throws Exception {
         this.maxHeight = maxHeight;
         maxTreeSize = (int)Utils.getCatalan(maxHeight + 1); //1 << maxHeight;
         expectedSize = Math.max(maxTreeSize, expectedSize);
@@ -65,6 +65,7 @@ public class LinguisticLayer {
         //treePatterns = new ReconnectedMultiTreeSet((int) expectedPatternSize);
         treePatterns = new ReconnectedMultiTreeSet(expectedSize);
         treePatterns.add(new LinguisticTree(LinguisticType.TREE));
+        treePatterns.add(new LinguisticTree("[TREE,TREE]"));
         // set position zero to 100%
         sequenceProbs.add(0);
     }

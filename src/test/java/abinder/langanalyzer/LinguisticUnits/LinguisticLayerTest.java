@@ -116,7 +116,7 @@ public class LinguisticLayerTest {
     }
 
     @Test
-    public void layerTest() throws IOException, InterruptedException {
+    public void layerTest() throws Exception {
 
         WIKIPEDIACorpus corpus = new WIKIPEDIACorpus();
         corpus.readFromFile("src/test/resources/abinder/langanalyzer/corpora/wikipedia/Sprache_short.txt");
