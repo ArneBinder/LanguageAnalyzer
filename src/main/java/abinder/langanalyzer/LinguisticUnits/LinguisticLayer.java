@@ -181,8 +181,15 @@ public class LinguisticLayer {
                 int remPos = addPos - maxTreeSize;
                 if(remPos>=0) {
                     double remValue = sequenceProbs.remove(remPos);
-                    //sequenceProbs.normalize();
-                    // TODO: just normalize previous values
+                    // TODO: check this
+                    sequenceProbs.normalize();
+                    /*double norm = 0;
+                    for(int normPos = addPos - maxTreeSize +1; normPos < maxTreeSize + addPos; normPos++){
+                        norm+= sequenceProbs.get(normPos);
+                    }
+                    for(int normPos = addPos - maxTreeSize +1; normPos < maxTreeSize + addPos; normPos++){
+                        sequenceProbs.put(normPos, sequenceProbs.get(normPos)/norm);
+                    }*/
                     //
 
                     sequenceProbs.resetTotalCount();
