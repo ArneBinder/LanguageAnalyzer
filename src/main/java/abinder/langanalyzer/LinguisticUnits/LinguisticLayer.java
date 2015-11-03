@@ -5,6 +5,7 @@ import abinder.langanalyzer.helper.*;
 import java.io.PrintStream;
 import java.lang.*;
 import java.lang.reflect.Array;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -48,7 +49,7 @@ public class LinguisticLayer {
 
     public LinguisticLayer(int maxHeight, int expectedSize){
         this.maxHeight = maxHeight;
-        maxTreeSize = 1 << maxHeight;
+        maxTreeSize = (int)Utils.getCatalan(maxHeight + 1); //1 << maxHeight;
         expectedSize = Math.max(maxTreeSize, expectedSize);
 
         previousTrees = new HashMap<>(expectedSize);
@@ -171,16 +172,23 @@ public class LinguisticLayer {
                     treePatterns.add(treeFixedPosSize,0);
                 }
                 double newSequProb = sequenceProbs.get(processedTreesIndex + 1 - size)* sizeRelFrequ;
-                if(Double.isInfinite(newSequProb))
-                    System.out.println("INFINITY");
                 sequenceProbs.add(processedTreesIndex + 1, newSequProb);//>=1.0?1.0:newSequProb);
             }
             t1+=System.currentTimeMillis()-start1;
             start2 = System.currentTimeMillis();
-            int addPos = processedTreesIndex + 1 - (1<<(maxHeight -1));
+            int addPos = processedTreesIndex + 1 - maxTreeSize;//(1<<(maxHeight -1));
             if(addPos >= 0){
+                int remPos = addPos - maxTreeSize;
+                if(remPos>=0) {
+                    double remValue = sequenceProbs.remove(remPos);
+                    //sequenceProbs.normalize();
+                    // TODO: just normalize previous values
+                    //
+
+                    sequenceProbs.resetTotalCount();
+                }
                 double probSum = 0;
-                for(int size = 1; size <= (1<<(maxHeight -1)) && addPos >= size -1; size++){
+                for(int size = 1; size <= maxTreeSize && addPos >= size -1; size++){
                     for(int tempEndPos = addPos; tempEndPos < addPos + size; tempEndPos++){
                         double prevSequProb = sequenceProbs.get(tempEndPos - size +1);
                         for(LinguisticTree tree: previousTreesBySize.get(tempEndPos).get(size)) {
@@ -189,7 +197,7 @@ public class LinguisticLayer {
                     }
                 }
 
-                for(int size = 1; size <= (1<<(maxHeight -1)) && addPos >= size -1; size++){
+                for(int size = 1; size <= maxTreeSize && addPos >= size -1; size++){
                     //for(int tempEndPos = addPos; tempEndPos < addPos + size; tempEndPos++){
                         double prevSequProb = sequenceProbs.get(addPos - size +1);
                         for(LinguisticTree tree: previousTreesBySize.get(addPos).get(size)) {

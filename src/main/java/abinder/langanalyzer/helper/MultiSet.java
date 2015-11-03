@@ -51,6 +51,28 @@ public class MultiSet<V> extends HashMap<V, Double> implements Iterable<V> {
         return get(value) / totalCount;
     }
 
+    public void normalize(){
+        resetTotalCount();
+        for(V key: keySet()){
+            put(key, get(key)/totalCount);
+        }
+        totalCount = 1;
+    }
+
+    public void resetTotalCount(){
+        totalCount = 0;
+        for(V key: keySet()){
+            totalCount += get(key);
+        }
+    }
+
+    @Override
+    public Double remove(Object key){
+        double removedItemValue = super.remove(key);
+        totalCount -= removedItemValue;
+        return removedItemValue;
+    }
+
     @Override
     public Iterator<V> iterator() {
         return keySet().iterator();
